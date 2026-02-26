@@ -1,16 +1,14 @@
 package com.app.exoplanethunter.presentation.screens.starsystem
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.app.exoplanethunter.ExoplanetApp
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllStarSystemsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetMultiPlanetSystemsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemsByStarCountUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.SearchStarSystemsUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -25,13 +23,12 @@ enum class StarSystemFilter(val label: String) {
     MultiPlanet("Multi-Planet")
 }
 
-class StarSystemListViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val app = application as ExoplanetApp
-    private val getAllStarSystemsUseCase = app.getAllStarSystemsUseCase
-    private val searchStarSystemsUseCase = app.searchStarSystemsUseCase
-    private val getMultiPlanetSystemsUseCase = app.getMultiPlanetSystemsUseCase
-    private val getStarSystemsByStarCountUseCase = app.getStarSystemsByStarCountUseCase
+class StarSystemListViewModel(
+    private val getAllStarSystemsUseCase: GetAllStarSystemsUseCase,
+    private val searchStarSystemsUseCase: SearchStarSystemsUseCase,
+    private val getMultiPlanetSystemsUseCase: GetMultiPlanetSystemsUseCase,
+    private val getStarSystemsByStarCountUseCase: GetStarSystemsByStarCountUseCase
+) : ViewModel() {
 
     var starSystems by mutableStateOf<List<String>>(emptyList())
         private set
@@ -102,14 +99,5 @@ class StarSystemListViewModel(application: Application) : AndroidViewModel(appli
             if (selectedFilter == StarSystemFilter.MultiPlanet) StarSystemFilter.All
             else StarSystemFilter.MultiPlanet
         )
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = this[APPLICATION_KEY] as ExoplanetApp
-                StarSystemListViewModel(app)
-            }
-        }
     }
 }

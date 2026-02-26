@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
 import com.app.exoplanethunter.presentation.theme.NebulaPink
@@ -45,7 +45,7 @@ import kotlin.math.sin
 @Composable
 fun SplashScreen(
     onDataLoaded: () -> Unit,
-    viewModel: SplashViewModel = viewModel(factory = SplashViewModel.Factory)
+    viewModel: SplashViewModel = koinViewModel()
 ) {
     val fadeIn = remember { Animatable(0f) }
     val titleSlide = remember { Animatable(50f) }

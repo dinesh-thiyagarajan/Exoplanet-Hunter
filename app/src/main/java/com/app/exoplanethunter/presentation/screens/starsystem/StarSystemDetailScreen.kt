@@ -74,7 +74,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.presentation.components.StarField
@@ -109,7 +109,7 @@ fun StarSystemDetailScreen(
     hostName: String,
     onPlanetClick: (Long) -> Unit,
     onBack: () -> Unit,
-    viewModel: StarSystemDetailViewModel = viewModel(factory = StarSystemDetailViewModel.Factory)
+    viewModel: StarSystemDetailViewModel = koinViewModel()
 ) {
     LaunchedEffect(hostName) {
         viewModel.loadSystem(hostName)

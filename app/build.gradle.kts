@@ -104,6 +104,10 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
 
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 

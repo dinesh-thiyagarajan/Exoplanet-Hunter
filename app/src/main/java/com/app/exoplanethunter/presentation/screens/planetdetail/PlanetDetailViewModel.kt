@@ -1,25 +1,20 @@
 package com.app.exoplanethunter.presentation.screens.planetdetail
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.app.exoplanethunter.ExoplanetApp
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.HabitabilityInsight
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetPlanetByIdUseCase
+import com.app.exoplanethunter.ml.GetHabitabilityInsightUseCase
 import kotlinx.coroutines.launch
 
-class PlanetDetailViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val app = application as ExoplanetApp
-    private val getPlanetByIdUseCase = app.getPlanetByIdUseCase
-    private val getHabitabilityInsightUseCase = app.getHabitabilityInsightUseCase
+class PlanetDetailViewModel(
+    private val getPlanetByIdUseCase: GetPlanetByIdUseCase,
+    private val getHabitabilityInsightUseCase: GetHabitabilityInsightUseCase
+) : ViewModel() {
 
     var planet by mutableStateOf<Exoplanet?>(null)
         private set
@@ -39,15 +34,6 @@ class PlanetDetailViewModel(application: Application) : AndroidViewModel(applica
                 insight = getHabitabilityInsightUseCase(it)
             }
             isLoading = false
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = this[APPLICATION_KEY] as ExoplanetApp
-                PlanetDetailViewModel(app)
-            }
         }
     }
 }

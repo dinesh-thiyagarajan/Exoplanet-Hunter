@@ -1,29 +1,26 @@
 package com.app.exoplanethunter.presentation.screens.planetlist
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.app.exoplanethunter.ExoplanetApp
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
+import com.app.exoplanethunter.exoplanet.domain.usecase.FilterPlanetsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllPlanetsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetDiscoveryMethodsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlanetListViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val app = application as ExoplanetApp
-    private val getAllPlanetsUseCase = app.getAllPlanetsUseCase
-    private val searchPlanetsUseCase = app.searchPlanetsUseCase
-    private val filterPlanetsUseCase = app.filterPlanetsUseCase
-    private val getDiscoveryMethodsUseCase = app.getDiscoveryMethodsUseCase
+class PlanetListViewModel(
+    private val getAllPlanetsUseCase: GetAllPlanetsUseCase,
+    private val searchPlanetsUseCase: SearchPlanetsUseCase,
+    private val filterPlanetsUseCase: FilterPlanetsUseCase,
+    private val getDiscoveryMethodsUseCase: GetDiscoveryMethodsUseCase
+) : ViewModel() {
 
     var planets by mutableStateOf<List<Exoplanet>>(emptyList())
         private set
@@ -117,15 +114,6 @@ class PlanetListViewModel(application: Application) : AndroidViewModel(applicati
                         isLoading = false
                     }
                 }
-            }
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = this[APPLICATION_KEY] as ExoplanetApp
-                PlanetListViewModel(app)
             }
         }
     }

@@ -50,7 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
@@ -69,7 +69,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun StarSystemListScreen(
     onSystemClick: (String) -> Unit,
-    viewModel: StarSystemListViewModel = viewModel(factory = StarSystemListViewModel.Factory)
+    viewModel: StarSystemListViewModel = koinViewModel()
 ) {
     val listState = rememberLazyListState()
 

@@ -58,7 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.presentation.components.PlanetMiniRenderer
 import com.app.exoplanethunter.presentation.components.StarField
@@ -78,7 +78,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun PlanetListScreen(
     onPlanetClick: (Long) -> Unit,
-    viewModel: PlanetListViewModel = viewModel(factory = PlanetListViewModel.Factory)
+    viewModel: PlanetListViewModel = koinViewModel()
 ) {
     val listState = rememberLazyListState()
 

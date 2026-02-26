@@ -52,7 +52,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.HabitabilityInsight
 import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
@@ -79,7 +79,7 @@ import kotlinx.coroutines.delay
 fun PlanetDetailScreen(
     planetId: Long,
     onBack: () -> Unit,
-    viewModel: PlanetDetailViewModel = viewModel(factory = PlanetDetailViewModel.Factory)
+    viewModel: PlanetDetailViewModel = koinViewModel()
 ) {
     LaunchedEffect(planetId) {
         viewModel.loadPlanet(planetId)

@@ -1,7 +1,21 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
+
+// Read local.properties for ad configuration
+val localProperties = Properties().apply {
+    val localPropsFile = rootProject.file("local.properties")
+    if (localPropsFile.exists()) {
+        localPropsFile.inputStream().use { load(it) }
+    }
+}
+
+val adsEnabled = localProperties.getProperty("ADS_ENABLED", "false")
+val admobAppId = localProperties.getProperty("ADMOB_APP_ID", "")
+val admobAdUnitId = localProperties.getProperty("ADMOB_AD_UNIT_ID", "")
 
 android {
     namespace = "com.workspace.exoplanethunter"
@@ -18,6 +32,13 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // Inject ad config into BuildConfig
+        buildConfigField("boolean", "ADS_ENABLED", adsEnabled)
+        buildConfigField("String", "ADMOB_AD_UNIT_ID", "\"$admobAdUnitId\"")
+
+        // Manifest placeholder for AdMob App ID
+        manifestPlaceholders["ADMOB_APP_ID"] = admobAppId
     }
 
     buildTypes {
@@ -38,6 +59,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
@@ -53,6 +75,7 @@ dependencies {
     // Feature modules
     implementation(project(":feature:exoplanet"))
     implementation(project(":feature:ml"))
+    implementation(project(":feature:ads"))
 
     // Core
     implementation("androidx.core:core-ktx:1.12.0")

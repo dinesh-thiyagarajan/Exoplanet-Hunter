@@ -5,7 +5,27 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,19 +36,40 @@ import com.workspace.exoplanethunter.presentation.screens.planetlist.PlanetListS
 import com.workspace.exoplanethunter.presentation.screens.splash.SplashScreen
 import com.workspace.exoplanethunter.presentation.screens.starsystem.StarSystemDetailScreen
 import com.workspace.exoplanethunter.presentation.screens.starsystem.StarSystemListScreen
+import com.workspace.exoplanethunter.presentation.theme.CosmicCyan
+import com.workspace.exoplanethunter.presentation.theme.SpaceBlack
+import com.workspace.exoplanethunter.presentation.theme.SurfaceCard
+import com.workspace.exoplanethunter.presentation.theme.SurfaceDark
+import com.workspace.exoplanethunter.presentation.theme.TextMuted
+
+// ---------------------------------------------------------------------------
+// Screen routes
+// ---------------------------------------------------------------------------
 
 sealed class Screen(val route: String) {
     data object Splash : Screen("splash")
-    data object PlanetList : Screen("planet_list")
+    data object Main : Screen("main")
     data object PlanetDetail : Screen("planet_detail/{planetId}") {
         fun createRoute(planetId: Long) = "planet_detail/$planetId"
     }
-    data object StarSystemList : Screen("star_system_list")
     data object StarSystemDetail : Screen("star_system_detail/{hostName}") {
         fun createRoute(hostName: String) =
             "star_system_detail/${java.net.URLEncoder.encode(hostName, "UTF-8")}"
     }
 }
+
+// ---------------------------------------------------------------------------
+// Bottom navigation tabs
+// ---------------------------------------------------------------------------
+
+enum class BottomNavTab(val label: String, val icon: ImageVector) {
+    Planets("Planets", Icons.Default.Public),
+    StarSystems("Star Systems", Icons.Default.Star)
+}
+
+// ---------------------------------------------------------------------------
+// Root navigation graph
+// ---------------------------------------------------------------------------
 
 @Composable
 fun ExoplanetNavigation() {
@@ -53,20 +94,20 @@ fun ExoplanetNavigation() {
         composable(Screen.Splash.route) {
             SplashScreen(
                 onDataLoaded = {
-                    navController.navigate(Screen.PlanetList.route) {
+                    navController.navigate(Screen.Main.route) {
                         popUpTo(Screen.Splash.route) { inclusive = true }
                     }
                 }
             )
         }
 
-        composable(Screen.PlanetList.route) {
-            PlanetListScreen(
+        composable(Screen.Main.route) {
+            MainScreen(
                 onPlanetClick = { planetId ->
                     navController.navigate(Screen.PlanetDetail.createRoute(planetId))
                 },
-                onNavigateToStarSystems = {
-                    navController.navigate(Screen.StarSystemList.route)
+                onSystemClick = { hostName ->
+                    navController.navigate(Screen.StarSystemDetail.createRoute(hostName))
                 }
             )
         }
@@ -78,15 +119,6 @@ fun ExoplanetNavigation() {
             val planetId = backStackEntry.arguments?.getLong("planetId") ?: return@composable
             PlanetDetailScreen(
                 planetId = planetId,
-                onBack = { navController.popBackStack() }
-            )
-        }
-
-        composable(Screen.StarSystemList.route) {
-            StarSystemListScreen(
-                onSystemClick = { hostName ->
-                    navController.navigate(Screen.StarSystemDetail.createRoute(hostName))
-                },
                 onBack = { navController.popBackStack() }
             )
         }
@@ -104,6 +136,64 @@ fun ExoplanetNavigation() {
                 },
                 onBack = { navController.popBackStack() }
             )
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Main screen with bottom navigation bar
+// ---------------------------------------------------------------------------
+
+@Composable
+private fun MainScreen(
+    onPlanetClick: (Long) -> Unit,
+    onSystemClick: (String) -> Unit
+) {
+    var selectedTab by rememberSaveable { mutableStateOf(BottomNavTab.Planets.name) }
+
+    Scaffold(
+        containerColor = SpaceBlack,
+        bottomBar = {
+            NavigationBar(
+                containerColor = SurfaceDark,
+                contentColor = Color.White,
+                tonalElevation = 8.dp
+            ) {
+                BottomNavTab.entries.forEach { tab ->
+                    NavigationBarItem(
+                        selected = selectedTab == tab.name,
+                        onClick = { selectedTab = tab.name },
+                        icon = {
+                            Icon(tab.icon, contentDescription = tab.label)
+                        },
+                        label = {
+                            Text(
+                                text = tab.label,
+                                fontWeight = if (selectedTab == tab.name)
+                                    FontWeight.Bold else FontWeight.Normal
+                            )
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = CosmicCyan,
+                            selectedTextColor = CosmicCyan,
+                            unselectedIconColor = TextMuted,
+                            unselectedTextColor = TextMuted,
+                            indicatorColor = SurfaceCard
+                        )
+                    )
+                }
+            }
+        }
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (BottomNavTab.valueOf(selectedTab)) {
+                BottomNavTab.Planets -> PlanetListScreen(
+                    onPlanetClick = onPlanetClick
+                )
+                BottomNavTab.StarSystems -> StarSystemListScreen(
+                    onSystemClick = onSystemClick
+                )
+            }
         }
     }
 }

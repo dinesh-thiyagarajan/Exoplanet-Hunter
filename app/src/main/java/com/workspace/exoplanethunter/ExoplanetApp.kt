@@ -15,10 +15,20 @@ import com.workspace.exoplanethunter.exoplanet.domain.usecase.GetStarSystemUseCa
 import com.workspace.exoplanethunter.exoplanet.domain.usecase.LoadDataUseCase
 import com.workspace.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
 import com.workspace.exoplanethunter.exoplanet.domain.usecase.SearchStarSystemsUseCase
+import com.workspace.exoplanethunter.ads.AdManager
 import com.workspace.exoplanethunter.ml.ExoplanetClassifier
 import com.workspace.exoplanethunter.ml.GetHabitabilityInsightUseCase
 
 class ExoplanetApp : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        AdManager.initialize(
+            context = this,
+            enabled = BuildConfig.ADS_ENABLED,
+            unitId = BuildConfig.ADMOB_AD_UNIT_ID
+        )
+    }
 
     private val database by lazy { ExoplanetDatabase.getInstance(this) }
     private val csvParser by lazy { CsvParser(this) }

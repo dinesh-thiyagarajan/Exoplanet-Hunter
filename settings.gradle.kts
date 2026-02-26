@@ -17,3 +17,4 @@ rootProject.name = "Exoplanet Hunter"
 include(":app")
 include(":feature:exoplanet")
 include(":feature:ml")
+include(":feature:ads")

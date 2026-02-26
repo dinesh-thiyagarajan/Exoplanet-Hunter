@@ -21,11 +21,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
@@ -67,13 +65,13 @@ import com.workspace.exoplanethunter.presentation.theme.SurfaceCard
 import com.workspace.exoplanethunter.presentation.theme.SurfaceCardLight
 import com.workspace.exoplanethunter.presentation.theme.TextMuted
 import com.workspace.exoplanethunter.presentation.theme.TextSecondary
+import com.workspace.exoplanethunter.ads.AdBannerCard
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StarSystemListScreen(
     onSystemClick: (String) -> Unit,
-    onBack: () -> Unit,
     viewModel: StarSystemListViewModel = viewModel(factory = StarSystemListViewModel.Factory)
 ) {
     Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
@@ -95,36 +93,22 @@ fun StarSystemListScreen(
                     )
                     .padding(top = 44.dp, start = 20.dp, end = 20.dp, bottom = 8.dp)
             ) {
-                // Top bar with back button
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-
-                    Text(
-                        text = "Star Systems",
-                        style = MaterialTheme.typography.headlineLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            brush = Brush.linearGradient(
-                                colors = listOf(StarGold, SolarOrange)
-                            )
+                Text(
+                    text = "Star Systems",
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        brush = Brush.linearGradient(
+                            colors = listOf(StarGold, SolarOrange)
                         )
                     )
-                }
+                )
 
                 Text(
                     text = if (viewModel.isLoading) "Loading..."
                     else "Explore ${viewModel.starSystems.size} star systems",
                     style = MaterialTheme.typography.bodyMedium,
                     color = TextSecondary,
-                    modifier = Modifier.padding(start = 12.dp, top = 4.dp)
+                    modifier = Modifier.padding(top = 4.dp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -224,19 +208,25 @@ fun StarSystemListScreen(
                         start = 16.dp,
                         end = 16.dp,
                         top = 8.dp,
-                        bottom = 100.dp
+                        bottom = 16.dp
                     ),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    itemsIndexed(
-                        items = viewModel.starSystems,
-                        key = { _, name -> name }
-                    ) { index, hostName ->
-                        AnimatedSystemCard(
-                            hostName = hostName,
-                            index = index,
-                            onClick = { onSystemClick(hostName) }
-                        )
+                    val systems = viewModel.starSystems
+                    systems.forEachIndexed { index, hostName ->
+                        item(key = hostName) {
+                            AnimatedSystemCard(
+                                hostName = hostName,
+                                index = index,
+                                onClick = { onSystemClick(hostName) }
+                            )
+                        }
+                        // Ad after every 5th item
+                        if ((index + 1) % 5 == 0 && index < systems.size - 1) {
+                            item(key = "ad_system_$index") {
+                                AdBannerCard()
+                            }
+                        }
                     }
                 }
             }

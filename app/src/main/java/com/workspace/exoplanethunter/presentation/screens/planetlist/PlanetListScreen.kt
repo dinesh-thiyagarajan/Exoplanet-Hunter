@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +36,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -73,13 +71,13 @@ import com.workspace.exoplanethunter.presentation.theme.SurfaceCard
 import com.workspace.exoplanethunter.presentation.theme.SurfaceCardLight
 import com.workspace.exoplanethunter.presentation.theme.TextMuted
 import com.workspace.exoplanethunter.presentation.theme.TextSecondary
+import com.workspace.exoplanethunter.ads.AdBannerCard
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlanetListScreen(
     onPlanetClick: (Long) -> Unit,
-    onNavigateToStarSystems: () -> Unit = {},
     viewModel: PlanetListViewModel = viewModel(factory = PlanetListViewModel.Factory)
 ) {
     Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
@@ -230,45 +228,29 @@ fun PlanetListScreen(
                         start = 16.dp,
                         end = 16.dp,
                         top = 8.dp,
-                        bottom = 100.dp
+                        bottom = 16.dp
                     ),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    itemsIndexed(
-                        items = viewModel.planets,
-                        key = { _, planet -> planet.id }
-                    ) { index, planet ->
-                        AnimatedPlanetCard(
-                            planet = planet,
-                            index = index,
-                            onClick = { onPlanetClick(planet.id) }
-                        )
+                    val planets = viewModel.planets
+                    planets.forEachIndexed { index, planet ->
+                        item(key = planet.id) {
+                            AnimatedPlanetCard(
+                                planet = planet,
+                                index = index,
+                                onClick = { onPlanetClick(planet.id) }
+                            )
+                        }
+                        // Ad after every 5th item
+                        if ((index + 1) % 5 == 0 && index < planets.size - 1) {
+                            item(key = "ad_planet_$index") {
+                                AdBannerCard()
+                            }
+                        }
                     }
                 }
             }
         }
-
-        // FAB to navigate to Star Systems — prominent and labeled
-        androidx.compose.material3.ExtendedFloatingActionButton(
-            onClick = onNavigateToStarSystems,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 20.dp, bottom = 32.dp),
-            containerColor = StarGold,
-            contentColor = SpaceBlack,
-            icon = {
-                Icon(
-                    Icons.Default.Star,
-                    contentDescription = "Explore Star Systems"
-                )
-            },
-            text = {
-                Text(
-                    text = "Star Systems",
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        )
     }
 }
 

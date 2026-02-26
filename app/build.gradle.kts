@@ -15,9 +15,9 @@ val localProperties = Properties().apply {
     }
 }
 
-val adsEnabled = localProperties.getProperty("ADS_ENABLED", "false")
-val admobAppId = localProperties.getProperty("ADMOB_APP_ID", "")
-val admobAdUnitId = localProperties.getProperty("ADMOB_AD_UNIT_ID", "")
+val adsEnabled: String = localProperties.getProperty("ADS_ENABLED", "false")
+val admobAppId: String = localProperties.getProperty("ADMOB_APP_ID", "")
+val admobAdUnitId: String = localProperties.getProperty("ADMOB_AD_UNIT_ID", "")
 
 android {
     namespace = "com.app.exoplanethunter"
@@ -48,7 +48,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }

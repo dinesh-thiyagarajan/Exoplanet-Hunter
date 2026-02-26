@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -80,6 +81,8 @@ fun PlanetListScreen(
     onPlanetClick: (Long) -> Unit,
     viewModel: PlanetListViewModel = viewModel(factory = PlanetListViewModel.Factory)
 ) {
+    val listState = rememberLazyListState()
+
     Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
         StarField(starCount = 100)
 
@@ -224,6 +227,7 @@ fun PlanetListScreen(
                 }
             } else {
                 LazyColumn(
+                    state = listState,
                     contentPadding = PaddingValues(
                         start = 16.dp,
                         end = 16.dp,

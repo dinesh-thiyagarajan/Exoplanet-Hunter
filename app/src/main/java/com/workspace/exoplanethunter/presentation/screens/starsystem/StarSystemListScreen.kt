@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -76,6 +77,8 @@ fun StarSystemListScreen(
     onSystemClick: (String) -> Unit,
     viewModel: StarSystemListViewModel = viewModel(factory = StarSystemListViewModel.Factory)
 ) {
+    val listState = rememberLazyListState()
+
     Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
         StarField(starCount = 100)
 
@@ -197,6 +200,7 @@ fun StarSystemListScreen(
                 }
             } else {
                 LazyColumn(
+                    state = listState,
                     contentPadding = PaddingValues(
                         start = 16.dp,
                         end = 16.dp,

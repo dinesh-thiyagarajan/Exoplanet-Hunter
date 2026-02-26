@@ -20,11 +20,11 @@ val admobAppId = localProperties.getProperty("ADMOB_APP_ID", "")
 val admobAdUnitId = localProperties.getProperty("ADMOB_AD_UNIT_ID", "")
 
 android {
-    namespace = "com.workspace.exoplanethunter"
+    namespace = "com.app.exoplanethunter"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.workspace.exoplanethunter"
+        applicationId = "com.app.exoplanethunter"
         minSdk = 29
         targetSdk = 36
         versionCode = 1

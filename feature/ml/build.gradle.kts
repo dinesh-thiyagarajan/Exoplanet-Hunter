@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.workspace.exoplanethunter.ml"
+    namespace = "com.app.exoplanethunter.ml"
     compileSdk = 34
 
     defaultConfig {

@@ -1,12 +1,10 @@
 package com.workspace.exoplanethunter.presentation.screens.planetlist
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -264,22 +263,19 @@ private fun AnimatedPlanetCard(
     index: Int,
     onClick: () -> Unit
 ) {
-    var visible by remember { mutableStateOf(false) }
+    val progress = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-        delay(index.coerceAtMost(20) * 50L)
-        visible = true
+        delay(index.coerceAtMost(10) * 30L)
+        progress.animateTo(1f, animationSpec = tween(250))
     }
 
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(tween(400)) + slideInVertically(
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessLow
-            ),
-            initialOffsetY = { it / 2 }
-        )
+    Box(
+        modifier = Modifier
+            .graphicsLayer {
+                alpha = progress.value
+                translationY = (1f - progress.value) * 24f
+            }
     ) {
         PlanetCard(planet = planet, onClick = onClick)
     }

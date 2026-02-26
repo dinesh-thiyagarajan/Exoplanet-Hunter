@@ -248,20 +248,27 @@ fun PlanetListScreen(
             }
         }
 
-        // FAB to navigate to Star Systems
-        FloatingActionButton(
+        // FAB to navigate to Star Systems — prominent and labeled
+        androidx.compose.material3.ExtendedFloatingActionButton(
             onClick = onNavigateToStarSystems,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 20.dp, bottom = 32.dp),
             containerColor = StarGold,
-            contentColor = SpaceBlack
-        ) {
-            Icon(
-                Icons.Default.Star,
-                contentDescription = "Explore Star Systems"
-            )
-        }
+            contentColor = SpaceBlack,
+            icon = {
+                Icon(
+                    Icons.Default.Star,
+                    contentDescription = "Explore Star Systems"
+                )
+            },
+            text = {
+                Text(
+                    text = "Star Systems",
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        )
     }
 }
 

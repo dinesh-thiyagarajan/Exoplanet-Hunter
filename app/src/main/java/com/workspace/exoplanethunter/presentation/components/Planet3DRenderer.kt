@@ -46,13 +46,14 @@ fun Planet3DRenderer(
     enableRotation: Boolean = true,
     autoRotate: Boolean = true,
 ) {
+    // Full 360° rotation — no clamping on Y, gentle clamp on X (tilt)
     var rotationX by remember { mutableFloatStateOf(0.3f) }
     var rotationY by remember { mutableFloatStateOf(0f) }
 
     val infiniteTransition = rememberInfiniteTransition(label = "planet_rotation")
     val autoRotateAngle by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 360f,
+        targetValue = (2f * PI).toFloat(), // Full radian circle
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = getRotationDuration(planet.orbitalPeriodDays),
@@ -88,9 +89,10 @@ fun Planet3DRenderer(
                         Modifier.pointerInput(Unit) {
                             detectDragGestures { change, dragAmount ->
                                 change.consume()
+                                // Full 360 on Y-axis (horizontal drag), wider range on X-axis
                                 rotationY += dragAmount.x * 0.01f
-                                rotationX += dragAmount.y * 0.01f
-                                rotationX = rotationX.coerceIn(-1.5f, 1.5f)
+                                rotationX += dragAmount.y * 0.008f
+                                rotationX = rotationX.coerceIn(-PI.toFloat() / 2f, PI.toFloat() / 2f) // ±90°
                             }
                         }
                     } else Modifier
@@ -100,8 +102,9 @@ fun Planet3DRenderer(
             val centerY = this.size.height / 2
             val radius = min(centerX, centerY) * 0.75f
 
+            // Combine manual + auto rotation (both in radians now)
             val currentRotY = if (autoRotate) {
-                rotationY + Math.toRadians(autoRotateAngle.toDouble()).toFloat()
+                rotationY + autoRotateAngle
             } else {
                 rotationY
             }
@@ -109,14 +112,17 @@ fun Planet3DRenderer(
             // Outer glow / atmosphere
             drawAtmosphere(centerX, centerY, radius, planetColors, atmosphereGlow)
 
-            // Main planet sphere
-            drawPlanetSphere(centerX, centerY, radius, planetColors, currentRotY, rotationX, planetType)
+            // Main planet sphere with rotation-aware lighting
+            drawPlanetSphere(centerX, centerY, radius, planetColors, currentRotY, rotationX)
 
-            // Surface features
+            // Surface features that properly wrap around the sphere
             drawSurfaceFeatures(centerX, centerY, radius, currentRotY, rotationX, planetType, planetColors)
 
             // Specular highlight
             drawSpecularHighlight(centerX, centerY, radius)
+
+            // Terminator line (day/night boundary) — subtle shadow
+            drawTerminator(centerX, centerY, radius, currentRotY)
 
             // Ring system for gas giants
             if (planetType == PlanetType.GAS_GIANT || planetType == PlanetType.ICE_GIANT) {
@@ -207,11 +213,11 @@ private fun DrawScope.drawAtmosphere(
 private fun DrawScope.drawPlanetSphere(
     cx: Float, cy: Float, radius: Float,
     colors: PlanetColorScheme,
-    rotY: Float, rotX: Float,
-    planetType: PlanetType
+    rotY: Float, rotX: Float
 ) {
-    // Main sphere with gradient for 3D effect
-    val lightOffsetX = -radius * 0.3f
+    // Light position shifts as planet rotates, giving a true 360° feel
+    val lightAngle = -0.6f // fixed light direction (from "star")
+    val lightOffsetX = -radius * 0.3f * cos(rotY * 0.15f)
     val lightOffsetY = -radius * 0.3f
 
     drawCircle(
@@ -251,7 +257,9 @@ private fun DrawScope.drawGasGiantBands(
 ) {
     val bandCount = 8
     for (i in 0 until bandCount) {
-        val bandY = cy + radius * (-0.8f + i * 0.2f + sin(rotX) * 0.1f)
+        val baseBandPos = -0.8f + i * 0.2f
+        // Tilt bands with vertical rotation
+        val bandY = cy + radius * (baseBandPos + sin(rotX) * 0.15f)
         val bandWidth = radius * 0.06f
         val distFromCenter = abs(bandY - cy) / radius
         if (distFromCenter > 0.95f) continue
@@ -273,15 +281,17 @@ private fun DrawScope.drawGasGiantBands(
         )
     }
 
-    // Great spot
-    val spotAngle = rotY * 0.5f
+    // Great Red Spot — wraps around with rotation
+    val spotAngle = rotY
     val spotX = cx + radius * 0.4f * cos(spotAngle)
     val spotY = cy + radius * 0.15f
     val spotDist = sqrt((spotX - cx) * (spotX - cx) + (spotY - cy) * (spotY - cy))
-    if (spotDist < radius * 0.85f) {
+    // Only visible when on the front face
+    if (spotDist < radius * 0.85f && cos(spotAngle) > -0.2f) {
         val spotScale = sqrt(1f - (spotDist / radius).let { it * it })
+        val spotAlpha = (0.5f * (cos(spotAngle) + 0.2f) / 1.2f).coerceIn(0f, 0.5f)
         drawOval(
-            color = colors.secondary.copy(alpha = 0.5f),
+            color = colors.secondary.copy(alpha = spotAlpha),
             topLeft = Offset(spotX - radius * 0.12f * spotScale, spotY - radius * 0.06f),
             size = androidx.compose.ui.geometry.Size(
                 radius * 0.24f * spotScale,
@@ -297,7 +307,7 @@ private fun DrawScope.drawIceGiantBands(
     colors: PlanetColorScheme
 ) {
     for (i in 0..5) {
-        val bandY = cy + radius * (-0.6f + i * 0.24f)
+        val bandY = cy + radius * (-0.6f + i * 0.24f + sin(rotX) * 0.08f)
         val distFromCenter = abs(bandY - cy) / radius
         if (distFromCenter > 0.95f) continue
 
@@ -316,31 +326,54 @@ private fun DrawScope.drawRockyFeatures(
     rotY: Float, rotX: Float,
     colors: PlanetColorScheme
 ) {
-    // Draw continent-like patches
+    // Features defined in 3D spherical coordinates, projected with rotation
+    // Each: (longitude, latitude, size)
     val featureSeeds = listOf(
-        Triple(0.3f, -0.2f, 0.25f),
-        Triple(-0.4f, 0.3f, 0.2f),
-        Triple(0.1f, 0.4f, 0.15f),
-        Triple(-0.2f, -0.4f, 0.18f),
-        Triple(0.5f, 0.1f, 0.12f),
+        Triple(0.0f, -0.2f, 0.25f),
+        Triple(1.2f, 0.3f, 0.2f),
+        Triple(2.5f, 0.1f, 0.15f),
+        Triple(3.8f, -0.3f, 0.18f),
+        Triple(5.0f, 0.15f, 0.12f),
+        Triple(0.8f, -0.4f, 0.14f),
+        Triple(2.0f, 0.4f, 0.16f),
+        Triple(4.2f, -0.1f, 0.20f),
     )
 
-    for ((baseX, baseY, featureRadius) in featureSeeds) {
-        val rotatedX = baseX * cos(rotY) - 0.1f * sin(rotY)
-        val fx = cx + radius * rotatedX
-        val fy = cy + radius * (baseY + sin(rotX) * 0.1f)
+    for ((longitude, latitude, featureRadius) in featureSeeds) {
+        // Rotate longitude by current Y rotation
+        val adjustedLon = longitude + rotY
+
+        // Project 3D sphere position to 2D
+        val cosLon = cos(adjustedLon)
+        val sinLon = sin(adjustedLon)
+        val cosLat = cos(latitude + rotX * 0.5f)
+        val sinLat = sin(latitude + rotX * 0.5f)
+
+        // Only draw if on front hemisphere
+        if (cosLon < -0.1f) continue
+
+        // Screen-space position
+        val fx = cx + radius * sinLon * cosLat * 0.85f
+        val fy = cy + radius * sinLat * 0.85f
 
         val distFromCenter = sqrt((fx - cx) * (fx - cx) + (fy - cy) * (fy - cy))
-        if (distFromCenter > radius * 0.85f) continue
+        if (distFromCenter > radius * 0.9f) continue
 
-        val scale = sqrt(1f - (distFromCenter / radius).let { it * it })
+        // Foreshortening: features near the edge appear smaller
+        val depthScale = cosLon.coerceAtLeast(0f)
+        val scale = sqrt(1f - (distFromCenter / radius).let { it * it }) * depthScale
         val fr = radius * featureRadius * scale
+
+        if (fr < 1f) continue
+
+        // Fade alpha based on how much it faces the viewer
+        val alpha = (0.35f * depthScale).coerceIn(0.05f, 0.35f)
 
         drawCircle(
             brush = Brush.radialGradient(
                 colors = listOf(
-                    colors.secondary.copy(alpha = 0.35f),
-                    colors.secondary.copy(alpha = 0.1f),
+                    colors.secondary.copy(alpha = alpha),
+                    colors.secondary.copy(alpha = alpha * 0.3f),
                     Color.Transparent
                 ),
                 center = Offset(fx, fy),
@@ -372,6 +405,36 @@ private fun DrawScope.drawSpecularHighlight(cx: Float, cy: Float, radius: Float)
     )
 }
 
+/**
+ * Subtle day/night terminator line that shifts with rotation, giving
+ * the illusion of a 360° lit surface.
+ */
+private fun DrawScope.drawTerminator(
+    cx: Float, cy: Float, radius: Float,
+    rotY: Float
+) {
+    // The terminator is a vertical band on the dark side
+    // As the planet rotates, the shadow shifts
+    val shadowOffsetX = radius * 0.6f * sin(rotY * 0.3f)
+    val shadowSide = cx + shadowOffsetX + radius * 0.4f
+
+    // Dark crescent on trailing edge
+    drawCircle(
+        brush = Brush.radialGradient(
+            colors = listOf(
+                Color.Transparent,
+                Color.Transparent,
+                Color(0x22000011),
+                Color(0x55000022)
+            ),
+            center = Offset(shadowSide, cy),
+            radius = radius * 1.4f
+        ),
+        radius = radius,
+        center = Offset(cx, cy)
+    )
+}
+
 private fun DrawScope.drawRings(
     cx: Float, cy: Float, radius: Float,
     rotX: Float,
@@ -382,7 +445,7 @@ private fun DrawScope.drawRings(
 
     for (i in 1..ringCount) {
         val ringRadius = radius * (1.3f + i * 0.15f)
-        val ringHeight = ringRadius * abs(ringTilt) * 0.3f
+        val ringHeight = ringRadius * abs(ringTilt).coerceAtLeast(0.08f) * 0.3f
         val ringAlpha = 0.25f - i * 0.05f
 
         drawOval(

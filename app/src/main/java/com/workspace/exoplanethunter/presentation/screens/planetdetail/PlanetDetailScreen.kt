@@ -53,9 +53,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.workspace.exoplanethunter.domain.model.Exoplanet
-import com.workspace.exoplanethunter.domain.model.HabitabilityInsight
-import com.workspace.exoplanethunter.domain.model.PlanetClassification
+import com.workspace.exoplanethunter.exoplanet.domain.model.Exoplanet
+import com.workspace.exoplanethunter.exoplanet.domain.model.HabitabilityInsight
+import com.workspace.exoplanethunter.exoplanet.domain.model.PlanetClassification
 import com.workspace.exoplanethunter.presentation.components.HabitabilityScoreBar
 import com.workspace.exoplanethunter.presentation.components.Planet3DRenderer
 import com.workspace.exoplanethunter.presentation.components.StarField

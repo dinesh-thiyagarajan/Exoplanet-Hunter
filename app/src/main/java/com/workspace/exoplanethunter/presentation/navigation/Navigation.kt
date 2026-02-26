@@ -14,12 +14,19 @@ import androidx.navigation.navArgument
 import com.workspace.exoplanethunter.presentation.screens.planetdetail.PlanetDetailScreen
 import com.workspace.exoplanethunter.presentation.screens.planetlist.PlanetListScreen
 import com.workspace.exoplanethunter.presentation.screens.splash.SplashScreen
+import com.workspace.exoplanethunter.presentation.screens.starsystem.StarSystemDetailScreen
+import com.workspace.exoplanethunter.presentation.screens.starsystem.StarSystemListScreen
 
 sealed class Screen(val route: String) {
     data object Splash : Screen("splash")
     data object PlanetList : Screen("planet_list")
     data object PlanetDetail : Screen("planet_detail/{planetId}") {
         fun createRoute(planetId: Long) = "planet_detail/$planetId"
+    }
+    data object StarSystemList : Screen("star_system_list")
+    data object StarSystemDetail : Screen("star_system_detail/{hostName}") {
+        fun createRoute(hostName: String) =
+            "star_system_detail/${java.net.URLEncoder.encode(hostName, "UTF-8")}"
     }
 }
 
@@ -57,6 +64,9 @@ fun ExoplanetNavigation() {
             PlanetListScreen(
                 onPlanetClick = { planetId ->
                     navController.navigate(Screen.PlanetDetail.createRoute(planetId))
+                },
+                onNavigateToStarSystems = {
+                    navController.navigate(Screen.StarSystemList.route)
                 }
             )
         }
@@ -68,6 +78,30 @@ fun ExoplanetNavigation() {
             val planetId = backStackEntry.arguments?.getLong("planetId") ?: return@composable
             PlanetDetailScreen(
                 planetId = planetId,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.StarSystemList.route) {
+            StarSystemListScreen(
+                onSystemClick = { hostName ->
+                    navController.navigate(Screen.StarSystemDetail.createRoute(hostName))
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Screen.StarSystemDetail.route,
+            arguments = listOf(navArgument("hostName") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val hostName = backStackEntry.arguments?.getString("hostName") ?: return@composable
+            val decodedHostName = java.net.URLDecoder.decode(hostName, "UTF-8")
+            StarSystemDetailScreen(
+                hostName = decodedHostName,
+                onPlanetClick = { planetId ->
+                    navController.navigate(Screen.PlanetDetail.createRoute(planetId))
+                },
                 onBack = { navController.popBackStack() }
             )
         }

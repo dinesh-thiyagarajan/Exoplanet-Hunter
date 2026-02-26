@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.workspace.exoplanethunter.domain.model.Exoplanet
+import com.workspace.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.workspace.exoplanethunter.presentation.theme.CoolBlue
 import com.workspace.exoplanethunter.presentation.theme.FrozenBlue
 import com.workspace.exoplanethunter.presentation.theme.HotOrange
@@ -33,13 +33,14 @@ fun PlanetMiniRenderer(
     size: Dp = 56.dp
 ) {
     val planetColor = remember(planet) {
+        val temp = planet.equilibriumTempK
         when {
-            planet.equilibriumTempK != null && planet.equilibriumTempK < 200 -> FrozenBlue
-            planet.equilibriumTempK != null && planet.equilibriumTempK < 300 -> CoolBlue
-            planet.equilibriumTempK != null && planet.equilibriumTempK < 400 -> TemperateGreen
-            planet.equilibriumTempK != null && planet.equilibriumTempK < 600 -> WarmYellow
-            planet.equilibriumTempK != null && planet.equilibriumTempK < 1000 -> HotOrange
-            planet.equilibriumTempK != null -> ScorchingRed
+            temp != null && temp < 200 -> FrozenBlue
+            temp != null && temp < 300 -> CoolBlue
+            temp != null && temp < 400 -> TemperateGreen
+            temp != null && temp < 600 -> WarmYellow
+            temp != null && temp < 1000 -> HotOrange
+            temp != null -> ScorchingRed
             else -> Color(0xFF8888AA)
         }
     }

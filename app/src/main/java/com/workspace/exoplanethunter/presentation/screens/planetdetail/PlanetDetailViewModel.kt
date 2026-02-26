@@ -11,8 +11,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.workspace.exoplanethunter.ExoplanetApp
-import com.workspace.exoplanethunter.domain.model.Exoplanet
-import com.workspace.exoplanethunter.domain.model.HabitabilityInsight
+import com.workspace.exoplanethunter.exoplanet.domain.model.Exoplanet
+import com.workspace.exoplanethunter.exoplanet.domain.model.HabitabilityInsight
 import kotlinx.coroutines.launch
 
 class PlanetDetailViewModel(application: Application) : AndroidViewModel(application) {

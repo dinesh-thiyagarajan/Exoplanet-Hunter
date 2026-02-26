@@ -37,6 +37,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -60,13 +61,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.workspace.exoplanethunter.domain.model.Exoplanet
+import com.workspace.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.workspace.exoplanethunter.presentation.components.PlanetMiniRenderer
 import com.workspace.exoplanethunter.presentation.components.StarField
 import com.workspace.exoplanethunter.presentation.theme.AuroraGreen
 import com.workspace.exoplanethunter.presentation.theme.CosmicCyan
 import com.workspace.exoplanethunter.presentation.theme.NebulaPink
 import com.workspace.exoplanethunter.presentation.theme.SpaceBlack
+import com.workspace.exoplanethunter.presentation.theme.StarGold
 import com.workspace.exoplanethunter.presentation.theme.SurfaceCard
 import com.workspace.exoplanethunter.presentation.theme.SurfaceCardLight
 import com.workspace.exoplanethunter.presentation.theme.TextMuted
@@ -77,6 +79,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun PlanetListScreen(
     onPlanetClick: (Long) -> Unit,
+    onNavigateToStarSystems: () -> Unit = {},
     viewModel: PlanetListViewModel = viewModel(factory = PlanetListViewModel.Factory)
 ) {
     Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
@@ -173,10 +176,6 @@ fun PlanetListScreen(
                                 labelColor = TextSecondary,
                                 selectedContainerColor = AuroraGreen,
                                 selectedLabelColor = SpaceBlack
-                            ),
-                            border = FilterChipDefaults.filterChipBorder(
-                                borderColor = TextMuted.copy(alpha = 0.3f),
-                                selectedBorderColor = AuroraGreen
                             )
                         )
                     }
@@ -191,10 +190,6 @@ fun PlanetListScreen(
                                 labelColor = TextSecondary,
                                 selectedContainerColor = CosmicCyan,
                                 selectedLabelColor = SpaceBlack
-                            ),
-                            border = FilterChipDefaults.filterChipBorder(
-                                borderColor = TextMuted.copy(alpha = 0.3f),
-                                selectedBorderColor = CosmicCyan
                             )
                         )
                     }
@@ -215,10 +210,6 @@ fun PlanetListScreen(
                                 labelColor = TextSecondary,
                                 selectedContainerColor = CosmicCyan,
                                 selectedLabelColor = SpaceBlack
-                            ),
-                            border = FilterChipDefaults.filterChipBorder(
-                                borderColor = TextMuted.copy(alpha = 0.3f),
-                                selectedBorderColor = CosmicCyan
                             )
                         )
                     }
@@ -255,6 +246,21 @@ fun PlanetListScreen(
                     }
                 }
             }
+        }
+
+        // FAB to navigate to Star Systems
+        FloatingActionButton(
+            onClick = onNavigateToStarSystems,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 20.dp, bottom = 32.dp),
+            containerColor = StarGold,
+            contentColor = SpaceBlack
+        ) {
+            Icon(
+                Icons.Default.Star,
+                contentDescription = "Explore Star Systems"
+            )
         }
     }
 }

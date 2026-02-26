@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.workspace.exoplanethunter.ExoplanetApp
-import com.workspace.exoplanethunter.domain.model.Exoplanet
+import com.workspace.exoplanethunter.exoplanet.domain.model.Exoplanet
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest

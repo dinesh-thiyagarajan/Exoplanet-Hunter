@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.workspace.exoplanethunter.domain.model.Exoplanet
+import com.workspace.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.workspace.exoplanethunter.presentation.theme.CoolBlue
 import com.workspace.exoplanethunter.presentation.theme.FrozenBlue
 import com.workspace.exoplanethunter.presentation.theme.HotOrange

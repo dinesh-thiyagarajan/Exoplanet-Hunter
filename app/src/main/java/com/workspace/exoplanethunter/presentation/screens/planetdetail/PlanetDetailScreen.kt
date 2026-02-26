@@ -59,6 +59,7 @@ import com.workspace.exoplanethunter.exoplanet.domain.model.PlanetClassification
 import com.workspace.exoplanethunter.presentation.components.HabitabilityScoreBar
 import com.workspace.exoplanethunter.presentation.components.Planet3DRenderer
 import com.workspace.exoplanethunter.presentation.components.StarField
+import com.workspace.exoplanethunter.ads.AdBannerCard
 import com.workspace.exoplanethunter.presentation.theme.AuroraGreen
 import com.workspace.exoplanethunter.presentation.theme.CautionYellow
 import com.workspace.exoplanethunter.presentation.theme.CosmicCyan
@@ -176,6 +177,9 @@ fun PlanetDetailScreen(
                     AnimatedSection(delay = 100) {
                         PlanetPropertiesCard(planet = planet)
                     }
+
+                    // Ad banner between property cards
+                    AdBannerCard()
 
                     // Stellar Properties
                     AnimatedSection(delay = 200) {

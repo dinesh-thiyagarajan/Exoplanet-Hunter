@@ -73,6 +73,10 @@ class ExoplanetRepositoryImpl(
         return dao.getMultiPlanetSystems()
     }
 
+    override fun getStarSystemsByStarCount(starCount: Int): Flow<List<String>> {
+        return dao.getStarSystemsByStarCount(starCount)
+    }
+
     override suspend fun loadDataIfNeeded() {
         withContext(Dispatchers.IO) {
             if (dao.getCount() == 0) {

@@ -3,6 +3,8 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 // Read local.properties for ad configuration
@@ -19,12 +21,12 @@ val admobAdUnitId = localProperties.getProperty("ADMOB_AD_UNIT_ID", "")
 
 android {
     namespace = "com.workspace.exoplanethunter"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.workspace.exoplanethunter"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -96,6 +98,11 @@ dependencies {
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")

@@ -15,6 +15,7 @@ import com.workspace.exoplanethunter.exoplanet.domain.usecase.GetStarSystemUseCa
 import com.workspace.exoplanethunter.exoplanet.domain.usecase.LoadDataUseCase
 import com.workspace.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
 import com.workspace.exoplanethunter.exoplanet.domain.usecase.SearchStarSystemsUseCase
+import com.workspace.exoplanethunter.exoplanet.domain.usecase.GetStarSystemsByStarCountUseCase
 import com.workspace.exoplanethunter.ads.AdManager
 import com.workspace.exoplanethunter.ml.ExoplanetClassifier
 import com.workspace.exoplanethunter.ml.GetHabitabilityInsightUseCase
@@ -49,4 +50,5 @@ class ExoplanetApp : Application() {
     val getStarSystemUseCase by lazy { GetStarSystemUseCase(repository) }
     val searchStarSystemsUseCase by lazy { SearchStarSystemsUseCase(repository) }
     val getMultiPlanetSystemsUseCase by lazy { GetMultiPlanetSystemsUseCase(repository) }
+    val getStarSystemsByStarCountUseCase by lazy { GetStarSystemsByStarCountUseCase(repository) }
 }

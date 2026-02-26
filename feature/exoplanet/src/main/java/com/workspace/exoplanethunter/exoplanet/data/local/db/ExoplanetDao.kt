@@ -62,4 +62,10 @@ interface ExoplanetDao {
             "HAVING COUNT(*) > 1 ORDER BY COUNT(*) DESC"
     )
     fun getMultiPlanetSystems(): Flow<List<String>>
+
+    @Query(
+        "SELECT DISTINCT hostName FROM exoplanets WHERE isDefault = 1 AND numStars = :starCount " +
+            "ORDER BY hostName ASC"
+    )
+    fun getStarSystemsByStarCount(starCount: Int): Flow<List<String>>
 }

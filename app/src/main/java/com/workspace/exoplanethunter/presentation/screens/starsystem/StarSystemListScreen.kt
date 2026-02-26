@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -56,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.workspace.exoplanethunter.presentation.components.StarField
+import com.workspace.exoplanethunter.presentation.theme.AuroraGreen
 import com.workspace.exoplanethunter.presentation.theme.CosmicCyan
 import com.workspace.exoplanethunter.presentation.theme.NebulaPink
 import com.workspace.exoplanethunter.presentation.theme.SolarOrange
@@ -147,50 +149,41 @@ fun StarSystemListScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Filter chips
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    FilterChip(
-                        selected = !viewModel.showMultiPlanetOnly,
-                        onClick = {
-                            if (viewModel.showMultiPlanetOnly) viewModel.onToggleMultiPlanet()
-                        },
-                        label = { Text("All Systems", fontSize = 12.sp) },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = if (!viewModel.showMultiPlanetOnly) SpaceBlack else StarGold
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(end = 16.dp)
+                ) {
+                    StarSystemFilter.entries.forEach { filter ->
+                        item(key = filter.name) {
+                            val isSelected = viewModel.selectedFilter == filter
+                            val chipColor = when (filter) {
+                                StarSystemFilter.All -> StarGold
+                                StarSystemFilter.SingleStar -> CosmicCyan
+                                StarSystemFilter.Binary -> SolarOrange
+                                StarSystemFilter.Trinary -> NebulaPink
+                                StarSystemFilter.MultiPlanet -> AuroraGreen
+                            }
+                            FilterChip(
+                                selected = isSelected,
+                                onClick = { viewModel.onFilterSelected(filter) },
+                                label = { Text(filter.label, fontSize = 12.sp) },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Star,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp),
+                                        tint = if (isSelected) SpaceBlack else chipColor
+                                    )
+                                },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    containerColor = SurfaceCard,
+                                    labelColor = TextSecondary,
+                                    selectedContainerColor = chipColor,
+                                    selectedLabelColor = SpaceBlack
+                                )
                             )
-                        },
-                        colors = FilterChipDefaults.filterChipColors(
-                            containerColor = SurfaceCard,
-                            labelColor = TextSecondary,
-                            selectedContainerColor = StarGold,
-                            selectedLabelColor = SpaceBlack
-                        )
-                    )
-
-                    FilterChip(
-                        selected = viewModel.showMultiPlanetOnly,
-                        onClick = {
-                            if (!viewModel.showMultiPlanetOnly) viewModel.onToggleMultiPlanet()
-                        },
-                        label = { Text("Multi-Planet", fontSize = 12.sp) },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = if (viewModel.showMultiPlanetOnly) SpaceBlack else NebulaPink
-                            )
-                        },
-                        colors = FilterChipDefaults.filterChipColors(
-                            containerColor = SurfaceCard,
-                            labelColor = TextSecondary,
-                            selectedContainerColor = NebulaPink,
-                            selectedLabelColor = SpaceBlack
-                        )
-                    )
+                        }
+                    }
                 }
             }
 

@@ -16,12 +16,22 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/** Filters available on the Star System list screen. */
+enum class StarSystemFilter(val label: String) {
+    All("All"),
+    SingleStar("Single Star"),
+    Binary("Binary"),
+    Trinary("Trinary"),
+    MultiPlanet("Multi-Planet")
+}
+
 class StarSystemListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val app = application as ExoplanetApp
     private val getAllStarSystemsUseCase = app.getAllStarSystemsUseCase
     private val searchStarSystemsUseCase = app.searchStarSystemsUseCase
     private val getMultiPlanetSystemsUseCase = app.getMultiPlanetSystemsUseCase
+    private val getStarSystemsByStarCountUseCase = app.getStarSystemsByStarCountUseCase
 
     var starSystems by mutableStateOf<List<String>>(emptyList())
         private set
@@ -32,9 +42,10 @@ class StarSystemListViewModel(application: Application) : AndroidViewModel(appli
     var searchQuery by mutableStateOf("")
         private set
 
-    var showMultiPlanetOnly by mutableStateOf(false)
+    var selectedFilter by mutableStateOf(StarSystemFilter.All)
         private set
 
+    private var loadJob: Job? = null
     private var searchJob: Job? = null
 
     init {
@@ -42,20 +53,28 @@ class StarSystemListViewModel(application: Application) : AndroidViewModel(appli
     }
 
     private fun loadSystems() {
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             isLoading = true
-            if (showMultiPlanetOnly) {
-                getMultiPlanetSystemsUseCase().collectLatest { list ->
-                    starSystems = list
-                    isLoading = false
-                }
-            } else {
-                getAllStarSystemsUseCase().collectLatest { list ->
-                    starSystems = list
-                    isLoading = false
-                }
+            val flow = when (selectedFilter) {
+                StarSystemFilter.All -> getAllStarSystemsUseCase()
+                StarSystemFilter.SingleStar -> getStarSystemsByStarCountUseCase(1)
+                StarSystemFilter.Binary -> getStarSystemsByStarCountUseCase(2)
+                StarSystemFilter.Trinary -> getStarSystemsByStarCountUseCase(3)
+                StarSystemFilter.MultiPlanet -> getMultiPlanetSystemsUseCase()
+            }
+            flow.collectLatest { list ->
+                starSystems = list
+                isLoading = false
             }
         }
+    }
+
+    fun onFilterSelected(filter: StarSystemFilter) {
+        if (selectedFilter == filter) return
+        selectedFilter = filter
+        searchQuery = ""
+        loadSystems()
     }
 
     fun onSearchQueryChanged(query: String) {
@@ -74,10 +93,15 @@ class StarSystemListViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
+    // Keep for backward compat but delegate to new filter API
+    val showMultiPlanetOnly: Boolean
+        get() = selectedFilter == StarSystemFilter.MultiPlanet
+
     fun onToggleMultiPlanet() {
-        showMultiPlanetOnly = !showMultiPlanetOnly
-        searchQuery = ""
-        loadSystems()
+        onFilterSelected(
+            if (selectedFilter == StarSystemFilter.MultiPlanet) StarSystemFilter.All
+            else StarSystemFilter.MultiPlanet
+        )
     }
 
     companion object {

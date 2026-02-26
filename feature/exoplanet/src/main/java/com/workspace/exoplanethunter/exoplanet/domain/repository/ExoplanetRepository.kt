@@ -15,5 +15,6 @@ interface ExoplanetRepository {
     suspend fun getStarSystem(hostName: String): StarSystem?
     fun searchStarSystems(query: String): Flow<List<String>>
     fun getMultiPlanetSystems(): Flow<List<String>>
+    fun getStarSystemsByStarCount(starCount: Int): Flow<List<String>>
     suspend fun loadDataIfNeeded()
 }

@@ -241,7 +241,10 @@ fun PlanetListScreen(
                             AnimatedPlanetCard(
                                 planet = planet,
                                 index = index,
-                                onClick = { onPlanetClick(planet.id) }
+                                onClick = {
+                                viewModel.trackPlanetClicked(planet)
+                                onPlanetClick(planet.id)
+                            }
                             )
                         }
                         // Ad after every 5th item

@@ -78,6 +78,7 @@ dependencies {
     implementation(project(":feature:exoplanet"))
     implementation(project(":feature:ml"))
     implementation(project(":feature:ads"))
+    implementation(project(":feature:analytics"))
 
     // Core
     implementation(libs.androidx.core.ktx)

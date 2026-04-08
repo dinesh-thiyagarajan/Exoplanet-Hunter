@@ -209,7 +209,10 @@ fun StarSystemListScreen(
                             AnimatedSystemCard(
                                 hostName = hostName,
                                 index = index,
-                                onClick = { onSystemClick(hostName) }
+                                onClick = {
+                                    viewModel.trackSystemClicked(hostName)
+                                    onSystemClick(hostName)
+                                }
                             )
                         }
                         // Ad after every 5th item

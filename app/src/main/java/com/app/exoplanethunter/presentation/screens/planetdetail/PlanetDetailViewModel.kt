@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
+import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.HabitabilityInsight
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetPlanetByIdUseCase
@@ -13,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class PlanetDetailViewModel(
     private val getPlanetByIdUseCase: GetPlanetByIdUseCase,
-    private val getHabitabilityInsightUseCase: GetHabitabilityInsightUseCase
+    private val getHabitabilityInsightUseCase: GetHabitabilityInsightUseCase,
+    private val trackEvent: TrackEventUseCase
 ) : ViewModel() {
 
     var planet by mutableStateOf<Exoplanet?>(null)
@@ -31,6 +34,12 @@ class PlanetDetailViewModel(
             val loadedPlanet = getPlanetByIdUseCase(id)
             planet = loadedPlanet
             loadedPlanet?.let {
+                trackEvent(
+                    AnalyticsEvent.PlanetDetailScreenViewed(
+                        planetId = it.id,
+                        planetName = it.planetName
+                    )
+                )
                 insight = getHabitabilityInsightUseCase(it)
             }
             isLoading = false

@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
+import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.usecase.FilterPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllPlanetsUseCase
@@ -19,7 +21,8 @@ class PlanetListViewModel(
     private val getAllPlanetsUseCase: GetAllPlanetsUseCase,
     private val searchPlanetsUseCase: SearchPlanetsUseCase,
     private val filterPlanetsUseCase: FilterPlanetsUseCase,
-    private val getDiscoveryMethodsUseCase: GetDiscoveryMethodsUseCase
+    private val getDiscoveryMethodsUseCase: GetDiscoveryMethodsUseCase,
+    private val trackEvent: TrackEventUseCase
 ) : ViewModel() {
 
     var planets by mutableStateOf<List<Exoplanet>>(emptyList())
@@ -43,6 +46,7 @@ class PlanetListViewModel(
     private var searchJob: Job? = null
 
     init {
+        trackEvent(AnalyticsEvent.PlanetListScreenViewed)
         loadPlanets()
         loadFilters()
     }
@@ -82,6 +86,12 @@ class PlanetListViewModel(
         selectedFilter = method
         showHabitableOnly = false
         searchQuery = ""
+        trackEvent(
+            AnalyticsEvent.PlanetFilterApplied(
+                filterType = "discovery_method",
+                filterValue = method ?: "all"
+            )
+        )
         applyCurrentFilter()
     }
 
@@ -89,7 +99,23 @@ class PlanetListViewModel(
         showHabitableOnly = !showHabitableOnly
         selectedFilter = null
         searchQuery = ""
+        trackEvent(
+            AnalyticsEvent.PlanetFilterApplied(
+                filterType = "habitable",
+                filterValue = showHabitableOnly.toString()
+            )
+        )
         applyCurrentFilter()
+    }
+
+    fun trackPlanetClicked(planet: Exoplanet) {
+        trackEvent(
+            AnalyticsEvent.PlanetClicked(
+                planetId = planet.id,
+                planetName = planet.planetName,
+                discoveryMethod = planet.discoveryMethod
+            )
+        )
     }
 
     private fun applyCurrentFilter() {

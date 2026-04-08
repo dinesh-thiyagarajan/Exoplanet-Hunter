@@ -1,5 +1,6 @@
 package com.app.exoplanethunter.di
 
+import com.app.exoplanethunter.analytics.di.analyticsModule
 import com.app.exoplanethunter.exoplanet.data.local.csv.CsvParser
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetDatabase
 import com.app.exoplanethunter.exoplanet.data.repository.ExoplanetRepositoryImpl
@@ -56,14 +57,15 @@ val useCaseModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { PlanetListViewModel(get(), get(), get(), get()) }
-    viewModel { PlanetDetailViewModel(get(), get()) }
-    viewModel { StarSystemListViewModel(get(), get(), get(), get()) }
-    viewModel { StarSystemDetailViewModel(get()) }
+    viewModel { PlanetListViewModel(get(), get(), get(), get(), get()) }
+    viewModel { PlanetDetailViewModel(get(), get(), get()) }
+    viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
+    viewModel { StarSystemDetailViewModel(get(), get()) }
     viewModel { SplashViewModel(get()) }
 }
 
 val appModules = listOf(
+    analyticsModule,
     databaseModule,
     dataModule,
     mlModule,

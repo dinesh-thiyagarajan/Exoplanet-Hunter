@@ -27,8 +27,8 @@ android {
         applicationId = "com.app.exoplanethunter"
         minSdk = 29
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.3"
+        versionCode = 4
+        versionName = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -75,10 +75,10 @@ android {
 
 dependencies {
     // Feature modules
-    implementation(project(":feature:exoplanet"))
-    implementation(project(":feature:ml"))
-    implementation(project(":feature:ads"))
-    implementation(project(":feature:analytics"))
+    implementation(project(":exoplanet"))
+    implementation(project(":ml"))
+    implementation(project(":ads"))
+    implementation(project(":analytics"))
 
     // Core
     implementation(libs.androidx.core.ktx)

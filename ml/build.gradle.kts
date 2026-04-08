@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature:exoplanet"))
+    implementation(project(":exoplanet"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.tensorflow.lite)
     implementation(libs.tensorflow.lite.support)

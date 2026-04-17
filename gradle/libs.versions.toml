@@ -20,6 +20,9 @@ junit = "4.13.2"
 junit-ext = "1.1.5"
 espresso = "3.5.1"
 koin = "3.5.6"
+min-sdk = "29"
+target-sdk = "36"
+compile-sdk = "36"
 
 [libraries]
 # Core

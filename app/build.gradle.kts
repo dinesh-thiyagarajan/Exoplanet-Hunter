@@ -21,14 +21,14 @@ val admobAdUnitId: String = localProperties.getProperty("ADMOB_AD_UNIT_ID", "")
 
 android {
     namespace = "com.app.exoplanethunter"
-    compileSdk = 36
+    compileSdk = libs.versions.compile.sdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.app.exoplanethunter"
-        minSdk = 29
-        targetSdk = 36
-        versionCode = 4
-        versionName = "1.4"
+        minSdk = libs.versions.min.sdk.get().toInt()
+        targetSdk = libs.versions.target.sdk.get().toInt()
+        versionCode = 5
+        versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -101,7 +101,7 @@ fun PlanetListScreen(
                             )
                         )
                     )
-                    .padding(start = 20.dp, end = 20.dp, bottom = 8.dp)
+                    .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 8.dp)
             ) {
                 Text(
                     text = "Exoplanets",
@@ -109,11 +109,6 @@ fun PlanetListScreen(
                         fontWeight = FontWeight.Bold,
                         brush = Brush.linearGradient(
                             colors = listOf(CosmicCyan, NebulaPink)
-                        ),
-                        platformStyle = PlatformTextStyle(includeFontPadding = false),
-                        lineHeightStyle = LineHeightStyle(
-                            alignment = LineHeightStyle.Alignment.Center,
-                            trim = LineHeightStyle.Trim.Both
                         )
                     )
                 )

@@ -46,13 +46,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.koin.androidx.compose.koinViewModel
+import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
@@ -64,18 +62,22 @@ import com.app.exoplanethunter.presentation.theme.SurfaceCard
 import com.app.exoplanethunter.presentation.theme.SurfaceCardLight
 import com.app.exoplanethunter.presentation.theme.TextMuted
 import com.app.exoplanethunter.presentation.theme.TextSecondary
-import com.app.exoplanethunter.ads.AdBannerCard
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StarSystemListScreen(
     onSystemClick: (String) -> Unit,
-    viewModel: StarSystemListViewModel = koinViewModel()
+    viewModel: StarSystemListViewModel = koinViewModel(),
 ) {
     val listState = rememberLazyListState()
 
-    Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SpaceBlack),
+    ) {
         StarField(starCount = 100)
 
         Column(modifier = Modifier.fillMaxSize()) {
@@ -88,25 +90,20 @@ fun StarSystemListScreen(
                             colors = listOf(
                                 SpaceBlack,
                                 SpaceBlack.copy(alpha = 0.95f),
-                                Color.Transparent
-                            )
-                        )
+                                Color.Transparent,
+                            ),
+                        ),
                     )
-                    .padding(start = 20.dp, end = 20.dp, bottom = 8.dp)
+                    .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 8.dp),
             ) {
                 Text(
                     text = "Star Systems",
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                         brush = Brush.linearGradient(
-                            colors = listOf(StarGold, SolarOrange)
+                            colors = listOf(StarGold, SolarOrange),
                         ),
-                        platformStyle = PlatformTextStyle(includeFontPadding = false),
-                        lineHeightStyle = LineHeightStyle(
-                            alignment = LineHeightStyle.Alignment.Center,
-                            trim = LineHeightStyle.Trim.Both
-                        )
-                    )
+                    ),
                 )
 
                 Text(
@@ -114,7 +111,7 @@ fun StarSystemListScreen(
                     else "Explore ${viewModel.starSystems.size} star systems",
                     style = MaterialTheme.typography.bodyMedium,
                     color = TextSecondary,
-                    modifier = Modifier.padding(top = 4.dp)
+                    modifier = Modifier.padding(top = 4.dp),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -132,7 +129,11 @@ fun StarSystemListScreen(
                     trailingIcon = {
                         if (viewModel.searchQuery.isNotBlank()) {
                             IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                                Icon(Icons.Default.Close, contentDescription = "Clear", tint = TextMuted)
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "Clear",
+                                    tint = TextMuted,
+                                )
                             }
                         }
                     },
@@ -145,9 +146,9 @@ fun StarSystemListScreen(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White
+                        unfocusedTextColor = Color.White,
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -155,7 +156,7 @@ fun StarSystemListScreen(
                 // Filter chips
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(end = 16.dp)
+                    contentPadding = PaddingValues(end = 16.dp),
                 ) {
                     StarSystemFilter.entries.forEach { filter ->
                         item(key = filter.name) {
@@ -176,15 +177,15 @@ fun StarSystemListScreen(
                                         Icons.Default.Star,
                                         contentDescription = null,
                                         modifier = Modifier.size(16.dp),
-                                        tint = if (isSelected) SpaceBlack else chipColor
+                                        tint = if (isSelected) SpaceBlack else chipColor,
                                     )
                                 },
                                 colors = FilterChipDefaults.filterChipColors(
                                     containerColor = SurfaceCard,
                                     labelColor = TextSecondary,
                                     selectedContainerColor = chipColor,
-                                    selectedLabelColor = SpaceBlack
-                                )
+                                    selectedLabelColor = SpaceBlack,
+                                ),
                             )
                         }
                     }
@@ -195,7 +196,7 @@ fun StarSystemListScreen(
             if (viewModel.isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator(color = StarGold)
                 }
@@ -206,9 +207,9 @@ fun StarSystemListScreen(
                         start = 16.dp,
                         end = 16.dp,
                         top = 8.dp,
-                        bottom = 16.dp
+                        bottom = 16.dp,
                     ),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     val systems = viewModel.starSystems
                     systems.forEachIndexed { index, hostName ->
@@ -219,7 +220,7 @@ fun StarSystemListScreen(
                                 onClick = {
                                     viewModel.trackSystemClicked(hostName)
                                     onSystemClick(hostName)
-                                }
+                                },
                             )
                         }
                         // Ad after every 5th item
@@ -239,7 +240,7 @@ fun StarSystemListScreen(
 private fun AnimatedSystemCard(
     hostName: String,
     index: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val progress = remember { Animatable(0f) }
 
@@ -253,7 +254,7 @@ private fun AnimatedSystemCard(
             .graphicsLayer {
                 alpha = progress.value
                 translationY = (1f - progress.value) * 24f
-            }
+            },
     ) {
         StarSystemCard(hostName = hostName, onClick = onClick)
     }
@@ -262,7 +263,7 @@ private fun AnimatedSystemCard(
 @Composable
 private fun StarSystemCard(
     hostName: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -270,13 +271,13 @@ private fun StarSystemCard(
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = SurfaceCard),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Star icon
             Box(
@@ -288,17 +289,17 @@ private fun StarSystemCard(
                             colors = listOf(
                                 StarGold.copy(alpha = 0.6f),
                                 SolarOrange.copy(alpha = 0.2f),
-                                Color.Transparent
-                            )
-                        )
+                                Color.Transparent,
+                            ),
+                        ),
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     Icons.Default.Star,
                     contentDescription = null,
                     tint = StarGold,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
 
@@ -311,7 +312,7 @@ private fun StarSystemCard(
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -319,7 +320,7 @@ private fun StarSystemCard(
                 Text(
                     text = "Tap to explore system",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = TextMuted,
                 )
             }
 
@@ -328,13 +329,13 @@ private fun StarSystemCard(
                 modifier = Modifier
                     .clip(RoundedCornerShape(6.dp))
                     .background(SurfaceCardLight)
-                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                    .padding(horizontal = 10.dp, vertical = 4.dp),
             ) {
                 Text(
                     text = "View",
                     style = MaterialTheme.typography.labelSmall,
                     color = CosmicCyan,
-                    fontSize = 11.sp
+                    fontSize = 11.sp,
                 )
             }
         }

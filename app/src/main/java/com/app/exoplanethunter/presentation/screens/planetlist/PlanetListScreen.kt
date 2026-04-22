@@ -102,7 +102,7 @@ fun PlanetListScreen(
                     .padding(top = 48.dp, start = 20.dp, end = 20.dp, bottom = 8.dp)
             ) {
                 Text(
-                    text = "Exoplanet Hunter",
+                    text = "Exoplanets",
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                         brush = Brush.linearGradient(

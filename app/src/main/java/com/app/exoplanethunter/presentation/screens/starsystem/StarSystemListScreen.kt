@@ -46,7 +46,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,7 +92,7 @@ fun StarSystemListScreen(
                             )
                         )
                     )
-                    .padding(top = 44.dp, start = 20.dp, end = 20.dp, bottom = 8.dp)
+                    .padding(start = 20.dp, end = 20.dp, bottom = 8.dp)
             ) {
                 Text(
                     text = "Star Systems",
@@ -98,6 +100,11 @@ fun StarSystemListScreen(
                         fontWeight = FontWeight.Bold,
                         brush = Brush.linearGradient(
                             colors = listOf(StarGold, SolarOrange)
+                        ),
+                        platformStyle = PlatformTextStyle(includeFontPadding = false),
+                        lineHeightStyle = LineHeightStyle(
+                            alignment = LineHeightStyle.Alignment.Center,
+                            trim = LineHeightStyle.Trim.Both
                         )
                     )
                 )

@@ -54,7 +54,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,7 +101,7 @@ fun PlanetListScreen(
                             )
                         )
                     )
-                    .padding(top = 48.dp, start = 20.dp, end = 20.dp, bottom = 8.dp)
+                    .padding(start = 20.dp, end = 20.dp, bottom = 8.dp)
             ) {
                 Text(
                     text = "Exoplanets",
@@ -107,6 +109,11 @@ fun PlanetListScreen(
                         fontWeight = FontWeight.Bold,
                         brush = Brush.linearGradient(
                             colors = listOf(CosmicCyan, NebulaPink)
+                        ),
+                        platformStyle = PlatformTextStyle(includeFontPadding = false),
+                        lineHeightStyle = LineHeightStyle(
+                            alignment = LineHeightStyle.Alignment.Center,
+                            trim = LineHeightStyle.Trim.Both
                         )
                     )
                 )

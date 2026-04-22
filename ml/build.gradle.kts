@@ -29,6 +29,5 @@ dependencies {
     implementation(project(":exoplanet"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.tensorflow.lite)
-    implementation(libs.tensorflow.lite.support)
     implementation(libs.kotlinx.coroutines.android)
 }

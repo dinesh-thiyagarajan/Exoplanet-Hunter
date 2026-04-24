@@ -9,7 +9,6 @@ import androidx.room.RoomDatabase
 abstract class ExoplanetDatabase : RoomDatabase() {
 
     abstract fun exoplanetDao(): ExoplanetDao
-    abstract fun starSystemDao(): StarSystemDao
 
     companion object {
         @Volatile
@@ -21,7 +20,9 @@ abstract class ExoplanetDatabase : RoomDatabase() {
                     context.applicationContext,
                     ExoplanetDatabase::class.java,
                     "exoplanet_database"
-                ).fallbackToDestructiveMigration().build()
+                ).createFromAsset("exoplanet_database.db")
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }

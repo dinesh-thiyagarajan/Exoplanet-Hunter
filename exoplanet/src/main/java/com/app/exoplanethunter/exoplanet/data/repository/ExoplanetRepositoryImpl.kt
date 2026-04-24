@@ -1,23 +1,16 @@
 package com.app.exoplanethunter.exoplanet.data.repository
 
-import com.app.exoplanethunter.exoplanet.data.local.csv.CsvParser
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetDao
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetEntity
-import com.app.exoplanethunter.exoplanet.data.local.db.StarSystemDao
-import com.app.exoplanethunter.exoplanet.data.local.db.StarSystemEntity
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 
 class ExoplanetRepositoryImpl(
-    private val dao: ExoplanetDao,
-    private val starSystemDao: StarSystemDao,
-    private val csvParser: CsvParser
+    private val dao: ExoplanetDao
 ) : ExoplanetRepository {
 
     override fun getAllPlanets(): Flow<List<Exoplanet>> {
@@ -74,19 +67,6 @@ class ExoplanetRepositoryImpl(
 
     override fun getStarSystemsByStarCount(starCount: Int): Flow<List<StarSystemSummary>> =
         dao.getStarSystemsByStarCount(starCount)
-
-    override suspend fun loadDataIfNeeded() {
-        withContext(Dispatchers.IO) {
-            if (dao.getCount() == 0) {
-                val rawPlanets = csvParser.parseExoplanets()
-                val hostToSystemId = rawPlanets.map { it.hostName }.distinct().associate { hostName ->
-                    hostName to starSystemDao.insert(StarSystemEntity(hostName = hostName))
-                }
-                val planets = rawPlanets.map { it.copy(systemId = hostToSystemId[it.hostName]!!) }
-                planets.chunked(500).forEach { chunk -> dao.insertAll(chunk) }
-            }
-        }
-    }
 
     private fun ExoplanetEntity.toDomain(): Exoplanet {
         return Exoplanet(

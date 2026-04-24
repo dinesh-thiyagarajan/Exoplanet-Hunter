@@ -1,9 +1,7 @@
 package com.app.exoplanethunter.di
 
 import com.app.exoplanethunter.analytics.di.analyticsModule
-import com.app.exoplanethunter.exoplanet.data.local.csv.CsvParser
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetDatabase
-import com.app.exoplanethunter.exoplanet.data.local.db.StarSystemDao
 import com.app.exoplanethunter.exoplanet.data.repository.ExoplanetRepositoryImpl
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
 import com.app.exoplanethunter.exoplanet.domain.usecase.FilterPlanetsUseCase
@@ -14,7 +12,6 @@ import com.app.exoplanethunter.exoplanet.domain.usecase.GetMultiPlanetSystemsUse
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetPlanetByIdUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemsByStarCountUseCase
-import com.app.exoplanethunter.exoplanet.domain.usecase.LoadDataUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchStarSystemsUseCase
 import com.app.exoplanethunter.ml.ExoplanetClassifier
@@ -31,12 +28,10 @@ import org.koin.dsl.module
 val databaseModule = module {
     single { ExoplanetDatabase.getInstance(androidContext()) }
     single { get<ExoplanetDatabase>().exoplanetDao() }
-    single { get<ExoplanetDatabase>().starSystemDao() }
 }
 
 val dataModule = module {
-    single { CsvParser(androidContext()) }
-    single<ExoplanetRepository> { ExoplanetRepositoryImpl(get(), get(), get()) }
+    single<ExoplanetRepository> { ExoplanetRepositoryImpl(get()) }
 }
 
 val mlModule = module {
@@ -48,7 +43,6 @@ val useCaseModule = module {
     factory { SearchPlanetsUseCase(get()) }
     factory { GetPlanetByIdUseCase(get()) }
     factory { GetDiscoveryMethodsUseCase(get()) }
-    factory { LoadDataUseCase(get()) }
     factory { FilterPlanetsUseCase(get()) }
     factory { GetAllStarSystemsUseCase(get()) }
     factory { GetStarSystemUseCase(get()) }
@@ -63,7 +57,7 @@ val viewModelModule = module {
     viewModel { PlanetDetailViewModel(get(), get(), get()) }
     viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
-    viewModel { SplashViewModel(get()) }
+    viewModel { SplashViewModel() }
 }
 
 val appModules = listOf(

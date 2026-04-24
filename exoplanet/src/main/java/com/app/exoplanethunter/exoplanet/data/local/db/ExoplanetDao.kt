@@ -32,12 +32,6 @@ interface ExoplanetDao {
     @Query("SELECT DISTINCT discoveryMethod FROM exoplanets WHERE isDefault = 1 ORDER BY discoveryMethod")
     suspend fun getDiscoveryMethods(): List<String>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(planets: List<ExoplanetEntity>)
-
-    @Query("SELECT COUNT(*) FROM exoplanets")
-    suspend fun getCount(): Int
-
     @Query(
         "SELECT * FROM exoplanets WHERE isDefault = 1 AND equilibriumTempK IS NOT NULL " +
             "AND planetRadiusEarth IS NOT NULL ORDER BY ABS(equilibriumTempK - 288) ASC LIMIT :limit"

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
 import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
+import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllStarSystemsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetMultiPlanetSystemsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemsByStarCountUseCase
@@ -33,7 +34,7 @@ class StarSystemListViewModel(
     private val trackEvent: TrackEventUseCase
 ) : ViewModel() {
 
-    var starSystems by mutableStateOf<List<String>>(emptyList())
+    var starSystems by mutableStateOf<List<StarSystemSummary>>(emptyList())
         private set
 
     var isLoading by mutableStateOf(true)
@@ -95,8 +96,8 @@ class StarSystemListViewModel(
         }
     }
 
-    fun trackSystemClicked(hostName: String) {
-        trackEvent(AnalyticsEvent.StarSystemClicked(hostName = hostName))
+    fun trackSystemClicked(system: StarSystemSummary) {
+        trackEvent(AnalyticsEvent.StarSystemClicked(hostName = system.hostName))
     }
 
     // Keep for backward compat but delegate to new filter API

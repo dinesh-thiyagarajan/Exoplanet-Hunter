@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "exoplanets")
 data class ExoplanetEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val systemId: Long = 0,
     val planetName: String,
     val hostName: String,
     val numStars: Int,

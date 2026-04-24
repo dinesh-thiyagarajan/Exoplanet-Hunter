@@ -3,8 +3,11 @@ package com.app.exoplanethunter.exoplanet.data.repository
 import com.app.exoplanethunter.exoplanet.data.local.csv.CsvParser
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetDao
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetEntity
+import com.app.exoplanethunter.exoplanet.data.local.db.StarSystemDao
+import com.app.exoplanethunter.exoplanet.data.local.db.StarSystemEntity
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
+import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +16,7 @@ import kotlinx.coroutines.withContext
 
 class ExoplanetRepositoryImpl(
     private val dao: ExoplanetDao,
+    private val starSystemDao: StarSystemDao,
     private val csvParser: CsvParser
 ) : ExoplanetRepository {
 
@@ -40,16 +44,15 @@ class ExoplanetRepositoryImpl(
         return dao.getDiscoveryMethods()
     }
 
-    override fun getAllStarSystems(): Flow<List<String>> {
-        return dao.getAllStarSystems()
-    }
+    override fun getAllStarSystems(): Flow<List<StarSystemSummary>> = dao.getAllStarSystems()
 
-    override suspend fun getStarSystem(hostName: String): StarSystem? {
-        val entities = dao.getPlanetsForSystem(hostName)
+    override suspend fun getStarSystem(systemId: Long): StarSystem? {
+        val entities = dao.getPlanetsForSystem(systemId)
         if (entities.isEmpty()) return null
         val first = entities.first()
         return StarSystem(
-            hostName = hostName,
+            id = systemId,
+            hostName = first.hostName,
             numStars = first.numStars,
             numPlanets = first.numPlanets,
             stellarEffectiveTempK = first.stellarEffectiveTempK,
@@ -65,25 +68,22 @@ class ExoplanetRepositoryImpl(
         )
     }
 
-    override fun searchStarSystems(query: String): Flow<List<String>> {
-        return dao.searchStarSystems(query)
-    }
+    override fun searchStarSystems(query: String): Flow<List<StarSystemSummary>> = dao.searchStarSystems(query)
 
-    override fun getMultiPlanetSystems(): Flow<List<String>> {
-        return dao.getMultiPlanetSystems()
-    }
+    override fun getMultiPlanetSystems(): Flow<List<StarSystemSummary>> = dao.getMultiPlanetSystems()
 
-    override fun getStarSystemsByStarCount(starCount: Int): Flow<List<String>> {
-        return dao.getStarSystemsByStarCount(starCount)
-    }
+    override fun getStarSystemsByStarCount(starCount: Int): Flow<List<StarSystemSummary>> =
+        dao.getStarSystemsByStarCount(starCount)
 
     override suspend fun loadDataIfNeeded() {
         withContext(Dispatchers.IO) {
             if (dao.getCount() == 0) {
-                val planets = csvParser.parseExoplanets()
-                planets.chunked(500).forEach { chunk ->
-                    dao.insertAll(chunk)
+                val rawPlanets = csvParser.parseExoplanets()
+                val hostToSystemId = rawPlanets.map { it.hostName }.distinct().associate { hostName ->
+                    hostName to starSystemDao.insert(StarSystemEntity(hostName = hostName))
                 }
+                val planets = rawPlanets.map { it.copy(systemId = hostToSystemId[it.hostName]!!) }
+                planets.chunked(500).forEach { chunk -> dao.insertAll(chunk) }
             }
         }
     }

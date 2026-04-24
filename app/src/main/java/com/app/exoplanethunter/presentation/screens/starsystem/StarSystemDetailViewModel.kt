@@ -22,11 +22,11 @@ class StarSystemDetailViewModel(
     var isLoading by mutableStateOf(true)
         private set
 
-    fun loadSystem(hostName: String) {
+    fun loadSystem(systemId: Long) {
         viewModelScope.launch {
             isLoading = true
-            starSystem = getStarSystemUseCase(hostName)
-            trackEvent(AnalyticsEvent.StarSystemDetailScreenViewed(hostName = hostName))
+            starSystem = getStarSystemUseCase(systemId)
+            trackEvent(AnalyticsEvent.StarSystemDetailScreenViewed(hostName = starSystem?.hostName ?: ""))
             isLoading = false
         }
     }

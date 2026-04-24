@@ -4,5 +4,5 @@ import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
 
 class GetStarSystemUseCase(private val repository: ExoplanetRepository) {
-    suspend operator fun invoke(hostName: String): StarSystem? = repository.getStarSystem(hostName)
+    suspend operator fun invoke(systemId: Long): StarSystem? = repository.getStarSystem(systemId)
 }

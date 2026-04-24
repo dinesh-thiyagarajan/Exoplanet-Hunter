@@ -1,6 +1,7 @@
 package com.app.exoplanethunter.exoplanet.domain.model
 
 data class StarSystem(
+    val id: Long,
     val hostName: String,
     val numStars: Int,
     val numPlanets: Int,

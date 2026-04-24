@@ -3,6 +3,7 @@ package com.app.exoplanethunter.di
 import com.app.exoplanethunter.analytics.di.analyticsModule
 import com.app.exoplanethunter.exoplanet.data.local.csv.CsvParser
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetDatabase
+import com.app.exoplanethunter.exoplanet.data.local.db.StarSystemDao
 import com.app.exoplanethunter.exoplanet.data.repository.ExoplanetRepositoryImpl
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
 import com.app.exoplanethunter.exoplanet.domain.usecase.FilterPlanetsUseCase
@@ -30,11 +31,12 @@ import org.koin.dsl.module
 val databaseModule = module {
     single { ExoplanetDatabase.getInstance(androidContext()) }
     single { get<ExoplanetDatabase>().exoplanetDao() }
+    single { get<ExoplanetDatabase>().starSystemDao() }
 }
 
 val dataModule = module {
     single { CsvParser(androidContext()) }
-    single<ExoplanetRepository> { ExoplanetRepositoryImpl(get(), get()) }
+    single<ExoplanetRepository> { ExoplanetRepositoryImpl(get(), get(), get()) }
 }
 
 val mlModule = module {

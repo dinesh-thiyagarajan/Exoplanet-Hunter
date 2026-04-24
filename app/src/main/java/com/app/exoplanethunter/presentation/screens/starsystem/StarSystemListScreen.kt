@@ -68,7 +68,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StarSystemListScreen(
-    onSystemClick: (String) -> Unit,
+    onSystemClick: (Long) -> Unit,
     viewModel: StarSystemListViewModel = koinViewModel(),
 ) {
     val listState = rememberLazyListState()
@@ -212,14 +212,14 @@ fun StarSystemListScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     val systems = viewModel.starSystems
-                    systems.forEachIndexed { index, hostName ->
-                        item(key = hostName) {
+                    systems.forEachIndexed { index, system ->
+                        item(key = system.id) {
                             AnimatedSystemCard(
-                                hostName = hostName,
+                                hostName = system.hostName,
                                 index = index,
                                 onClick = {
-                                    viewModel.trackSystemClicked(hostName)
-                                    onSystemClick(hostName)
+                                    viewModel.trackSystemClicked(system)
+                                    onSystemClick(system.id)
                                 },
                             )
                         }

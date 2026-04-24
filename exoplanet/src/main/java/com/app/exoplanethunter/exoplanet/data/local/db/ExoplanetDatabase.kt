@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [ExoplanetEntity::class], version = 1, exportSchema = false)
+@Database(entities = [ExoplanetEntity::class, StarSystemEntity::class], version = 2, exportSchema = false)
 abstract class ExoplanetDatabase : RoomDatabase() {
 
     abstract fun exoplanetDao(): ExoplanetDao
+    abstract fun starSystemDao(): StarSystemDao
 
     companion object {
         @Volatile
@@ -20,7 +21,7 @@ abstract class ExoplanetDatabase : RoomDatabase() {
                     context.applicationContext,
                     ExoplanetDatabase::class.java,
                     "exoplanet_database"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }

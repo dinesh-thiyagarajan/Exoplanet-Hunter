@@ -106,13 +106,13 @@ import kotlin.math.sqrt
 
 @Composable
 fun StarSystemDetailScreen(
-    hostName: String,
+    systemId: Long,
     onPlanetClick: (Long) -> Unit,
     onBack: () -> Unit,
     viewModel: StarSystemDetailViewModel = koinViewModel()
 ) {
-    LaunchedEffect(hostName) {
-        viewModel.loadSystem(hostName)
+    LaunchedEffect(systemId) {
+        viewModel.loadSystem(systemId)
     }
 
     Box(
@@ -126,8 +126,18 @@ fun StarSystemDetailScreen(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = StarGold)
             }
+        } else if (viewModel.starSystem == null) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "No data available for this star system",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
+                }
+            }
         } else {
-            val system = viewModel.starSystem ?: return@Box
+            val system = viewModel.starSystem!!
 
             Column(
                 modifier = Modifier

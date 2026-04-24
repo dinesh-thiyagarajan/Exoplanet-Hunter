@@ -47,14 +47,13 @@ import com.app.exoplanethunter.presentation.theme.TextMuted
 // ---------------------------------------------------------------------------
 
 sealed class Screen(val route: String) {
-    data object Splash : Screen("splash")
-    data object Main : Screen("main")
-    data object PlanetDetail : Screen("planet_detail/{planetId}") {
+    data object Splash : Screen(NavRoutes.SPLASH)
+    data object Main : Screen(NavRoutes.MAIN)
+    data object PlanetDetail : Screen(NavRoutes.PLANET_DETAIL) {
         fun createRoute(planetId: Long) = "planet_detail/$planetId"
     }
-    data object StarSystemDetail : Screen("star_system_detail/{hostName}") {
-        fun createRoute(hostName: String) =
-            "star_system_detail/${java.net.URLEncoder.encode(hostName, "UTF-8")}"
+    data object StarSystemDetail : Screen(NavRoutes.STAR_SYSTEM_DETAIL) {
+        fun createRoute(systemId: Long) = "star_system_detail/$systemId"
     }
 }
 
@@ -106,17 +105,17 @@ fun ExoplanetNavigation() {
                 onPlanetClick = { planetId ->
                     navController.navigate(Screen.PlanetDetail.createRoute(planetId))
                 },
-                onSystemClick = { hostName ->
-                    navController.navigate(Screen.StarSystemDetail.createRoute(hostName))
+                onSystemClick = { systemId ->
+                    navController.navigate(Screen.StarSystemDetail.createRoute(systemId))
                 }
             )
         }
 
         composable(
             route = Screen.PlanetDetail.route,
-            arguments = listOf(navArgument("planetId") { type = NavType.LongType })
+            arguments = listOf(navArgument(NavArgs.PLANET_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            val planetId = backStackEntry.arguments?.getLong("planetId") ?: return@composable
+            val planetId = backStackEntry.arguments?.getLong(NavArgs.PLANET_ID) ?: return@composable
             PlanetDetailScreen(
                 planetId = planetId,
                 onBack = { navController.popBackStack() }
@@ -125,12 +124,11 @@ fun ExoplanetNavigation() {
 
         composable(
             route = Screen.StarSystemDetail.route,
-            arguments = listOf(navArgument("hostName") { type = NavType.StringType })
+            arguments = listOf(navArgument(NavArgs.SYSTEM_ID) { type = NavType.LongType })
         ) { backStackEntry ->
-            val hostName = backStackEntry.arguments?.getString("hostName") ?: return@composable
-            val decodedHostName = java.net.URLDecoder.decode(hostName, "UTF-8")
+            val systemId = backStackEntry.arguments?.getLong(NavArgs.SYSTEM_ID) ?: return@composable
             StarSystemDetailScreen(
-                hostName = decodedHostName,
+                systemId = systemId,
                 onPlanetClick = { planetId ->
                     navController.navigate(Screen.PlanetDetail.createRoute(planetId))
                 },
@@ -147,7 +145,7 @@ fun ExoplanetNavigation() {
 @Composable
 private fun MainScreen(
     onPlanetClick: (Long) -> Unit,
-    onSystemClick: (String) -> Unit
+    onSystemClick: (Long) -> Unit
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(BottomNavTab.Planets.name) }
 

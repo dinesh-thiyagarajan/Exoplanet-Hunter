@@ -106,15 +106,15 @@ fun AboutScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
                 
-                SectionHeader("Application Details")
+                SectionHeader("Scientific Framework")
 
                 // Information Sections
                 AnimatedSection(delay = 200) {
                     AboutSection(
                         icon = Icons.Default.Dataset,
                         iconColor = CosmicCyan,
-                        title = stringResource(R.string.about_data_source),
-                        description = "Planetary data is sourced from the NASA Exoplanet Archive (Caltech/IPAC). The catalog is updated regularly to include newly confirmed worlds discovered by missions like Kepler, TESS, and K2."
+                        title = "NASA Exoplanet Archive",
+                        description = "Operated by the California Institute of Technology (Caltech) under contract with NASA, this archive is the global standard for confirmed exoplanet data. It aggregates measurements from space missions like Kepler, K2, and TESS, as well as major ground-based surveys."
                     )
                 }
 
@@ -124,8 +124,8 @@ fun AboutScreen(
                     AboutSection(
                         icon = Icons.Default.AutoAwesome,
                         iconColor = StarGold,
-                        title = stringResource(R.string.about_significance),
-                        description = "Every planet in this catalog represents a unique discovery. We aim to provide accessible insights into the vast diversity of the cosmos, from rocky Earth-sized worlds to massive gas giants."
+                        title = "Data Verification",
+                        description = "Every planet in this app has undergone a rigorous peer-review process. Confirmation typically requires multiple independent observations to verify the planet's existence and accurately measure its physical properties, such as mass, radius, and orbital period."
                     )
                 }
 
@@ -135,8 +135,8 @@ fun AboutScreen(
                     AboutSection(
                         icon = Icons.Default.Psychology,
                         iconColor = NebulaPink,
-                        title = stringResource(R.string.about_ml),
-                        description = "Our on-device TensorFlow Lite models perform real-time analysis on 20 planetary and stellar features to estimate habitability and classification without compromising user privacy."
+                        title = "Inference & ML",
+                        description = "We use planetary and stellar features (orbital semi-major axis, stellar mass, temperature) to run on-device habitability estimates. These insights are intended for educational exploration based on current astrophysical models."
                     )
                 }
 
@@ -204,7 +204,7 @@ private fun AboutHeader(planetCount: Int, systemCount: Int) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = stringResource(R.string.about_title),
+            text = "Exoplanet Hunter",
             style = MaterialTheme.typography.headlineLarge,
             color = Color.White,
             fontWeight = FontWeight.ExtraBold,
@@ -212,7 +212,7 @@ private fun AboutHeader(planetCount: Int, systemCount: Int) {
         )
         
         Text(
-            text = "EXPLORING THE COSMOS",
+            text = "NASA ARCHIVE DATASET",
             style = MaterialTheme.typography.labelMedium,
             color = CosmicCyan,
             fontWeight = FontWeight.Bold,
@@ -321,13 +321,13 @@ fun SyncControl(
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text(
-                        text = "Data Synchronization",
+                        text = "NASA TAP Sync",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Last synced: ${formatLastSyncTime(lastSyncTime)}",
+                        text = "Last updated: ${formatLastSyncTime(lastSyncTime)}",
                         style = MaterialTheme.typography.labelSmall,
                         color = TextMuted
                     )
@@ -351,7 +351,7 @@ fun SyncControl(
                         Icon(Icons.Default.Sync, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            "SYNC WITH NASA ARCHIVE",
+                            "REFRESH CATALOG",
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
                         )
@@ -359,7 +359,7 @@ fun SyncControl(
                     
                     if (status is SyncStatus.Success) {
                         SyncMessage(
-                            message = "Catalog updated successfully!",
+                            message = "Catalog successfully updated",
                             color = HabitableGreen,
                             icon = Icons.Default.CheckCircle
                         )
@@ -390,7 +390,7 @@ fun SyncControl(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Fetching deep space data...",
+                                text = "Updating planetary records...",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = CosmicCyan
                             )
@@ -472,7 +472,7 @@ fun AboutSection(
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = TextSecondary,
                     lineHeight = 22.sp
                 )
             }
@@ -491,39 +491,31 @@ private fun AboutFooter() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "DATABASE SNAPSHOT",
+            text = "DATA SOURCE ACKNOWLEDGEMENT",
             style = MaterialTheme.typography.labelSmall,
             color = CosmicCyan,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp
         )
-        Text(
-            text = "February 25, 2026",
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.White,
-            modifier = Modifier.padding(top = 4.dp)
-        )
         
-        Spacer(modifier = Modifier.height(16.dp))
-        Divider(color = SurfaceCardLight, thickness = 1.dp)
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         
         Text(
-            text = "Exoplanet Hunter is an open-source initiative dedicated to space education and planetary science.",
+            text = "This application uses the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.",
             style = MaterialTheme.typography.bodySmall,
             color = TextMuted,
             textAlign = TextAlign.Center,
             lineHeight = 18.sp
         )
         
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         
         Text(
-            text = "© 2026 COSMIC ARCHIVE",
+            text = "IPAC / CALTECH / NASA",
             style = MaterialTheme.typography.labelSmall,
             color = TextMuted,
             fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp
+            letterSpacing = 2.sp
         )
     }
 }

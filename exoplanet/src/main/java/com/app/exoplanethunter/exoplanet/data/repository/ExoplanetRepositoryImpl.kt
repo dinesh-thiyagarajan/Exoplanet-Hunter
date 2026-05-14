@@ -1,21 +1,38 @@
 package com.app.exoplanethunter.exoplanet.data.repository
 
+import android.content.Context
+import androidx.work.*
+import com.app.exoplanethunter.exoplanet.data.local.SyncPreferences
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetDao
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetEntity
+import com.app.exoplanethunter.exoplanet.data.worker.DataSyncWorker
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
+import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import java.util.UUID
 
 class ExoplanetRepositoryImpl(
-    private val dao: ExoplanetDao
+    private val context: Context,
+    private val dao: ExoplanetDao,
+    private val syncPreferences: SyncPreferences
 ) : ExoplanetRepository {
+
+    private val workManager = WorkManager.getInstance(context)
 
     override fun getAllPlanets(): Flow<List<Exoplanet>> {
         return dao.getAllPlanets().map { entities -> entities.map { it.toDomain() } }
     }
+
+    override fun getPlanetCount(): Flow<Int> = dao.getPlanetCount()
+
+    override fun getStarSystemCount(): Flow<Int> = dao.getStarSystemCount()
+
+    override fun getLastSyncTime(): Flow<Long> = syncPreferences.lastSyncTime
 
     override fun searchPlanets(query: String): Flow<List<Exoplanet>> {
         return dao.searchPlanets(query).map { entities -> entities.map { it.toDomain() } }
@@ -67,6 +84,34 @@ class ExoplanetRepositoryImpl(
 
     override fun getStarSystemsByStarCount(starCount: Int): Flow<List<StarSystemSummary>> =
         dao.getStarSystemsByStarCount(starCount)
+
+    override suspend fun syncExoplanets(): Flow<SyncStatus> {
+        val syncRequest = OneTimeWorkRequestBuilder<DataSyncWorker>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .addTag("data_sync")
+            .build()
+        
+        workManager.enqueueUniqueWork(
+            "exoplanet_sync",
+            ExistingWorkPolicy.REPLACE,
+            syncRequest
+        )
+
+        return workManager.getWorkInfoByIdFlow(syncRequest.id).map { workInfo ->
+            when (workInfo?.state) {
+                WorkInfo.State.RUNNING -> {
+                    val progress = workInfo.progress.getInt("progress", 0)
+                    SyncStatus.Progress(progress)
+                }
+                WorkInfo.State.SUCCEEDED -> SyncStatus.Success
+                WorkInfo.State.FAILED -> {
+                    val error = workInfo.outputData.getString("error") ?: "Sync failed"
+                    SyncStatus.Error(error)
+                }
+                else -> SyncStatus.Idle
+            }
+        }
+    }
 
     private fun ExoplanetEntity.toDomain(): Exoplanet {
         return Exoplanet(

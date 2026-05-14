@@ -1,16 +1,44 @@
 package com.app.exoplanethunter.exoplanet.data.local.db
-
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExoplanetDao {
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPlanets(planets: List<ExoplanetEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStarSystems(systems: List<StarSystemEntity>)
+
+    @Query("DELETE FROM exoplanets")
+    suspend fun deleteAllPlanets()
+
+    @Query("DELETE FROM star_systems")
+    suspend fun deleteAllStarSystems()
+
+    @Transaction
+    suspend fun replaceData(planets: List<ExoplanetEntity>, systems: List<StarSystemEntity>) {
+        deleteAllPlanets()
+        deleteAllStarSystems()
+        insertStarSystems(systems)
+        insertPlanets(planets)
+    }
+
+    @Query("SELECT COUNT(*) FROM exoplanets")
+    fun getPlanetCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM star_systems")
+    fun getStarSystemCount(): Flow<Int>
+
     @Query("SELECT * FROM exoplanets WHERE isDefault = 1 ORDER BY planetName ASC")
+// ... (rest of methods)
+
     fun getAllPlanets(): Flow<List<ExoplanetEntity>>
 
     @Query("SELECT * FROM exoplanets WHERE id = :id")

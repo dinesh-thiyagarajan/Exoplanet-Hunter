@@ -14,8 +14,11 @@ import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemsByStarCountUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchStarSystemsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.SyncExoplanetsUseCase
 import com.app.exoplanethunter.ml.ExoplanetClassifier
+import com.app.exoplanethunter.exoplanet.data.local.SyncPreferences
 import com.app.exoplanethunter.ml.GetHabitabilityInsightUseCase
+import com.app.exoplanethunter.presentation.screens.about.AboutViewModel
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailViewModel
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListViewModel
 import com.app.exoplanethunter.presentation.screens.splash.SplashViewModel
@@ -31,7 +34,8 @@ val databaseModule = module {
 }
 
 val dataModule = module {
-    single<ExoplanetRepository> { ExoplanetRepositoryImpl(get()) }
+    single { SyncPreferences(androidContext()) }
+    single<ExoplanetRepository> { ExoplanetRepositoryImpl(androidContext(), get(), get()) }
 }
 
 val mlModule = module {
@@ -50,6 +54,7 @@ val useCaseModule = module {
     factory { GetMultiPlanetSystemsUseCase(get()) }
     factory { GetStarSystemsByStarCountUseCase(get()) }
     factory { GetHabitabilityInsightUseCase(get()) }
+    factory { SyncExoplanetsUseCase(get()) }
 }
 
 val viewModelModule = module {
@@ -58,6 +63,7 @@ val viewModelModule = module {
     viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
     viewModel { SplashViewModel() }
+    viewModel { AboutViewModel(get(), get()) }
 }
 
 val appModules = listOf(

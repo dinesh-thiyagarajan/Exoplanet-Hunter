@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Exoplanet Hunter</string>
+    <string name="tab_planets">Planets</string>
+    <string name="tab_systems">Systems</string>
+    <string name="tab_about">About</string>
+    <string name="about_title">Exoplanet Hunter</string>
+    <string name="about_data_source">Data Source</string>
+    <string name="about_significance">Significance</string>
+    <string name="about_ml">Machine Learning</string>
 </resources>

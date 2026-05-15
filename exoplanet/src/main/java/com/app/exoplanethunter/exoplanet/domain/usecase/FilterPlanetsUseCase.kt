@@ -10,4 +10,10 @@ class FilterPlanetsUseCase(private val repository: ExoplanetRepository) {
 
     fun mostHabitable(limit: Int = 20): Flow<List<Exoplanet>> =
         repository.getMostHabitablePlanets(limit)
+
+    fun latestDiscoveries(): Flow<List<Exoplanet>> =
+        repository.getPlanetsSortedByLatest()
+
+    fun byMinDiscoveryYear(year: Int): Flow<List<Exoplanet>> =
+        repository.getPlanetsByMinDiscoveryYear(year)
 }

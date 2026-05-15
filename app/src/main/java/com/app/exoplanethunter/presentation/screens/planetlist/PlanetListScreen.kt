@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
@@ -60,6 +62,7 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Calendar
 import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.presentation.components.PlanetMiniRenderer
@@ -162,6 +165,49 @@ fun PlanetListScreen(
                 ) {
                     item {
                         FilterChip(
+                            selected = viewModel.showLatestOnly,
+                            onClick = viewModel::onToggleLatest,
+                            label = { Text("Latest", fontSize = 12.sp) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.AutoAwesome,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp),
+                                    tint = if (viewModel.showLatestOnly) SpaceBlack else StarGold
+                                )
+                            },
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = SurfaceCard,
+                                labelColor = TextSecondary,
+                                selectedContainerColor = StarGold,
+                                selectedLabelColor = SpaceBlack
+                            )
+                        )
+                    }
+
+                    item {
+                        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+                        val recentYear = currentYear - 3
+                        val isRecentSelected = viewModel.minDiscoveryYear == recentYear
+                        
+                        FilterChip(
+                            selected = isRecentSelected,
+                            onClick = { 
+                                if (isRecentSelected) viewModel.onMinYearChanged(null) 
+                                else viewModel.onMinYearChanged(recentYear) 
+                            },
+                            label = { Text("Recent (3y)", fontSize = 12.sp) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = SurfaceCard,
+                                labelColor = TextSecondary,
+                                selectedContainerColor = CosmicCyan,
+                                selectedLabelColor = SpaceBlack
+                            )
+                        )
+                    }
+
+                    item {
+                        FilterChip(
                             selected = viewModel.showHabitableOnly,
                             onClick = viewModel::onToggleHabitable,
                             label = { Text("Habitable", fontSize = 12.sp) },
@@ -243,10 +289,11 @@ fun PlanetListScreen(
                             AnimatedPlanetCard(
                                 planet = planet,
                                 index = index,
+                                isYearHighlighted = viewModel.showLatestOnly || viewModel.minDiscoveryYear != null,
                                 onClick = {
-                                viewModel.trackPlanetClicked(planet)
-                                onPlanetClick(planet.id)
-                            }
+                                    viewModel.trackPlanetClicked(planet)
+                                    onPlanetClick(planet.id)
+                                }
                             )
                         }
                         // Ad after every 5th item
@@ -266,6 +313,7 @@ fun PlanetListScreen(
 private fun AnimatedPlanetCard(
     planet: Exoplanet,
     index: Int,
+    isYearHighlighted: Boolean,
     onClick: () -> Unit
 ) {
     val progress = remember { Animatable(0f) }
@@ -282,13 +330,18 @@ private fun AnimatedPlanetCard(
                 translationY = (1f - progress.value) * 24f
             }
     ) {
-        PlanetCard(planet = planet, onClick = onClick)
+        PlanetCard(
+            planet = planet, 
+            isYearHighlighted = isYearHighlighted,
+            onClick = onClick
+        )
     }
 }
 
 @Composable
 private fun PlanetCard(
     planet: Exoplanet,
+    isYearHighlighted: Boolean,
     onClick: () -> Unit
 ) {
     var pressed by remember { mutableStateOf(false) }
@@ -348,7 +401,10 @@ private fun PlanetCard(
                     planet.equilibriumTempK?.let {
                         InfoChip("${it.toInt()}K")
                     }
-                    InfoChip(planet.discoveryYear.toString())
+                    InfoChip(
+                        text = planet.discoveryYear.toString(),
+                        isHighlighted = isYearHighlighted
+                    )
                 }
             }
 
@@ -380,18 +436,23 @@ private fun PlanetCard(
 }
 
 @Composable
-private fun InfoChip(text: String) {
+private fun InfoChip(text: String, isHighlighted: Boolean = false) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(6.dp))
-            .background(SurfaceCardLight)
+            .background(if (isHighlighted) StarGold.copy(alpha = 0.2f) else SurfaceCardLight)
             .padding(horizontal = 8.dp, vertical = 2.dp)
+            .then(
+                if (isHighlighted) Modifier.border(0.5.dp, StarGold.copy(alpha = 0.5f), RoundedCornerShape(6.dp))
+                else Modifier
+            )
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.labelSmall,
-            color = TextSecondary,
-            fontSize = 10.sp
+            color = if (isHighlighted) StarGold else TextSecondary,
+            fontSize = 10.sp,
+            fontWeight = if (isHighlighted) FontWeight.Bold else FontWeight.Normal
         )
     }
 }

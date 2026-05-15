@@ -14,6 +14,8 @@ sealed class SyncStatus {
 
 interface ExoplanetRepository {
     fun getAllPlanets(): Flow<List<Exoplanet>>
+    fun getPlanetsSortedByLatest(): Flow<List<Exoplanet>>
+    fun getPlanetsByMinDiscoveryYear(minYear: Int): Flow<List<Exoplanet>>
     fun getPlanetCount(): Flow<Int>
     fun getStarSystemCount(): Flow<Int>
     fun getLastSyncTime(): Flow<Long>

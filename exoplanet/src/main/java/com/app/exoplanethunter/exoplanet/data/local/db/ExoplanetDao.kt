@@ -37,9 +37,13 @@ interface ExoplanetDao {
     fun getStarSystemCount(): Flow<Int>
 
     @Query("SELECT * FROM exoplanets WHERE isDefault = 1 ORDER BY planetName ASC")
-// ... (rest of methods)
-
     fun getAllPlanets(): Flow<List<ExoplanetEntity>>
+
+    @Query("SELECT * FROM exoplanets WHERE isDefault = 1 ORDER BY discoveryYear DESC, planetName ASC")
+    fun getPlanetsSortedByLatest(): Flow<List<ExoplanetEntity>>
+
+    @Query("SELECT * FROM exoplanets WHERE isDefault = 1 AND discoveryYear >= :minYear ORDER BY discoveryYear DESC, planetName ASC")
+    fun getPlanetsByMinDiscoveryYear(minYear: Int): Flow<List<ExoplanetEntity>>
 
     @Query("SELECT * FROM exoplanets WHERE id = :id")
     suspend fun getPlanetById(id: Long): ExoplanetEntity?

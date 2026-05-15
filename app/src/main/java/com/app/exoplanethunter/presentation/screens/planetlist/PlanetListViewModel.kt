@@ -43,6 +43,12 @@ class PlanetListViewModel(
     var showHabitableOnly by mutableStateOf(false)
         private set
 
+    var showLatestOnly by mutableStateOf(false)
+        private set
+
+    var minDiscoveryYear by mutableStateOf<Int?>(null)
+        private set
+
     private var searchJob: Job? = null
 
     init {
@@ -85,6 +91,8 @@ class PlanetListViewModel(
     fun onFilterSelected(method: String?) {
         selectedFilter = method
         showHabitableOnly = false
+        showLatestOnly = false
+        minDiscoveryYear = null
         searchQuery = ""
         trackEvent(
             AnalyticsEvent.PlanetFilterApplied(
@@ -108,6 +116,36 @@ class PlanetListViewModel(
         applyCurrentFilter()
     }
 
+    fun onToggleLatest() {
+        showLatestOnly = !showLatestOnly
+        selectedFilter = null
+        showHabitableOnly = false
+        minDiscoveryYear = null
+        searchQuery = ""
+        trackEvent(
+            AnalyticsEvent.PlanetFilterApplied(
+                filterType = "latest_discoveries",
+                filterValue = showLatestOnly.toString()
+            )
+        )
+        applyCurrentFilter()
+    }
+
+    fun onMinYearChanged(year: Int?) {
+        minDiscoveryYear = year
+        selectedFilter = null
+        showHabitableOnly = false
+        showLatestOnly = false
+        searchQuery = ""
+        trackEvent(
+            AnalyticsEvent.PlanetFilterApplied(
+                filterType = "min_discovery_year",
+                filterValue = year?.toString() ?: "all"
+            )
+        )
+        applyCurrentFilter()
+    }
+
     fun trackPlanetClicked(planet: Exoplanet) {
         trackEvent(
             AnalyticsEvent.PlanetClicked(
@@ -124,6 +162,18 @@ class PlanetListViewModel(
             when {
                 showHabitableOnly -> {
                     filterPlanetsUseCase.mostHabitable(50).collectLatest { list ->
+                        planets = list
+                        isLoading = false
+                    }
+                }
+                showLatestOnly -> {
+                    filterPlanetsUseCase.latestDiscoveries().collectLatest { list ->
+                        planets = list
+                        isLoading = false
+                    }
+                }
+                minDiscoveryYear != null -> {
+                    filterPlanetsUseCase.byMinDiscoveryYear(minDiscoveryYear!!).collectLatest { list ->
                         planets = list
                         isLoading = false
                     }

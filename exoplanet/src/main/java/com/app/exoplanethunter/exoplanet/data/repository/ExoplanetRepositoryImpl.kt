@@ -28,6 +28,14 @@ class ExoplanetRepositoryImpl(
         return dao.getAllPlanets().map { entities -> entities.map { it.toDomain() } }
     }
 
+    override fun getPlanetsSortedByLatest(): Flow<List<Exoplanet>> {
+        return dao.getPlanetsSortedByLatest().map { entities -> entities.map { it.toDomain() } }
+    }
+
+    override fun getPlanetsByMinDiscoveryYear(minYear: Int): Flow<List<Exoplanet>> {
+        return dao.getPlanetsByMinDiscoveryYear(minYear).map { entities -> entities.map { it.toDomain() } }
+    }
+
     override fun getPlanetCount(): Flow<Int> = dao.getPlanetCount()
 
     override fun getStarSystemCount(): Flow<Int> = dao.getStarSystemCount()

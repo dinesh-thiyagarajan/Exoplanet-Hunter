@@ -56,12 +56,14 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.exoplanethunter.R
 import java.util.Calendar
 import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
@@ -165,38 +167,9 @@ fun PlanetListScreen(
                 ) {
                     item {
                         FilterChip(
-                            selected = viewModel.showLatestOnly,
-                            onClick = viewModel::onToggleLatest,
-                            label = { Text("Latest", fontSize = 12.sp) },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Default.AutoAwesome,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp),
-                                    tint = if (viewModel.showLatestOnly) SpaceBlack else StarGold
-                                )
-                            },
-                            colors = FilterChipDefaults.filterChipColors(
-                                containerColor = SurfaceCard,
-                                labelColor = TextSecondary,
-                                selectedContainerColor = StarGold,
-                                selectedLabelColor = SpaceBlack
-                            )
-                        )
-                    }
-
-                    item {
-                        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-                        val recentYear = currentYear - 3
-                        val isRecentSelected = viewModel.minDiscoveryYear == recentYear
-                        
-                        FilterChip(
-                            selected = isRecentSelected,
-                            onClick = { 
-                                if (isRecentSelected) viewModel.onMinYearChanged(null) 
-                                else viewModel.onMinYearChanged(recentYear) 
-                            },
-                            label = { Text("Recent (3y)", fontSize = 12.sp) },
+                            selected = viewModel.selectedFilter == null && !viewModel.showHabitableOnly && !viewModel.showLatestOnly && viewModel.minDiscoveryYear == null,
+                            onClick = { viewModel.onFilterSelected(null) },
+                            label = { Text(stringResource(R.string.filter_all), fontSize = 12.sp) },
                             colors = FilterChipDefaults.filterChipColors(
                                 containerColor = SurfaceCard,
                                 labelColor = TextSecondary,
@@ -210,7 +183,7 @@ fun PlanetListScreen(
                         FilterChip(
                             selected = viewModel.showHabitableOnly,
                             onClick = viewModel::onToggleHabitable,
-                            label = { Text("Habitable", fontSize = 12.sp) },
+                            label = { Text(stringResource(R.string.filter_habitable), fontSize = 12.sp) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Default.Star,
@@ -223,20 +196,6 @@ fun PlanetListScreen(
                                 containerColor = SurfaceCard,
                                 labelColor = TextSecondary,
                                 selectedContainerColor = AuroraGreen,
-                                selectedLabelColor = SpaceBlack
-                            )
-                        )
-                    }
-
-                    item {
-                        FilterChip(
-                            selected = viewModel.selectedFilter == null && !viewModel.showHabitableOnly,
-                            onClick = { viewModel.onFilterSelected(null) },
-                            label = { Text("All", fontSize = 12.sp) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                containerColor = SurfaceCard,
-                                labelColor = TextSecondary,
-                                selectedContainerColor = CosmicCyan,
                                 selectedLabelColor = SpaceBlack
                             )
                         )
@@ -257,6 +216,49 @@ fun PlanetListScreen(
                                 containerColor = SurfaceCard,
                                 labelColor = TextSecondary,
                                 selectedContainerColor = CosmicCyan,
+                                selectedLabelColor = SpaceBlack
+                            )
+                        )
+                    }
+
+                    item {
+                        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+                        val recentYear = currentYear - 3
+                        val isRecentSelected = viewModel.minDiscoveryYear == recentYear
+                        
+                        FilterChip(
+                            selected = isRecentSelected,
+                            onClick = { 
+                                if (isRecentSelected) viewModel.onMinYearChanged(null) 
+                                else viewModel.onMinYearChanged(recentYear) 
+                            },
+                            label = { Text(stringResource(R.string.filter_recent_3y), fontSize = 12.sp) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = SurfaceCard,
+                                labelColor = TextSecondary,
+                                selectedContainerColor = CosmicCyan,
+                                selectedLabelColor = SpaceBlack
+                            )
+                        )
+                    }
+
+                    item {
+                        FilterChip(
+                            selected = viewModel.showLatestOnly,
+                            onClick = viewModel::onToggleLatest,
+                            label = { Text(stringResource(R.string.filter_latest), fontSize = 12.sp) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.AutoAwesome,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp),
+                                    tint = if (viewModel.showLatestOnly) SpaceBlack else StarGold
+                                )
+                            },
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = SurfaceCard,
+                                labelColor = TextSecondary,
+                                selectedContainerColor = StarGold,
                                 selectedLabelColor = SpaceBlack
                             )
                         )

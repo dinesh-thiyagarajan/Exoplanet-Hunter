@@ -7,4 +7,8 @@
     <string name="about_data_source">Data Source</string>
     <string name="about_significance">Significance</string>
     <string name="about_ml">Machine Learning</string>
+    <string name="filter_all">All</string>
+    <string name="filter_habitable">Habitable</string>
+    <string name="filter_recent_3y">Recent (3y)</string>
+    <string name="filter_latest">Latest</string>
 </resources>

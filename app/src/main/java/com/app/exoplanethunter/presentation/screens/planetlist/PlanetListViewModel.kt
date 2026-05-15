@@ -81,6 +81,7 @@ class PlanetListViewModel(
             if (query.isBlank()) {
                 applyCurrentFilter()
             } else {
+                trackEvent(AnalyticsEvent.PlanetSearched(query))
                 searchPlanetsUseCase(query).collectLatest { list ->
                     planets = list
                 }

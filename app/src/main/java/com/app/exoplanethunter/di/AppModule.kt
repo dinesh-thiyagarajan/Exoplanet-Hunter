@@ -63,7 +63,7 @@ val viewModelModule = module {
     viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
     viewModel { SplashViewModel() }
-    viewModel { AboutViewModel(get(), get()) }
+    viewModel { AboutViewModel(get(), get(), get()) }
 }
 
 val appModules = listOf(

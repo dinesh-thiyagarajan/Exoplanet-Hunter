@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
 import com.app.exoplanethunter.analytics.domain.repository.AnalyticsRepository
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.app.exoplanethunter.analytics.data.repository.AnalyticsConstants as Keys
 
 class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
 
@@ -19,45 +20,70 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
 
         // Screen views
         is AnalyticsEvent.PlanetListScreenViewed ->
-            "planet_list_screen_viewed" to null
+            Keys.PLANET_LIST_SCREEN_VIEWED to null
+
+        is AnalyticsEvent.AboutScreenViewed ->
+            Keys.ABOUT_SCREEN_VIEWED to null
 
         is AnalyticsEvent.StarSystemListScreenViewed ->
-            "star_system_list_screen_viewed" to null
+            Keys.STAR_SYSTEM_LIST_SCREEN_VIEWED to null
 
-        is AnalyticsEvent.PlanetDetailScreenViewed ->
-            "planet_detail_screen_viewed" to Bundle().apply {
-                putLong("planet_id", planetId)
-                putString("planet_name", planetName)
+        is AnalyticsEvent.PlanetDetailScreenViewed -> {
+            val event = this
+            Keys.PLANET_DETAIL_SCREEN_VIEWED to Bundle().apply {
+                putLong(Keys.PARAM_PLANET_ID, event.planetId)
+                putString(Keys.PARAM_PLANET_NAME, event.planetName)
             }
+        }
 
-        is AnalyticsEvent.StarSystemDetailScreenViewed ->
-            "star_system_detail_screen_viewed" to Bundle().apply {
-                putString("host_name", hostName)
+        is AnalyticsEvent.StarSystemDetailScreenViewed -> {
+            val event = this
+            Keys.STAR_SYSTEM_DETAIL_SCREEN_VIEWED to Bundle().apply {
+                putString(Keys.PARAM_HOST_NAME, event.hostName)
             }
+        }
 
         // Clicks / navigation
-        is AnalyticsEvent.PlanetClicked ->
-            "planet_clicked" to Bundle().apply {
-                putLong("planet_id", planetId)
-                putString("planet_name", planetName)
-                putString("discovery_method", discoveryMethod)
+        is AnalyticsEvent.PlanetClicked -> {
+            val event = this
+            Keys.PLANET_CLICKED to Bundle().apply {
+                putLong(Keys.PARAM_PLANET_ID, event.planetId)
+                putString(Keys.PARAM_PLANET_NAME, event.planetName)
+                putString(Keys.PARAM_DISCOVERY_METHOD, event.discoveryMethod)
             }
+        }
 
-        is AnalyticsEvent.StarSystemClicked ->
-            "star_system_clicked" to Bundle().apply {
-                putString("host_name", hostName)
+        is AnalyticsEvent.StarSystemClicked -> {
+            val event = this
+            Keys.STAR_SYSTEM_CLICKED to Bundle().apply {
+                putString(Keys.PARAM_HOST_NAME, event.hostName)
             }
+        }
 
-        // Filters
-        is AnalyticsEvent.PlanetFilterApplied ->
-            "planet_filter_applied" to Bundle().apply {
-                putString("filter_type", filterType)
-                putString("filter_value", filterValue)
+        // Filters & Search
+        is AnalyticsEvent.PlanetFilterApplied -> {
+            val event = this
+            Keys.PLANET_FILTER_APPLIED to Bundle().apply {
+                putString(Keys.PARAM_FILTER_TYPE, event.filterType)
+                putString(Keys.PARAM_FILTER_VALUE, event.filterValue)
             }
+        }
 
-        is AnalyticsEvent.StarSystemFilterApplied ->
-            "star_system_filter_applied" to Bundle().apply {
-                putString("filter", filter)
+        is AnalyticsEvent.PlanetSearched -> {
+            val event = this
+            Keys.PLANET_SEARCHED to Bundle().apply {
+                putString(Keys.PARAM_QUERY, event.query)
             }
+        }
+
+        is AnalyticsEvent.ManualSyncInitiated ->
+            Keys.MANUAL_SYNC_INITIATED to null
+
+        is AnalyticsEvent.StarSystemFilterApplied -> {
+            val event = this
+            Keys.STAR_SYSTEM_FILTER_APPLIED to Bundle().apply {
+                putString(Keys.PARAM_FILTER, event.filter)
+            }
+        }
     }
 }

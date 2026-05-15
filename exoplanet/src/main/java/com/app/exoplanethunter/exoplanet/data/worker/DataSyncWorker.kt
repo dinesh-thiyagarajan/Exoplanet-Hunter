@@ -1,7 +1,6 @@
 package com.app.exoplanethunter.exoplanet.data.worker
 
 import android.content.Context
-import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -31,12 +30,10 @@ class DataSyncWorker(
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
-    private val TAG = "DataSyncWorker"
     private val dao = ExoplanetDatabase.getInstance(context).exoplanetDao()
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
-            Log.d(TAG, "Starting sync from NASA TAP service...")
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://exoplanetarchive.ipac.caltech.edu/")
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -48,12 +45,10 @@ class DataSyncWorker(
             setProgress(workDataOf("progress" to 10))
 
             val csvData = api.getExoplanets()
-            Log.d(TAG, "CSV data received. Length: ${csvData.length} characters")
             
             setProgress(workDataOf("progress" to 50))
 
             val lines = csvData.lines()
-            Log.d(TAG, "Parsing ${lines.size} planetary records...")
             if (lines.size < 2) return@withContext Result.failure()
 
             val header = lines[0].split(",")
@@ -79,11 +74,7 @@ class DataSyncWorker(
 
             val systemEntities = systems.map { StarSystemEntity(hostName = it) }
             
-            Log.d(TAG, "Sync complete. Total Planets: ${planets.size}, Total Systems: ${systems.size}")
-            
-            Log.d(TAG, "Replacing local database data...")
             dao.replaceData(planets, systemEntities)
-            Log.d(TAG, "Database updated successfully.")
 
             // Save last sync time
             SyncPreferences(applicationContext).saveLastSyncTime(System.currentTimeMillis())
@@ -91,7 +82,6 @@ class DataSyncWorker(
             setProgress(workDataOf("progress" to 100))
             Result.success()
         } catch (e: Exception) {
-            Log.e(TAG, "Sync failed: ${e.message}", e)
             Result.failure(workDataOf("error" to (e.message ?: "Unknown error")))
         }
     }

@@ -6,6 +6,8 @@ sealed class AnalyticsEvent {
 
     object PlanetListScreenViewed : AnalyticsEvent()
 
+    object AboutScreenViewed : AnalyticsEvent()
+
     object StarSystemListScreenViewed : AnalyticsEvent()
 
     data class PlanetDetailScreenViewed(
@@ -29,12 +31,18 @@ sealed class AnalyticsEvent {
         val hostName: String
     ) : AnalyticsEvent()
 
-    // ── Filters ───────────────────────────────────────────────────────────────
+    // ── Filters & Search ───────────────────────────────────────────────────────
 
     data class PlanetFilterApplied(
         val filterType: String,
         val filterValue: String
     ) : AnalyticsEvent()
+
+    data class PlanetSearched(
+        val query: String
+    ) : AnalyticsEvent()
+
+    object ManualSyncInitiated : AnalyticsEvent()
 
     data class StarSystemFilterApplied(
         val filter: String

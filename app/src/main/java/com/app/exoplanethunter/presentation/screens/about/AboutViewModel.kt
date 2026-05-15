@@ -2,6 +2,8 @@ package com.app.exoplanethunter.presentation.screens.about
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
+import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
 import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
 import com.app.exoplanethunter.exoplanet.domain.usecase.SyncExoplanetsUseCase
@@ -13,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class AboutViewModel(
     private val repository: ExoplanetRepository,
-    private val syncExoplanetsUseCase: SyncExoplanetsUseCase
+    private val syncExoplanetsUseCase: SyncExoplanetsUseCase,
+    private val trackEvent: TrackEventUseCase
 ) : ViewModel() {
 
     val planetCount = repository.getPlanetCount()
@@ -25,10 +28,15 @@ class AboutViewModel(
     val lastSyncTime = repository.getLastSyncTime()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0L)
 
+    init {
+        trackEvent(AnalyticsEvent.AboutScreenViewed)
+    }
+
     private val _syncStatus = MutableStateFlow<SyncStatus>(SyncStatus.Idle)
     val syncStatus = _syncStatus.asStateFlow()
 
     fun syncData() {
+        trackEvent(AnalyticsEvent.ManualSyncInitiated)
         viewModelScope.launch {
             syncExoplanetsUseCase().collect {
                 _syncStatus.value = it

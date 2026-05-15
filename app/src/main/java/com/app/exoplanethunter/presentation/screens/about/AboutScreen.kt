@@ -1,10 +1,5 @@
 package com.app.exoplanethunter.presentation.screens.about
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -25,14 +20,11 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
 import com.app.exoplanethunter.presentation.components.StarField
@@ -51,15 +43,6 @@ fun AboutScreen(
     val systemCount by viewModel.systemCount.collectAsState()
     val lastSyncTime by viewModel.lastSyncTime.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            viewModel.syncData()
-        }
-    }
 
     Scaffold(
         containerColor = SpaceBlack,
@@ -87,24 +70,11 @@ fun AboutScreen(
                     SyncControl(
                         status = syncStatus,
                         lastSyncTime = lastSyncTime,
-                        onSyncClick = {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                val permissionCheck = ContextCompat.checkSelfPermission(
-                                    context, Manifest.permission.POST_NOTIFICATIONS
-                                )
-                                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                                    viewModel.syncData()
-                                } else {
-                                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                                }
-                            } else {
-                                viewModel.syncData()
-                            }
-                        }
+                        onSyncClick = { viewModel.syncData() }
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(32.dp))
                 
                 SectionHeader("Scientific Framework")
 
@@ -183,7 +153,6 @@ private fun AboutHeader(planetCount: Int, systemCount: Int) {
                     )
             )
             
-            // App Icon Placeholder / Icon
             Surface(
                 modifier = Modifier.size(80.dp),
                 shape = CircleShape,
@@ -204,7 +173,7 @@ private fun AboutHeader(planetCount: Int, systemCount: Int) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Exoplanet Hunter",
+            text = stringResource(R.string.about_title),
             style = MaterialTheme.typography.headlineLarge,
             color = Color.White,
             fontWeight = FontWeight.ExtraBold,
@@ -221,35 +190,74 @@ private fun AboutHeader(planetCount: Int, systemCount: Int) {
         )
         
         Text(
-            text = "Version 1.12.2",
+            text = "Version 1.12.4",
             style = MaterialTheme.typography.bodySmall,
             color = TextMuted,
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
-            verticalAlignment = Alignment.CenterVertically
+        // Improved Stats Bar
+        Surface(
+            color = SurfaceCard.copy(alpha = 0.5f),
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier.widthIn(max = 320.dp)
         ) {
-            CountBadge(count = planetCount, label = "Planets", icon = Icons.Default.Public)
-            CountBadge(count = systemCount, label = "Systems", icon = Icons.Default.Star)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                CountBadge(
+                    count = planetCount, 
+                    label = "Planets", 
+                    icon = Icons.Default.Public,
+                    modifier = Modifier.weight(1f)
+                )
+                
+                Box(
+                    modifier = Modifier
+                        .height(32.dp)
+                        .width(1.dp)
+                        .background(SurfaceCardLight)
+                )
+                
+                CountBadge(
+                    count = systemCount, 
+                    label = "Systems", 
+                    icon = Icons.Default.Star,
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun CountBadge(count: Int, label: String, icon: ImageVector) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+private fun CountBadge(
+    count: Int, 
+    label: String, 
+    icon: ImageVector,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = CosmicCyan,
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier.size(16.dp)
             )
-            Spacer(modifier = Modifier.width(6.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = String.format("%,d", count),
                 style = MaterialTheme.typography.titleLarge,
@@ -261,7 +269,8 @@ private fun CountBadge(count: Int, label: String, icon: ImageVector) {
             text = label.uppercase(),
             style = MaterialTheme.typography.labelSmall,
             color = TextMuted,
-            letterSpacing = 1.sp
+            letterSpacing = 1.sp,
+            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
@@ -303,11 +312,14 @@ fun SyncControl(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(12.dp))
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(14.dp))
                         .background(CosmicCyan.copy(alpha = 0.1f)),
                     contentAlignment = Alignment.Center
                 ) {
@@ -315,11 +327,11 @@ fun SyncControl(
                         Icons.Default.CloudDownload,
                         contentDescription = null,
                         tint = CosmicCyan,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "NASA TAP Sync",
                         style = MaterialTheme.typography.titleMedium,
@@ -327,14 +339,49 @@ fun SyncControl(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Last updated: ${formatLastSyncTime(lastSyncTime)}",
+                        text = "Archive Synchronization",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TextMuted
+                        color = CosmicCyan,
+                        letterSpacing = 0.5.sp
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+            
+            // Last Updated Info Row
+            Surface(
+                color = SpaceBlack.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.History,
+                        contentDescription = null,
+                        tint = TextMuted,
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Last updated:",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextMuted
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = formatLastSyncTime(lastSyncTime),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = StarWhite,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             when (status) {
                 is SyncStatus.Idle, is SyncStatus.Success, is SyncStatus.Error -> {
@@ -346,7 +393,8 @@ fun SyncControl(
                         ),
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth(),
-                        contentPadding = PaddingValues(16.dp)
+                        contentPadding = PaddingValues(16.dp),
+                        enabled = status !is SyncStatus.Progress
                     ) {
                         Icon(Icons.Default.Sync, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))

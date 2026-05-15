@@ -87,7 +87,6 @@ class ExoplanetRepositoryImpl(
 
     override suspend fun syncExoplanets(): Flow<SyncStatus> {
         val syncRequest = OneTimeWorkRequestBuilder<DataSyncWorker>()
-            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .addTag("data_sync")
             .build()
         

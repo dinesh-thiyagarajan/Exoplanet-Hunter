@@ -1,12 +1,7 @@
 package com.app.exoplanethunter.exoplanet.data.worker
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.content.pm.ServiceInfo
-import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
-import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.app.exoplanethunter.exoplanet.data.local.SyncPreferences
@@ -35,14 +30,9 @@ class DataSyncWorker(
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
-    private val notificationManager =
-        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
     private val dao = ExoplanetDatabase.getInstance(context).exoplanetDao()
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        setForeground(createForegroundInfo(0))
-
         try {
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://exoplanetarchive.ipac.caltech.edu/")
@@ -53,12 +43,10 @@ class DataSyncWorker(
             val api = retrofit.create(NasaExoplanetApi::class.java)
             
             setProgress(workDataOf("progress" to 10))
-            setForeground(createForegroundInfo(10))
 
             val csvData = api.getExoplanets()
             
             setProgress(workDataOf("progress" to 50))
-            setForeground(createForegroundInfo(50))
 
             val lines = csvData.lines()
             if (lines.size < 2) return@withContext Result.failure()
@@ -71,7 +59,6 @@ class DataSyncWorker(
                 val line = lines[i]
                 if (line.isBlank()) continue
                 
-                // Simple CSV split (handling basic cases, NASA CSVs are usually standard)
                 val parts = splitCsv(line)
                 if (parts.size < header.size) continue
 
@@ -82,7 +69,6 @@ class DataSyncWorker(
                 if (i % 500 == 0) {
                     val progress = 50 + (i * 40 / lines.size)
                     setProgress(workDataOf("progress" to progress))
-                    setForeground(createForegroundInfo(progress))
                 }
             }
 
@@ -149,30 +135,5 @@ class DataSyncWorker(
             isDefault = true,
             systemId = 0
         )
-    }
-
-    private fun createForegroundInfo(progress: Int): ForegroundInfo {
-        val channelId = "sync_channel"
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                "Data Sync",
-                NotificationManager.IMPORTANCE_LOW
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val notification = NotificationCompat.Builder(applicationContext, channelId)
-            .setContentTitle("Syncing Exoplanet Data")
-            .setSmallIcon(android.R.drawable.stat_sys_download)
-            .setProgress(100, progress, false)
-            .setOngoing(true)
-            .build()
-
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            ForegroundInfo(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-        } else {
-            ForegroundInfo(1, notification)
-        }
     }
 }

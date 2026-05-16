@@ -1,9 +1,9 @@
 package com.app.exoplanethunter.exoplanet.data.local.db
+
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import kotlinx.coroutines.flow.Flow
 
@@ -16,24 +16,19 @@ interface ExoplanetDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStarSystems(systems: List<StarSystemEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStarSystemsAndGetIds(systems: List<StarSystemEntity>): List<Long>
+
     @Query("DELETE FROM exoplanets")
     suspend fun deleteAllPlanets()
 
     @Query("DELETE FROM star_systems")
     suspend fun deleteAllStarSystems()
 
-    @Transaction
-    suspend fun replaceData(planets: List<ExoplanetEntity>, systems: List<StarSystemEntity>) {
-        deleteAllPlanets()
-        deleteAllStarSystems()
-        insertStarSystems(systems)
-        insertPlanets(planets)
-    }
-
-    @Query("SELECT COUNT(*) FROM exoplanets")
+    @Query("SELECT COUNT(*) FROM exoplanets WHERE isDefault = 1")
     fun getPlanetCount(): Flow<Int>
 
-    @Query("SELECT COUNT(*) FROM star_systems")
+    @Query("SELECT COUNT(DISTINCT hostName) FROM exoplanets WHERE isDefault = 1")
     fun getStarSystemCount(): Flow<Int>
 
     @Query("SELECT * FROM exoplanets WHERE isDefault = 1 ORDER BY planetName ASC")
@@ -49,51 +44,53 @@ interface ExoplanetDao {
     suspend fun getPlanetById(id: Long): ExoplanetEntity?
 
     @Query(
-        "SELECT * FROM exoplanets WHERE isDefault = 1 AND " +
-            "(planetName LIKE '%' || :query || '%' OR hostName LIKE '%' || :query || '%') " +
-            "ORDER BY planetName ASC"
+        """
+        SELECT * FROM exoplanets 
+        WHERE isDefault = 1 AND (planetName LIKE '%' || :query || '%' OR hostName LIKE '%' || :query || '%') 
+        ORDER BY planetName ASC
+        """
     )
     fun searchPlanets(query: String): Flow<List<ExoplanetEntity>>
 
-    @Query(
-        "SELECT * FROM exoplanets WHERE isDefault = 1 AND discoveryMethod = :method " +
-            "ORDER BY planetName ASC"
-    )
+    @Query("SELECT * FROM exoplanets WHERE isDefault = 1 AND discoveryMethod = :method ORDER BY planetName ASC")
     fun getPlanetsByDiscoveryMethod(method: String): Flow<List<ExoplanetEntity>>
 
     @Query("SELECT DISTINCT discoveryMethod FROM exoplanets WHERE isDefault = 1 ORDER BY discoveryMethod")
     suspend fun getDiscoveryMethods(): List<String>
 
     @Query(
-        "SELECT * FROM exoplanets WHERE isDefault = 1 AND equilibriumTempK IS NOT NULL " +
-            "AND planetRadiusEarth IS NOT NULL ORDER BY ABS(equilibriumTempK - 288) ASC LIMIT :limit"
+        """
+        SELECT * FROM exoplanets 
+        WHERE isDefault = 1 AND equilibriumTempK IS NOT NULL AND planetRadiusEarth IS NOT NULL 
+        ORDER BY ABS(equilibriumTempK - 288) ASC LIMIT :limit
+        """
     )
     fun getMostHabitablePlanets(limit: Int = 20): Flow<List<ExoplanetEntity>>
 
     @Query("SELECT id, hostName FROM star_systems ORDER BY hostName ASC")
     fun getAllStarSystems(): Flow<List<StarSystemSummary>>
 
-    @Query(
-        "SELECT * FROM exoplanets WHERE systemId = :systemId AND isDefault = 1 ORDER BY orbitSemiMajorAxisAu ASC"
-    )
+    @Query("SELECT * FROM exoplanets WHERE systemId = :systemId AND isDefault = 1 ORDER BY orbitSemiMajorAxisAu ASC")
     suspend fun getPlanetsForSystem(systemId: Long): List<ExoplanetEntity>
 
-    @Query(
-        "SELECT id, hostName FROM star_systems WHERE hostName LIKE '%' || :query || '%' ORDER BY hostName ASC"
-    )
+    @Query("SELECT id, hostName FROM star_systems WHERE hostName LIKE '%' || :query || '%' ORDER BY hostName ASC")
     fun searchStarSystems(query: String): Flow<List<StarSystemSummary>>
 
     @Query(
-        "SELECT ss.id, ss.hostName FROM star_systems ss " +
-            "INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1 " +
-            "GROUP BY ss.id HAVING COUNT(*) > 1 ORDER BY COUNT(*) DESC"
+        """
+        SELECT ss.id, ss.hostName FROM star_systems ss 
+        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1 
+        GROUP BY ss.id HAVING COUNT(*) > 1 ORDER BY COUNT(*) DESC
+        """
     )
     fun getMultiPlanetSystems(): Flow<List<StarSystemSummary>>
 
     @Query(
-        "SELECT DISTINCT ss.id, ss.hostName FROM star_systems ss " +
-            "INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1 AND e.numStars = :starCount " +
-            "ORDER BY ss.hostName ASC"
+        """
+        SELECT DISTINCT ss.id, ss.hostName FROM star_systems ss 
+        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1 AND e.numStars = :starCount 
+        ORDER BY ss.hostName ASC
+        """
     )
     fun getStarSystemsByStarCount(starCount: Int): Flow<List<StarSystemSummary>>
 }

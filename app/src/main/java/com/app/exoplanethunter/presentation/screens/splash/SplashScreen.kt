@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,14 +50,15 @@ fun SplashScreen(
 ) {
     val fadeIn = remember { Animatable(0f) }
     val titleSlide = remember { Animatable(50f) }
+    val isDataLoaded by viewModel.loadingState.collectAsState()
 
     LaunchedEffect(Unit) {
         fadeIn.animateTo(1f, tween(1200))
         titleSlide.animateTo(0f, tween(800))
     }
 
-    LaunchedEffect(viewModel.isLoaded) {
-        if (viewModel.isLoaded) {
+    LaunchedEffect(isDataLoaded) {
+        if (isDataLoaded) {
             kotlinx.coroutines.delay(500)
             onDataLoaded()
         }
@@ -179,7 +181,7 @@ fun SplashScreen(
             Spacer(modifier = Modifier.height(48.dp))
 
             Text(
-                text = if (viewModel.isLoaded) "Ready" else "Loading exoplanet data...",
+                text = if (isDataLoaded) "Ready" else "Loading exoplanet data...",
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextSecondary
             )

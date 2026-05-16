@@ -1,16 +1,32 @@
 package com.app.exoplanethunter.presentation.screens.splash
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
+import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
+import com.app.exoplanethunter.exoplanet.data.local.SyncPreferences
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
-class SplashViewModel : ViewModel() {
+class SplashViewModel(
+    private val trackEvent: TrackEventUseCase,
+    private val syncPreferences: SyncPreferences
+) : ViewModel() {
 
-    var isLoaded by mutableStateOf(false)
-        private set
+    private val _loadingState = MutableStateFlow(false)
+    val loadingState = _loadingState.asStateFlow()
 
     init {
-        isLoaded = true
+        trackEvent(AnalyticsEvent.AboutScreenViewed)
+
+        viewModelScope.launch {
+            val isInitialAssetCopied = syncPreferences.isInitialAssetCopied.first()
+            if (!isInitialAssetCopied) {
+                syncPreferences.setInitialAssetCopied(true)
+            }
+            _loadingState.value = true
+        }
     }
 }

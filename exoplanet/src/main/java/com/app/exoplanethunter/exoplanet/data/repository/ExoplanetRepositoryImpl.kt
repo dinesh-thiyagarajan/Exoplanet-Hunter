@@ -1,6 +1,7 @@
 package com.app.exoplanethunter.exoplanet.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.work.*
 import com.app.exoplanethunter.exoplanet.data.local.SyncPreferences
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetDao
@@ -14,6 +15,7 @@ import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import java.util.UUID
 
 class ExoplanetRepositoryImpl(
@@ -36,7 +38,9 @@ class ExoplanetRepositoryImpl(
         return dao.getPlanetsByMinDiscoveryYear(minYear).map { entities -> entities.map { it.toDomain() } }
     }
 
-    override fun getPlanetCount(): Flow<Int> = dao.getPlanetCount()
+    override fun getPlanetCount(): Flow<Int> = dao.getPlanetCount().onEach {
+        Log.d("DTD", "Planet count: $it")
+    }
 
     override fun getStarSystemCount(): Flow<Int> = dao.getStarSystemCount()
 

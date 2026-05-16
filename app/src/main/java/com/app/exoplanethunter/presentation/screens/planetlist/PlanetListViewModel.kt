@@ -90,6 +90,7 @@ class PlanetListViewModel(
     }
 
     fun onFilterSelected(method: String?) {
+        if (selectedFilter == method) return
         selectedFilter = method
         showHabitableOnly = false
         showLatestOnly = false

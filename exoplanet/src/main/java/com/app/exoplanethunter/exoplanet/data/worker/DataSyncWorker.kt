@@ -45,13 +45,17 @@ class DataSyncWorker(
             setProgress(workDataOf("progress" to 10))
 
             val csvData = api.getExoplanets()
+            if (csvData.isNullOrEmpty()) {
+                return@withContext Result.failure(workDataOf("error" to "API returned no data"))
+            }
             
-            setProgress(workDataOf("progress" to 50))
+            setProgress(workDataOf("progress" to 40))
 
             val lines = csvData.lines()
-            if (lines.size < 2) return@withContext Result.failure()
+            if (lines.size < 2) {
+                return@withContext Result.failure(workDataOf("error" to "Invalid data format"))
+            }
 
-            val header = lines[0].split(",")
             val planets = mutableListOf<ExoplanetEntity>()
             val systems = mutableSetOf<String>()
 
@@ -60,25 +64,28 @@ class DataSyncWorker(
                 if (line.isBlank()) continue
                 
                 val parts = splitCsv(line)
-                if (parts.size < header.size) continue
+                if (parts.size < 25) continue
 
                 val entity = mapToEntity(parts)
                 planets.add(entity)
                 systems.add(entity.hostName)
-                
-                if (i % 500 == 0) {
-                    val progress = 50 + (i * 40 / lines.size)
-                    setProgress(workDataOf("progress" to progress))
-                }
             }
 
+            if (planets.isEmpty()) {
+                return@withContext Result.failure(workDataOf("error" to "No valid records found"))
+            }
+
+            dao.deleteAllPlanets()
+            dao.deleteAllStarSystems()
+
             val systemEntities = systems.map { StarSystemEntity(hostName = it) }
-            
-            dao.replaceData(planets, systemEntities)
+            val systemIds = dao.insertStarSystemsAndGetIds(systemEntities)
+            val systemMap = systems.zip(systemIds).toMap()
 
-            // Save last sync time
+            val planetsWithIds = planets.map { it.copy(systemId = systemMap[it.hostName] ?: 0) }
+            dao.insertPlanets(planetsWithIds)
+
             SyncPreferences(applicationContext).saveLastSyncTime(System.currentTimeMillis())
-
             setProgress(workDataOf("progress" to 100))
             Result.success()
         } catch (e: Exception) {
@@ -88,19 +95,16 @@ class DataSyncWorker(
 
     private fun splitCsv(line: String): List<String> {
         val result = mutableListOf<String>()
-        var current = StringBuilder()
+        val sb = StringBuilder()
         var inQuotes = false
         for (char in line) {
-            when {
-                char == '\"' -> inQuotes = !inQuotes
-                char == ',' && !inQuotes -> {
-                    result.add(current.toString().trim())
-                    current = StringBuilder()
-                }
-                else -> current.append(char)
-            }
+            if (char == '\"') inQuotes = !inQuotes
+            else if (char == ',' && !inQuotes) {
+                result.add(sb.toString().trim())
+                sb.clear()
+            } else sb.append(char)
         }
-        result.add(current.toString().trim())
+        result.add(sb.toString().trim())
         return result
     }
 

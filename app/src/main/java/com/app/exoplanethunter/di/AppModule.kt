@@ -62,7 +62,7 @@ val viewModelModule = module {
     viewModel { PlanetDetailViewModel(get(), get(), get()) }
     viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
-    viewModel { SplashViewModel() }
+    viewModel { SplashViewModel(get(), get()) }
     viewModel { AboutViewModel(get(), get(), get()) }
 }
 

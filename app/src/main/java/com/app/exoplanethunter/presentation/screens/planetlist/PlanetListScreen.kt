@@ -60,6 +60,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -275,22 +276,35 @@ fun PlanetListScreen(
                     CircularProgressIndicator(color = CosmicCyan)
                 }
             } else {
-                LazyColumn(
-                    state = listState,
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 8.dp,
-                        bottom = 16.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    val planets = viewModel.planets
-                    planets.forEachIndexed { index, planet ->
-                        item(key = planet.id) {
+                if (viewModel.planets.isEmpty()) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "No planets found matching your criteria.",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = TextMuted,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(32.dp)
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        state = listState,
+                        contentPadding = PaddingValues(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 8.dp,
+                            bottom = 16.dp
+                        ),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        val planets = viewModel.planets
+                        items(
+                            items = planets,
+                            key = { it.id }
+                        ) { planet ->
                             AnimatedPlanetCard(
                                 planet = planet,
-                                index = index,
+                                index = planets.indexOf(planet), // This can be inefficient for large lists
                                 isYearHighlighted = viewModel.showLatestOnly || viewModel.minDiscoveryYear != null,
                                 onClick = {
                                     viewModel.trackPlanetClicked(planet)
@@ -299,9 +313,15 @@ fun PlanetListScreen(
                             )
                         }
                         // Ad after every 5th item
-                        if ((index + 1) % 5 == 0 && index < planets.size - 1) {
-                            item(key = "ad_planet_$index") {
-                                AdBannerCard()
+                        val adsToShow = (planets.size / 5) -1 // Adjust logic to correctly place ads
+                        for (i in 0 until adsToShow) {
+                            val adIndex = (i + 1) * 5 -1 // Place ad after every 5th item (0-indexed)
+                            if (adIndex < planets.size - 1) { // Ensure ad is not after the very last item
+                                item(key = "ad_planet_$adIndex") {
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                    AdBannerCard()
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                }
                             }
                         }
                     }

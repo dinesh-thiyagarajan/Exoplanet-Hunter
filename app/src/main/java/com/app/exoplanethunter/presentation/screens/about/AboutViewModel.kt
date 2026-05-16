@@ -38,8 +38,13 @@ class AboutViewModel(
     fun syncData() {
         trackEvent(AnalyticsEvent.ManualSyncInitiated)
         viewModelScope.launch {
-            syncExoplanetsUseCase().collect {
-                _syncStatus.value = it
+            syncExoplanetsUseCase().collect { status ->
+                _syncStatus.value = status
+                when (status) {
+                    SyncStatus.Success -> trackEvent(AnalyticsEvent.ManualSyncSuccess)
+                    is SyncStatus.Error -> trackEvent(AnalyticsEvent.ManualSyncFailure(status.message))
+                    else -> Unit
+                }
             }
         }
     }

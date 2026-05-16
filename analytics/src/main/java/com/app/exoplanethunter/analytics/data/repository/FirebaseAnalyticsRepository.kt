@@ -79,6 +79,16 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
         is AnalyticsEvent.ManualSyncInitiated ->
             Keys.MANUAL_SYNC_INITIATED to null
 
+        is AnalyticsEvent.ManualSyncSuccess ->
+            Keys.MANUAL_SYNC_SUCCESS to null
+
+        is AnalyticsEvent.ManualSyncFailure -> {
+            val event = this
+            Keys.MANUAL_SYNC_FAILURE to Bundle().apply {
+                putString(Keys.PARAM_ERROR_MESSAGE, event.errorMessage)
+            }
+        }
+
         is AnalyticsEvent.StarSystemFilterApplied -> {
             val event = this
             Keys.STAR_SYSTEM_FILTER_APPLIED to Bundle().apply {

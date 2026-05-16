@@ -44,6 +44,12 @@ sealed class AnalyticsEvent {
 
     object ManualSyncInitiated : AnalyticsEvent()
 
+    object ManualSyncSuccess : AnalyticsEvent()
+
+    data class ManualSyncFailure(
+        val errorMessage: String
+    ) : AnalyticsEvent()
+
     data class StarSystemFilterApplied(
         val filter: String
     ) : AnalyticsEvent()

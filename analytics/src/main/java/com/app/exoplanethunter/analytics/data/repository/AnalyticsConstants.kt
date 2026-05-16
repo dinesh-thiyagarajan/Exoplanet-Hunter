@@ -14,6 +14,8 @@ object AnalyticsConstants {
     const val PLANET_FILTER_APPLIED = "planet_filter_applied"
     const val PLANET_SEARCHED = "planet_searched"
     const val MANUAL_SYNC_INITIATED = "manual_sync_initiated"
+    const val MANUAL_SYNC_SUCCESS = "manual_sync_success"
+    const val MANUAL_SYNC_FAILURE = "manual_sync_failure"
     const val STAR_SYSTEM_FILTER_APPLIED = "star_system_filter_applied"
 
     // Parameter Keys
@@ -25,4 +27,5 @@ object AnalyticsConstants {
     const val PARAM_FILTER_VALUE = "filter_value"
     const val PARAM_QUERY = "query"
     const val PARAM_FILTER = "filter"
+    const val PARAM_ERROR_MESSAGE = "error_message"
 }

@@ -75,16 +75,16 @@ fun AboutScreen(
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
-                
-                SectionHeader("Scientific Framework")
+
+                SectionHeader(stringResource(R.string.about_section_scientific_framework))
 
                 // Information Sections
                 AnimatedSection(delay = 200) {
                     AboutSection(
                         icon = Icons.Default.Dataset,
                         iconColor = CosmicCyan,
-                        title = "NASA Exoplanet Archive",
-                        description = "Operated by the California Institute of Technology (Caltech) under contract with NASA, this archive is the global standard for confirmed exoplanet data. It aggregates measurements from space missions like Kepler, K2, and TESS, as well as major ground-based surveys."
+                        title = stringResource(R.string.about_data_source_title),
+                        description = stringResource(R.string.about_data_source_description)
                     )
                 }
 
@@ -94,8 +94,8 @@ fun AboutScreen(
                     AboutSection(
                         icon = Icons.Default.AutoAwesome,
                         iconColor = StarGold,
-                        title = "Data Verification",
-                        description = "Every planet in this app has undergone a rigorous peer-review process. Confirmation typically requires multiple independent observations to verify the planet's existence and accurately measure its physical properties, such as mass, radius, and orbital period."
+                        title = stringResource(R.string.about_verification_title),
+                        description = stringResource(R.string.about_verification_description)
                     )
                 }
 
@@ -105,8 +105,8 @@ fun AboutScreen(
                     AboutSection(
                         icon = Icons.Default.Psychology,
                         iconColor = NebulaPink,
-                        title = "Inference & ML",
-                        description = "We use planetary and stellar features (orbital semi-major axis, stellar mass, temperature) to run on-device habitability estimates. These insights are intended for educational exploration based on current astrophysical models."
+                        title = stringResource(R.string.about_ml_title),
+                        description = stringResource(R.string.about_ml_description)
                     )
                 }
 
@@ -181,16 +181,16 @@ private fun AboutHeader(planetCount: Int, systemCount: Int) {
         )
         
         Text(
-            text = "NASA ARCHIVE DATASET",
+            text = stringResource(R.string.about_nasa_archive_dataset),
             style = MaterialTheme.typography.labelMedium,
             color = CosmicCyan,
             fontWeight = FontWeight.Bold,
             letterSpacing = 4.sp,
             modifier = Modifier.padding(top = 4.dp)
         )
-        
+
         Text(
-            text = "Version 1.12.4",
+            text = stringResource(R.string.about_version),
             style = MaterialTheme.typography.bodySmall,
             color = TextMuted,
             modifier = Modifier.padding(top = 8.dp)
@@ -212,22 +212,22 @@ private fun AboutHeader(planetCount: Int, systemCount: Int) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 CountBadge(
-                    count = planetCount, 
-                    label = "Planets", 
+                    count = planetCount,
+                    label = stringResource(R.string.about_planets),
                     icon = Icons.Default.Public,
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 Box(
                     modifier = Modifier
                         .height(32.dp)
                         .width(1.dp)
                         .background(SurfaceCardLight)
                 )
-                
+
                 CountBadge(
-                    count = systemCount, 
-                    label = "Systems", 
+                    count = systemCount,
+                    label = stringResource(R.string.about_systems),
                     icon = Icons.Default.Star,
                     modifier = Modifier.weight(1f)
                 )
@@ -333,13 +333,13 @@ fun SyncControl(
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "NASA TAP Sync",
+                        text = stringResource(R.string.about_sync_title),
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Archive Synchronization",
+                        text = stringResource(R.string.about_sync_subtitle),
                         style = MaterialTheme.typography.labelSmall,
                         color = CosmicCyan,
                         letterSpacing = 0.5.sp
@@ -367,13 +367,13 @@ fun SyncControl(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Last updated:",
+                        text = stringResource(R.string.about_sync_last_updated),
                         style = MaterialTheme.typography.bodySmall,
                         color = TextMuted
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = formatLastSyncTime(lastSyncTime),
+                        text = if (lastSyncTime == 0L) stringResource(R.string.about_sync_never) else formatLastSyncTime(lastSyncTime),
                         style = MaterialTheme.typography.bodySmall,
                         color = StarWhite,
                         fontWeight = FontWeight.Medium
@@ -399,7 +399,7 @@ fun SyncControl(
                         Icon(Icons.Default.Sync, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            "REFRESH CATALOG",
+                            stringResource(R.string.about_sync_refresh),
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
                         )
@@ -407,7 +407,7 @@ fun SyncControl(
                     
                     if (status is SyncStatus.Success) {
                         SyncMessage(
-                            message = "Catalog successfully updated",
+                            message = stringResource(R.string.about_sync_success),
                             color = HabitableGreen,
                             icon = Icons.Default.CheckCircle
                         )
@@ -438,7 +438,7 @@ fun SyncControl(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Updating planetary records...",
+                                text = stringResource(R.string.about_sync_updating),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = CosmicCyan
                             )
@@ -457,7 +457,6 @@ fun SyncControl(
 }
 
 private fun formatLastSyncTime(timestamp: Long): String {
-    if (timestamp == 0L) return "Never"
     val sdf = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
     return sdf.format(Date(timestamp))
 }
@@ -539,27 +538,38 @@ private fun AboutFooter() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "DATA SOURCE ACKNOWLEDGEMENT",
+            text = stringResource(R.string.about_acknowledgement_label),
             style = MaterialTheme.typography.labelSmall,
             color = CosmicCyan,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp
         )
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         Text(
-            text = "This application uses the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.",
+            text = stringResource(R.string.about_acknowledgement_text),
             style = MaterialTheme.typography.bodySmall,
             color = TextMuted,
             textAlign = TextAlign.Center,
             lineHeight = 18.sp
         )
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         Text(
-            text = "IPAC / CALTECH / NASA",
+            text = stringResource(R.string.about_acknowledgement_citation),
+            style = MaterialTheme.typography.labelSmall,
+            color = TextMuted,
+            textAlign = TextAlign.Center,
+            fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+            lineHeight = 16.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(R.string.about_acknowledgement_attribution),
             style = MaterialTheme.typography.labelSmall,
             color = TextMuted,
             fontWeight = FontWeight.Bold,

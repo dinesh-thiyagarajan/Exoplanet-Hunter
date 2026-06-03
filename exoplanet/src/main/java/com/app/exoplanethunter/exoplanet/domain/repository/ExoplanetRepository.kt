@@ -31,5 +31,6 @@ interface ExoplanetRepository {
     fun getMultiPlanetSystems(): Flow<List<StarSystemSummary>>
     fun getStarSystemsByStarCount(starCount: Int): Flow<List<StarSystemSummary>>
 
+    fun getSyncStatus(): Flow<SyncStatus>
     suspend fun syncExoplanets(): Flow<SyncStatus>
 }

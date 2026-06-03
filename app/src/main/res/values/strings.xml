@@ -11,4 +11,28 @@
     <string name="filter_habitable">Habitable</string>
     <string name="filter_recent_3y">Recent (3y)</string>
     <string name="filter_latest">Latest</string>
+
+    <!-- About Screen -->
+    <string name="about_nasa_archive_dataset">NASA ARCHIVE DATASET</string>
+    <string name="about_version">Version 1.12.4</string>
+    <string name="about_planets">Planets</string>
+    <string name="about_systems">Systems</string>
+    <string name="about_section_scientific_framework">Scientific Framework</string>
+    <string name="about_data_source_title">NASA Exoplanet Archive</string>
+    <string name="about_data_source_description">Operated by the California Institute of Technology (Caltech) under contract with NASA, this archive is the global standard for confirmed exoplanet data. It aggregates measurements from space missions like Kepler, K2, and TESS, as well as major ground-based surveys.</string>
+    <string name="about_verification_title">Data Verification</string>
+    <string name="about_verification_description">Every planet in this app has undergone a rigorous peer-review process. Confirmation typically requires multiple independent observations to verify the planet\'s existence and accurately measure its physical properties, such as mass, radius, and orbital period.</string>
+    <string name="about_ml_title">Inference &amp; ML</string>
+    <string name="about_ml_description">We use planetary and stellar features (orbital semi-major axis, stellar mass, temperature) to run on-device habitability estimates. These insights are intended for educational exploration based on current astrophysical models.</string>
+    <string name="about_sync_title">NASA TAP Sync</string>
+    <string name="about_sync_subtitle">Archive Synchronization</string>
+    <string name="about_sync_last_updated">Last updated:</string>
+    <string name="about_sync_never">Never</string>
+    <string name="about_sync_refresh">REFRESH CATALOG</string>
+    <string name="about_sync_updating">Updating planetary records…</string>
+    <string name="about_sync_success">Catalog successfully updated</string>
+    <string name="about_acknowledgement_label">DATA SOURCE ACKNOWLEDGEMENT</string>
+    <string name="about_acknowledgement_text">This application has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.</string>
+    <string name="about_acknowledgement_citation">Christiansen et al. (2025), Planetary Science Journal</string>
+    <string name="about_acknowledgement_attribution">IPAC / CALTECH / NASA</string>
 </resources>

@@ -28,24 +28,33 @@ class AboutViewModel(
     val lastSyncTime = repository.getLastSyncTime()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0L)
 
-    init {
-        trackEvent(AnalyticsEvent.AboutScreenViewed)
-    }
-
     private val _syncStatus = MutableStateFlow<SyncStatus>(SyncStatus.Idle)
     val syncStatus = _syncStatus.asStateFlow()
+
+    init {
+        trackEvent(AnalyticsEvent.AboutScreenViewed)
+        observeSyncStatus()
+    }
+
+    private fun observeSyncStatus() {
+        viewModelScope.launch {
+            repository.getSyncStatus().collect { status ->
+                if (_syncStatus.value != status) { // Only track changes
+                    when (status) {
+                        SyncStatus.Success -> trackEvent(AnalyticsEvent.ManualSyncSuccess)
+                        is SyncStatus.Error -> trackEvent(AnalyticsEvent.ManualSyncFailure(status.message))
+                        else -> Unit
+                    }
+                }
+                _syncStatus.value = status
+            }
+        }
+    }
 
     fun syncData() {
         trackEvent(AnalyticsEvent.ManualSyncInitiated)
         viewModelScope.launch {
-            syncExoplanetsUseCase().collect { status ->
-                _syncStatus.value = status
-                when (status) {
-                    SyncStatus.Success -> trackEvent(AnalyticsEvent.ManualSyncSuccess)
-                    is SyncStatus.Error -> trackEvent(AnalyticsEvent.ManualSyncFailure(status.message))
-                    else -> Unit
-                }
-            }
+            syncExoplanetsUseCase() // Just trigger, the observer will pick up progress
         }
     }
 }

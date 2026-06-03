@@ -12,10 +12,15 @@ import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
 import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class ExoplanetRepositoryImpl(
@@ -25,6 +30,10 @@ class ExoplanetRepositoryImpl(
 ) : ExoplanetRepository {
 
     private val workManager = WorkManager.getInstance(context)
+    private val repositoryScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val _syncStatus = MutableStateFlow<SyncStatus>(SyncStatus.Idle)
+
+    override fun getSyncStatus(): Flow<SyncStatus> = _syncStatus.asStateFlow()
 
     override fun getAllPlanets(): Flow<List<Exoplanet>> {
         return dao.getAllPlanets().map { entities -> entities.map { it.toDomain() } }
@@ -101,14 +110,14 @@ class ExoplanetRepositoryImpl(
         val syncRequest = OneTimeWorkRequestBuilder<DataSyncWorker>()
             .addTag("data_sync")
             .build()
-        
+
         workManager.enqueueUniqueWork(
             "exoplanet_sync",
             ExistingWorkPolicy.REPLACE,
             syncRequest
         )
 
-        return workManager.getWorkInfoByIdFlow(syncRequest.id).map { workInfo ->
+        val workFlow = workManager.getWorkInfoByIdFlow(syncRequest.id).map { workInfo ->
             when (workInfo?.state) {
                 WorkInfo.State.RUNNING -> {
                     val progress = workInfo.progress.getInt("progress", 0)
@@ -122,6 +131,12 @@ class ExoplanetRepositoryImpl(
                 else -> SyncStatus.Idle
             }
         }
+
+        repositoryScope.launch {
+            workFlow.collect { _syncStatus.value = it }
+        }
+
+        return _syncStatus.asStateFlow()
     }
 
     private fun ExoplanetEntity.toDomain(): Exoplanet {

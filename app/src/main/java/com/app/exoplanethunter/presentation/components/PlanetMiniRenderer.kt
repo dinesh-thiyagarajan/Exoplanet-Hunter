@@ -32,18 +32,7 @@ fun PlanetMiniRenderer(
     modifier: Modifier = Modifier,
     size: Dp = 56.dp
 ) {
-    val planetColor = remember(planet) {
-        val temp = planet.equilibriumTempK
-        when {
-            temp != null && temp < 200 -> FrozenBlue
-            temp != null && temp < 300 -> CoolBlue
-            temp != null && temp < 400 -> TemperateGreen
-            temp != null && temp < 600 -> WarmYellow
-            temp != null && temp < 1000 -> HotOrange
-            temp != null -> ScorchingRed
-            else -> Color(0xFF8888AA)
-        }
-    }
+    val planetColor = remember(planet) { planetAccentColor(planet) }
 
     val infiniteTransition = rememberInfiniteTransition(label = "mini_planet")
     val glowPulse by infiniteTransition.animateFloat(

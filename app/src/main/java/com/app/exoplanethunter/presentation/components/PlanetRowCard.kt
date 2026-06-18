@@ -9,8 +9,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,6 +58,7 @@ import com.app.exoplanethunter.presentation.theme.TextSecondary
  * The standard exoplanet list-row card, shared by the Planets list and the Favorites list so
  * both stay visually identical. Includes the favorite (star) toggle on the trailing edge.
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PlanetRowCard(
     planet: Exoplanet,
@@ -61,105 +67,114 @@ fun PlanetRowCard(
     onClick: () -> Unit,
     isYearHighlighted: Boolean = false
 ) {
-    var pressed by remember { mutableStateOf(false) }
-    val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.97f else 1f,
-        animationSpec = spring(stiffness = Spring.StiffnessHigh),
-        label = "card_scale"
-    )
+    val accent = planetAccentColor(planet)
+    val typeLabel = planetTypeLabel(planet)
+    val typeColor = planetTypeColor(typeLabel)
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .scale(scale)
             .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = SurfaceCard),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PlanetMiniRenderer(
-                planet = planet,
-                size = 56.dp
+            // Colored accent bar keyed to the planet's type/temperature.
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .fillMaxHeight()
+                    .background(
+                        Brush.verticalGradient(listOf(accent, accent.copy(alpha = 0.25f)))
+                    )
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = planet.planetName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Text(
-                    text = planet.hostName,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = CosmicCyan,
-                    maxLines = 1
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    planet.planetRadiusEarth?.let {
-                        InfoChip("${String.format("%.1f", it)}R⊕")
-                    }
-                    planet.equilibriumTempK?.let {
-                        InfoChip("${it.toInt()}K")
-                    }
-                    InfoChip(
-                        text = planet.discoveryYear.toString(),
-                        isHighlighted = isYearHighlighted
-                    )
-                }
-            }
-
-            Column(
-                horizontalAlignment = Alignment.End
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 14.dp, top = 14.dp, bottom = 14.dp, end = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = planet.discoveryMethod
-                        .replace("Radial Velocity", "RV")
-                        .replace("Transit Timing Variations", "TTV")
-                        .replace("Microlensing", "Lens")
-                        .replace("Direct Imaging", "DI")
-                        .take(10),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = NebulaPink
-                )
+                PlanetMiniRenderer(planet = planet, size = 52.dp)
 
-                planet.distanceParsec?.let { dist ->
-                    Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.width(14.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "${String.format("%.0f", dist)} pc",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TextMuted
+                        text = planet.planetName,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    Text(
+                        text = planet.hostName,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = CosmicCyan,
+                        maxLines = 1
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        TypeChip(label = typeLabel, color = typeColor)
+                        planet.planetRadiusEarth?.let {
+                            InfoChip("${String.format("%.1f", it)} R⊕")
+                        }
+                        planet.equilibriumTempK?.let {
+                            InfoChip("${it.toInt()} K")
+                        }
+                        planet.distanceParsec?.let {
+                            InfoChip("${String.format("%.0f", it)} pc")
+                        }
+                        InfoChip(
+                            text = planet.discoveryYear.toString(),
+                            isHighlighted = isYearHighlighted
+                        )
+                    }
+                }
+
+                IconButton(
+                    onClick = onToggleFavorite,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        imageVector = if (isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
+                        contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                        tint = if (isFavorite) StarGold else TextMuted
                     )
                 }
-            }
-
-            IconButton(
-                onClick = onToggleFavorite,
-                modifier = Modifier.size(40.dp)
-            ) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
-                    contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                    tint = if (isFavorite) StarGold else TextMuted
-                )
             }
         }
+    }
+}
+
+@Composable
+private fun TypeChip(label: String, color: Color) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(color.copy(alpha = 0.18f))
+            .padding(horizontal = 8.dp, vertical = 2.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = color,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 

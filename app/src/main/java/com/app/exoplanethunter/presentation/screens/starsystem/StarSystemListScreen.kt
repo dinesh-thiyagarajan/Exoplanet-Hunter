@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
@@ -51,6 +52,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.ads.AdBannerCard
+import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
@@ -215,7 +217,7 @@ fun StarSystemListScreen(
                     systems.forEachIndexed { index, system ->
                         item(key = system.id) {
                             AnimatedSystemCard(
-                                hostName = system.hostName,
+                                system = system,
                                 index = index,
                                 onClick = {
                                     viewModel.trackSystemClicked(system)
@@ -238,7 +240,7 @@ fun StarSystemListScreen(
 
 @Composable
 private fun AnimatedSystemCard(
-    hostName: String,
+    system: StarSystemSummary,
     index: Int,
     onClick: () -> Unit,
 ) {
@@ -256,13 +258,13 @@ private fun AnimatedSystemCard(
                 translationY = (1f - progress.value) * 24f
             },
     ) {
-        StarSystemCard(hostName = hostName, onClick = onClick)
+        StarSystemCard(system = system, onClick = onClick)
     }
 }
 
 @Composable
 private fun StarSystemCard(
-    hostName: String,
+    system: StarSystemSummary,
     onClick: () -> Unit,
 ) {
     Card(
@@ -282,7 +284,7 @@ private fun StarSystemCard(
             // Star icon
             Box(
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(56.dp)
                     .clip(CircleShape)
                     .background(
                         Brush.radialGradient(
@@ -299,7 +301,7 @@ private fun StarSystemCard(
                     Icons.Default.Star,
                     contentDescription = null,
                     tint = StarGold,
-                    modifier = Modifier.size(24.dp),
+                    modifier = Modifier.size(26.dp),
                 )
             }
 
@@ -307,7 +309,7 @@ private fun StarSystemCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = hostName,
+                    text = system.hostName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White,
@@ -315,29 +317,62 @@ private fun StarSystemCard(
                     overflow = TextOverflow.Ellipsis,
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                system.spectralType?.takeIf { it.isNotBlank() }?.let {
+                    Text(
+                        text = "Spectral type $it",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = StarGold,
+                        maxLines = 1,
+                    )
+                }
 
-                Text(
-                    text = "Tap to explore system",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted,
-                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    val planetCount = system.numPlanets
+                    SystemInfoChip(
+                        text = "$planetCount ${if (planetCount == 1) "planet" else "planets"}",
+                        color = CosmicCyan,
+                    )
+                    SystemInfoChip(text = starCountLabel(system.numStars), color = SolarOrange)
+                    system.distanceParsec?.let { dist ->
+                        SystemInfoChip(text = "${String.format("%.0f", dist)} pc", color = TextSecondary)
+                    }
+                }
             }
 
-            // Arrow indicator
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(SurfaceCardLight)
-                    .padding(horizontal = 10.dp, vertical = 4.dp),
-            ) {
-                Text(
-                    text = "View",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = CosmicCyan,
-                    fontSize = 11.sp,
-                )
-            }
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Icon(
+                Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = TextMuted,
+            )
         }
+    }
+}
+
+private fun starCountLabel(numStars: Int): String = when (numStars) {
+    0, 1 -> "Single star"
+    2 -> "Binary"
+    3 -> "Trinary"
+    else -> "$numStars stars"
+}
+
+@Composable
+private fun SystemInfoChip(text: String, color: Color) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(SurfaceCardLight)
+            .padding(horizontal = 8.dp, vertical = 3.dp),
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            color = color,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Medium,
+        )
     }
 }

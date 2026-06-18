@@ -106,28 +106,64 @@ interface ExoplanetDao {
     )
     fun getMostHabitablePlanets(limit: Int = 20): Flow<List<ExoplanetEntity>>
 
-    @Query("SELECT id, hostName FROM star_systems ORDER BY hostName ASC")
+    @Query(
+        """
+        SELECT ss.id AS id, ss.hostName AS hostName,
+               COUNT(e.id) AS numPlanets,
+               MAX(e.numStars) AS numStars,
+               MAX(e.distanceParsec) AS distanceParsec,
+               MAX(e.spectralType) AS spectralType
+        FROM star_systems ss
+        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1
+        GROUP BY ss.id
+        ORDER BY ss.hostName ASC
+        """
+    )
     fun getAllStarSystems(): Flow<List<StarSystemSummary>>
 
     @Query("SELECT * FROM exoplanets WHERE systemId = :systemId AND isDefault = 1 ORDER BY orbitSemiMajorAxisAu ASC")
     suspend fun getPlanetsForSystem(systemId: Long): List<ExoplanetEntity>
 
-    @Query("SELECT id, hostName FROM star_systems WHERE hostName LIKE '%' || :query || '%' ORDER BY hostName ASC")
+    @Query(
+        """
+        SELECT ss.id AS id, ss.hostName AS hostName,
+               COUNT(e.id) AS numPlanets,
+               MAX(e.numStars) AS numStars,
+               MAX(e.distanceParsec) AS distanceParsec,
+               MAX(e.spectralType) AS spectralType
+        FROM star_systems ss
+        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1
+        WHERE ss.hostName LIKE '%' || :query || '%'
+        GROUP BY ss.id
+        ORDER BY ss.hostName ASC
+        """
+    )
     fun searchStarSystems(query: String): Flow<List<StarSystemSummary>>
 
     @Query(
         """
-        SELECT ss.id, ss.hostName FROM star_systems ss 
-        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1 
-        GROUP BY ss.id HAVING COUNT(*) > 1 ORDER BY COUNT(*) DESC
+        SELECT ss.id AS id, ss.hostName AS hostName,
+               COUNT(e.id) AS numPlanets,
+               MAX(e.numStars) AS numStars,
+               MAX(e.distanceParsec) AS distanceParsec,
+               MAX(e.spectralType) AS spectralType
+        FROM star_systems ss
+        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1
+        GROUP BY ss.id HAVING COUNT(e.id) > 1 ORDER BY COUNT(e.id) DESC
         """
     )
     fun getMultiPlanetSystems(): Flow<List<StarSystemSummary>>
 
     @Query(
         """
-        SELECT DISTINCT ss.id, ss.hostName FROM star_systems ss 
-        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1 AND e.numStars = :starCount 
+        SELECT ss.id AS id, ss.hostName AS hostName,
+               COUNT(e.id) AS numPlanets,
+               MAX(e.numStars) AS numStars,
+               MAX(e.distanceParsec) AS distanceParsec,
+               MAX(e.spectralType) AS spectralType
+        FROM star_systems ss
+        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1 AND e.numStars = :starCount
+        GROUP BY ss.id
         ORDER BY ss.hostName ASC
         """
     )

@@ -4,6 +4,7 @@ import android.content.Context
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.HabitabilityInsight
 import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
+import org.json.JSONObject
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.nio.ByteBuffer
@@ -20,8 +21,10 @@ class ExoplanetClassifier(private val context: Context) {
     private var habitableInterpreter: Interpreter? = null
     private var planetTypeInterpreter: Interpreter? = null
 
+    // Preprocessing params below are FALLBACK defaults; the real values are loaded from the
+    // bundled *_metadata.json in init(), so a retrain is a drop-in asset swap (tflite + json).
     // --- Habitable model scaler values (20 features) ---
-    private val habitableMean = doubleArrayOf(
+    private var habitableMean = doubleArrayOf(
         25.560833292970155,
         0.13460360990145173,
         6.4986823561924885,
@@ -44,7 +47,7 @@ class ExoplanetClassifier(private val context: Context) {
         6.282567205820584
     )
 
-    private val habitableScale = doubleArrayOf(
+    private var habitableScale = doubleArrayOf(
         65.35558673089939,
         0.14958115452650433,
         95.7136878735263,
@@ -67,10 +70,11 @@ class ExoplanetClassifier(private val context: Context) {
         0.9186321931600263
     )
 
-    private val habitableThreshold = 0.62f
+    private var habitableThreshold = 0.62f
+    private var habitableMedian = DoubleArray(20)
 
     // --- Planet type model scaler values (20 features) ---
-    private val planetTypeMean = doubleArrayOf(
+    private var planetTypeMean = doubleArrayOf(
         11108.13950634216,
         2.7014787152319224,
         4.47275712511527,
@@ -93,7 +97,7 @@ class ExoplanetClassifier(private val context: Context) {
         6.098611492058574
     )
 
-    private val planetTypeScale = doubleArrayOf(
+    private var planetTypeScale = doubleArrayOf(
         2026758.0343796052,
         135.1906867724341,
         59.563570513224754,
@@ -116,7 +120,9 @@ class ExoplanetClassifier(private val context: Context) {
         1.1474022814476705
     )
 
-    private val planetTypeLabels = arrayOf(
+    private var planetTypeMedian = DoubleArray(20)
+
+    private var planetTypeLabels = listOf(
         "Gas Giant",
         "Neptune-like",
         "Rocky",
@@ -129,8 +135,47 @@ class ExoplanetClassifier(private val context: Context) {
         try {
             habitableInterpreter = Interpreter(loadModelFile("habitable_model.tflite"))
             planetTypeInterpreter = Interpreter(loadModelFile("planet_type_model.tflite"))
+            loadMeta("habitable_tflite_metadata.json")?.let {
+                habitableMean = it.mean
+                habitableScale = it.scale
+                habitableMedian = it.median
+                habitableThreshold = it.threshold
+            }
+            loadMeta("planet_type_tflite_metadata.json")?.let {
+                planetTypeMean = it.mean
+                planetTypeScale = it.scale
+                planetTypeMedian = it.median
+                planetTypeLabels = it.labels
+            }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    /** Preprocessing params + labels for one model, parsed from its metadata JSON asset. */
+    private class ModelMeta(
+        val mean: DoubleArray,
+        val scale: DoubleArray,
+        val median: DoubleArray,
+        val threshold: Float,
+        val labels: List<String>,
+    )
+
+    private fun loadMeta(filename: String): ModelMeta? {
+        return try {
+            val text = context.assets.open(filename).bufferedReader().use { it.readText() }
+            val obj = JSONObject(text)
+            fun arr(key: String): DoubleArray {
+                val a = obj.getJSONArray(key)
+                return DoubleArray(a.length()) { a.getDouble(it) }
+            }
+            val labelsArr = obj.getJSONArray("labels")
+            val labels = (0 until labelsArr.length()).map { labelsArr.getString(it) }
+            val threshold = if (obj.has("threshold")) obj.getDouble("threshold").toFloat() else 0.5f
+            ModelMeta(arr("scaler_mean"), arr("scaler_scale"), arr("impute_median"), threshold, labels)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 
@@ -239,56 +284,68 @@ class ExoplanetClassifier(private val context: Context) {
      * 19  log_sy_dist            ln(sy_dist)
      */
     private fun extractFeatures(planet: Exoplanet): DoubleArray {
-        val plOrbper = planet.orbitalPeriodDays ?: 0.0
-        val plOrbsmax = planet.orbitSemiMajorAxisAu ?: 0.0
-        val plRade = planet.planetRadiusEarth ?: 0.0
-        val plBmasse = planet.planetMassEarth ?: 0.0
-        val plOrbeccen = planet.eccentricity ?: 0.0
-        val plEqt = planet.equilibriumTempK ?: 0.0
-        val plInsol = planet.insolationFlux ?: 0.0
-        val stTeff = planet.stellarEffectiveTempK ?: 0.0
-        val stRad = planet.stellarRadiusSolar ?: 0.0
-        val stMass = planet.stellarMassSolar ?: 0.0
-        val stLogg = planet.stellarSurfaceGravity ?: 0.0
-        val stMet = planet.stellarMetallicity ?: 0.0
-        val syDist = planet.distanceParsec ?: 0.0
+        // Missing inputs are left as NaN (NOT 0.0). The normalization step then imputes each
+        // NaN with that feature's training median — exactly mirroring train_local.py. Using 0.0
+        // here would feed the model out-of-distribution values after standardization.
+        val plOrbper = planet.orbitalPeriodDays
+        val plOrbsmax = planet.orbitSemiMajorAxisAu
+        val plRade = planet.planetRadiusEarth
+        val plBmasse = planet.planetMassEarth
+        val plOrbeccen = planet.eccentricity
+        val plEqt = planet.equilibriumTempK
+        val plInsol = planet.insolationFlux
+        val stTeff = planet.stellarEffectiveTempK
+        val stRad = planet.stellarRadiusSolar
+        val stMass = planet.stellarMassSolar
+        val stLogg = planet.stellarSurfaceGravity
+        val stMet = planet.stellarMetallicity
+        val syDist = planet.distanceParsec
 
-        // Derived features
-        val radiusMassRatio = if (plBmasse > 0.0) plRade / plBmasse else 0.0
-        val planetStarRadiusRatio = if (stRad > 0.0) plRade / (stRad * 109.076) else 0.0
-        val fluxTempRatio = if (plEqt > 0.0) plInsol / plEqt else 0.0
+        // Derived features — NaN whenever an input is missing or out of the valid domain.
+        val radiusMassRatio = ratio(plRade, plBmasse)
+        val planetStarRadiusRatio = ratio(plRade, stRad?.let { it * 109.076 })
+        val fluxTempRatio = ratio(plInsol, plEqt)
         val logPlOrbper = safeLog(plOrbper)
         val logPlBmasse = safeLog(plBmasse)
         val logPlRade = safeLog(plRade)
         val logSyDist = safeLog(syDist)
 
         return doubleArrayOf(
-            plOrbper,               // 0
-            plOrbsmax,              // 1
-            plRade,                 // 2
-            plBmasse,               // 3
-            plOrbeccen,             // 4
-            plEqt,                  // 5
-            plInsol,                // 6
-            stTeff,                 // 7
-            stRad,                  // 8
-            stMass,                 // 9
-            stLogg,                 // 10
-            stMet,                  // 11
-            syDist,                 // 12
-            radiusMassRatio,        // 13
-            planetStarRadiusRatio,  // 14
-            fluxTempRatio,          // 15
-            logPlOrbper,            // 16
-            logPlBmasse,            // 17
-            logPlRade,              // 18
-            logSyDist               // 19
+            plOrbper ?: Double.NaN,         // 0
+            plOrbsmax ?: Double.NaN,        // 1
+            plRade ?: Double.NaN,           // 2
+            plBmasse ?: Double.NaN,         // 3
+            plOrbeccen ?: Double.NaN,       // 4
+            plEqt ?: Double.NaN,            // 5
+            plInsol ?: Double.NaN,          // 6
+            stTeff ?: Double.NaN,           // 7
+            stRad ?: Double.NaN,            // 8
+            stMass ?: Double.NaN,           // 9
+            stLogg ?: Double.NaN,           // 10
+            stMet ?: Double.NaN,            // 11
+            syDist ?: Double.NaN,           // 12
+            radiusMassRatio,                // 13
+            planetStarRadiusRatio,          // 14
+            fluxTempRatio,                  // 15
+            logPlOrbper,                    // 16
+            logPlBmasse,                    // 17
+            logPlRade,                      // 18
+            logSyDist                       // 19
         )
     }
 
-    /** Natural log that guards against non-positive values. */
-    private fun safeLog(value: Double): Double {
-        return if (value > 0.0) ln(value) else 0.0
+    /** numerator / denominator, or NaN if either is missing or the denominator is non-positive. */
+    private fun ratio(numerator: Double?, denominator: Double?): Double {
+        return if (numerator != null && denominator != null && denominator > 0.0) {
+            numerator / denominator
+        } else {
+            Double.NaN
+        }
+    }
+
+    /** Natural log of a positive value, or NaN otherwise (mirrors the Python safe_log). */
+    private fun safeLog(value: Double?): Double {
+        return if (value != null && value > 0.0) ln(value) else Double.NaN
     }
 
     // -----------------------------------------------------------------------
@@ -296,18 +353,19 @@ class ExoplanetClassifier(private val context: Context) {
     // -----------------------------------------------------------------------
 
     /**
-     * Apply Z-score normalization: (x - mean) / scale for each feature.
+     * Impute missing (NaN) features with the training median, then apply Z-score
+     * normalization: (x - mean) / scale. This matches train_local.py's
+     * "fillna(median) -> StandardScaler" order exactly.
      */
     private fun normalizeFeatures(
         raw: DoubleArray,
         mean: DoubleArray,
-        scale: DoubleArray
+        scale: DoubleArray,
+        median: DoubleArray
     ): FloatArray {
-        require(raw.size == mean.size && raw.size == scale.size) {
-            "Feature array size (${raw.size}) must match mean (${mean.size}) and scale (${scale.size})"
-        }
         return FloatArray(raw.size) { i ->
-            ((raw[i] - mean[i]) / scale[i]).toFloat()
+            val imputed = if (raw[i].isNaN()) median.getOrElse(i) { 0.0 } else raw[i]
+            ((imputed - mean[i]) / scale[i]).toFloat()
         }
     }
 
@@ -320,7 +378,7 @@ class ExoplanetClassifier(private val context: Context) {
      */
     private fun runHabitableModel(rawFeatures: DoubleArray): Float {
         val interpreter = habitableInterpreter ?: return 0f
-        val normalized = normalizeFeatures(rawFeatures, habitableMean, habitableScale)
+        val normalized = normalizeFeatures(rawFeatures, habitableMean, habitableScale, habitableMedian)
 
         // Prepare input buffer: 1 sample x 20 features, float32
         val inputBuffer = ByteBuffer.allocateDirect(4 * normalized.size)
@@ -347,7 +405,7 @@ class ExoplanetClassifier(private val context: Context) {
      */
     private fun runPlanetTypeModel(rawFeatures: DoubleArray): FloatArray {
         val interpreter = planetTypeInterpreter ?: return FloatArray(6) { 0f }
-        val normalized = normalizeFeatures(rawFeatures, planetTypeMean, planetTypeScale)
+        val normalized = normalizeFeatures(rawFeatures, planetTypeMean, planetTypeScale, planetTypeMedian)
 
         // Prepare input buffer: 1 sample x 20 features, float32
         val inputBuffer = ByteBuffer.allocateDirect(4 * normalized.size)

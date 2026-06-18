@@ -299,31 +299,24 @@ fun PlanetListScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         val planets = viewModel.planets
-                        items(
-                            items = planets,
-                            key = { it.id }
-                        ) { planet ->
-                            AnimatedPlanetCard(
-                                planet = planet,
-                                index = planets.indexOf(planet), // This can be inefficient for large lists
-                                isYearHighlighted = viewModel.showLatestOnly || viewModel.minDiscoveryYear != null,
-                                isFavorite = planet.planetName in viewModel.favoriteNames,
-                                onToggleFavorite = { viewModel.toggleFavorite(planet) },
-                                onClick = {
-                                    viewModel.trackPlanetClicked(planet)
-                                    onPlanetClick(planet.id)
-                                }
-                            )
-                        }
-                        // Ad after every 5th item
-                        val adsToShow = (planets.size / 5) -1 // Adjust logic to correctly place ads
-                        for (i in 0 until adsToShow) {
-                            val adIndex = (i + 1) * 5 -1 // Place ad after every 5th item (0-indexed)
-                            if (adIndex < planets.size - 1) { // Ensure ad is not after the very last item
-                                item(key = "ad_planet_$adIndex") {
-                                    Spacer(modifier = Modifier.height(12.dp))
+                        planets.forEachIndexed { index, planet ->
+                            item(key = planet.id) {
+                                AnimatedPlanetCard(
+                                    planet = planet,
+                                    index = index,
+                                    isYearHighlighted = viewModel.showLatestOnly || viewModel.minDiscoveryYear != null,
+                                    isFavorite = planet.planetName in viewModel.favoriteNames,
+                                    onToggleFavorite = { viewModel.toggleFavorite(planet) },
+                                    onClick = {
+                                        viewModel.trackPlanetClicked(planet)
+                                        onPlanetClick(planet.id)
+                                    }
+                                )
+                            }
+                            // Interleave an ad after every 5th planet (not at the end of the list).
+                            if ((index + 1) % 5 == 0 && index < planets.size - 1) {
+                                item(key = "ad_planet_$index") {
                                     AdBannerCard()
-                                    Spacer(modifier = Modifier.height(12.dp))
                                 }
                             }
                         }

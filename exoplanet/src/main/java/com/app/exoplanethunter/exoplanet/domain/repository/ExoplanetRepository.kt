@@ -33,4 +33,9 @@ interface ExoplanetRepository {
 
     fun getSyncStatus(): Flow<SyncStatus>
     suspend fun syncExoplanets(): Flow<SyncStatus>
+
+    // Favorites — keyed by planetName so they survive catalog syncs (which reassign ids)
+    fun getFavoriteNames(): Flow<Set<String>>
+    fun getFavoritePlanets(): Flow<List<Exoplanet>>
+    suspend fun toggleFavorite(planetName: String)
 }

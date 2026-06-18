@@ -30,6 +30,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -123,8 +124,16 @@ fun PlanetDetailScreen(
                         text = planet.planetName,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.White,
+                        modifier = Modifier.weight(1f)
                     )
+                    IconButton(onClick = viewModel::toggleFavorite) {
+                        Icon(
+                            imageVector = if (viewModel.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
+                            contentDescription = if (viewModel.isFavorite) "Remove from favorites" else "Add to favorites",
+                            tint = if (viewModel.isFavorite) StarGold else Color.White
+                        )
+                    }
                 }
 
                 // 3D Planet

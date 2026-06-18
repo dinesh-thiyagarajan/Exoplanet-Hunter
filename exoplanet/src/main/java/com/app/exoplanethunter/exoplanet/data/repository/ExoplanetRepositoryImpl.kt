@@ -3,6 +3,7 @@ package com.app.exoplanethunter.exoplanet.data.repository
 import android.content.Context
 import android.util.Log
 import androidx.work.*
+import com.app.exoplanethunter.exoplanet.data.local.FavoritesPreferences
 import com.app.exoplanethunter.exoplanet.data.local.SyncPreferences
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetDao
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetEntity
@@ -15,9 +16,12 @@ import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -26,7 +30,8 @@ import java.util.UUID
 class ExoplanetRepositoryImpl(
     private val context: Context,
     private val dao: ExoplanetDao,
-    private val syncPreferences: SyncPreferences
+    private val syncPreferences: SyncPreferences,
+    private val favoritesPreferences: FavoritesPreferences
 ) : ExoplanetRepository {
 
     private val workManager = WorkManager.getInstance(context)
@@ -105,6 +110,23 @@ class ExoplanetRepositoryImpl(
 
     override fun getStarSystemsByStarCount(starCount: Int): Flow<List<StarSystemSummary>> =
         dao.getStarSystemsByStarCount(starCount)
+
+    override fun getFavoriteNames(): Flow<Set<String>> = favoritesPreferences.favoriteNames
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getFavoritePlanets(): Flow<List<Exoplanet>> {
+        return favoritesPreferences.favoriteNames.flatMapLatest { names ->
+            if (names.isEmpty()) {
+                flowOf(emptyList())
+            } else {
+                dao.getPlanetsByNames(names).map { entities -> entities.map { it.toDomain() } }
+            }
+        }
+    }
+
+    override suspend fun toggleFavorite(planetName: String) {
+        favoritesPreferences.toggle(planetName)
+    }
 
     override suspend fun syncExoplanets(): Flow<SyncStatus> {
         val syncRequest = OneTimeWorkRequestBuilder<DataSyncWorker>()

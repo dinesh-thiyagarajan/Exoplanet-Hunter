@@ -8,6 +8,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Hub
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Star
@@ -33,6 +34,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.app.exoplanethunter.presentation.screens.about.AboutScreen
+import com.app.exoplanethunter.presentation.screens.favorites.FavoritesScreen
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailScreen
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListScreen
 import com.app.exoplanethunter.presentation.screens.splash.SplashScreen
@@ -66,7 +68,8 @@ sealed class Screen(val route: String) {
 
 enum class BottomNavTab(val label: String, val icon: ImageVector) {
     Planets("Planets", Icons.Default.Public),
-    StarSystems("Star Systems", Icons.Default.Star),
+    StarSystems("Star Systems", Icons.Default.Hub),
+    Favorites("Favorites", Icons.Default.Star),
     About("About", Icons.Default.Info)
 }
 
@@ -194,6 +197,9 @@ private fun MainScreen(
                 )
                 BottomNavTab.StarSystems -> StarSystemListScreen(
                     onSystemClick = onSystemClick
+                )
+                BottomNavTab.Favorites -> FavoritesScreen(
+                    onPlanetClick = onPlanetClick
                 )
                 BottomNavTab.About -> AboutScreen()
             }

@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -68,7 +69,7 @@ import com.app.exoplanethunter.R
 import java.util.Calendar
 import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
-import com.app.exoplanethunter.presentation.components.PlanetMiniRenderer
+import com.app.exoplanethunter.presentation.components.PlanetRowCard
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
@@ -306,6 +307,8 @@ fun PlanetListScreen(
                                 planet = planet,
                                 index = planets.indexOf(planet), // This can be inefficient for large lists
                                 isYearHighlighted = viewModel.showLatestOnly || viewModel.minDiscoveryYear != null,
+                                isFavorite = planet.planetName in viewModel.favoriteNames,
+                                onToggleFavorite = { viewModel.toggleFavorite(planet) },
                                 onClick = {
                                     viewModel.trackPlanetClicked(planet)
                                     onPlanetClick(planet.id)
@@ -336,6 +339,8 @@ private fun AnimatedPlanetCard(
     planet: Exoplanet,
     index: Int,
     isYearHighlighted: Boolean,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
     onClick: () -> Unit
 ) {
     val progress = remember { Animatable(0f) }
@@ -352,129 +357,13 @@ private fun AnimatedPlanetCard(
                 translationY = (1f - progress.value) * 24f
             }
     ) {
-        PlanetCard(
-            planet = planet, 
-            isYearHighlighted = isYearHighlighted,
-            onClick = onClick
+        PlanetRowCard(
+            planet = planet,
+            isFavorite = isFavorite,
+            onToggleFavorite = onToggleFavorite,
+            onClick = onClick,
+            isYearHighlighted = isYearHighlighted
         )
     }
 }
 
-@Composable
-private fun PlanetCard(
-    planet: Exoplanet,
-    isYearHighlighted: Boolean,
-    onClick: () -> Unit
-) {
-    var pressed by remember { mutableStateOf(false) }
-    val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.97f else 1f,
-        animationSpec = spring(stiffness = Spring.StiffnessHigh),
-        label = "card_scale"
-    )
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .scale(scale)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceCard),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            PlanetMiniRenderer(
-                planet = planet,
-                size = 56.dp
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = planet.planetName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Text(
-                    text = planet.hostName,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = CosmicCyan,
-                    maxLines = 1
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    planet.planetRadiusEarth?.let {
-                        InfoChip("${String.format("%.1f", it)}R\u2295")
-                    }
-                    planet.equilibriumTempK?.let {
-                        InfoChip("${it.toInt()}K")
-                    }
-                    InfoChip(
-                        text = planet.discoveryYear.toString(),
-                        isHighlighted = isYearHighlighted
-                    )
-                }
-            }
-
-            Column(
-                horizontalAlignment = Alignment.End
-            ) {
-                Text(
-                    text = planet.discoveryMethod
-                        .replace("Radial Velocity", "RV")
-                        .replace("Transit Timing Variations", "TTV")
-                        .replace("Microlensing", "Lens")
-                        .replace("Direct Imaging", "DI")
-                        .take(10),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = NebulaPink
-                )
-
-                planet.distanceParsec?.let { dist ->
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "${String.format("%.0f", dist)} pc",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TextMuted
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun InfoChip(text: String, isHighlighted: Boolean = false) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(if (isHighlighted) StarGold.copy(alpha = 0.2f) else SurfaceCardLight)
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-            .then(
-                if (isHighlighted) Modifier.border(0.5.dp, StarGold.copy(alpha = 0.5f), RoundedCornerShape(6.dp))
-                else Modifier
-            )
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelSmall,
-            color = if (isHighlighted) StarGold else TextSecondary,
-            fontSize = 10.sp,
-            fontWeight = if (isHighlighted) FontWeight.Bold else FontWeight.Normal
-        )
-    }
-}

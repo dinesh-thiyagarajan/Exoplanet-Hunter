@@ -11,7 +11,9 @@ import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.usecase.FilterPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetDiscoveryMethodsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetFavoriteNamesUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.ToggleFavoriteUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -22,8 +24,13 @@ class PlanetListViewModel(
     private val searchPlanetsUseCase: SearchPlanetsUseCase,
     private val filterPlanetsUseCase: FilterPlanetsUseCase,
     private val getDiscoveryMethodsUseCase: GetDiscoveryMethodsUseCase,
+    private val getFavoriteNamesUseCase: GetFavoriteNamesUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val trackEvent: TrackEventUseCase
 ) : ViewModel() {
+
+    var favoriteNames by mutableStateOf<Set<String>>(emptySet())
+        private set
 
     var planets by mutableStateOf<List<Exoplanet>>(emptyList())
         private set
@@ -55,6 +62,24 @@ class PlanetListViewModel(
         trackEvent(AnalyticsEvent.PlanetListScreenViewed)
         loadPlanets()
         loadFilters()
+        observeFavorites()
+    }
+
+    private fun observeFavorites() {
+        viewModelScope.launch {
+            getFavoriteNamesUseCase().collectLatest { favoriteNames = it }
+        }
+    }
+
+    fun toggleFavorite(planet: Exoplanet) {
+        val wasFavorite = planet.planetName in favoriteNames
+        trackEvent(
+            if (wasFavorite) AnalyticsEvent.PlanetUnfavorited(planet.id, planet.planetName)
+            else AnalyticsEvent.PlanetFavorited(planet.id, planet.planetName)
+        )
+        viewModelScope.launch {
+            toggleFavoriteUseCase(planet.planetName)
+        }
     }
 
     private fun loadPlanets() {

@@ -43,6 +43,9 @@ interface ExoplanetDao {
     @Query("SELECT * FROM exoplanets WHERE id = :id")
     suspend fun getPlanetById(id: Long): ExoplanetEntity?
 
+    @Query("SELECT * FROM exoplanets WHERE isDefault = 1 AND planetName IN (:names) ORDER BY planetName ASC")
+    fun getPlanetsByNames(names: Set<String>): Flow<List<ExoplanetEntity>>
+
     @Query(
         """
         SELECT * FROM exoplanets 

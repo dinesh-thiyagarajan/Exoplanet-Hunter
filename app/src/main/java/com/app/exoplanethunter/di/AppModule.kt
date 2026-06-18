@@ -8,6 +8,8 @@ import com.app.exoplanethunter.exoplanet.domain.usecase.FilterPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllStarSystemsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetDiscoveryMethodsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetFavoriteNamesUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetFavoritePlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetMultiPlanetSystemsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetPlanetByIdUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemUseCase
@@ -15,10 +17,13 @@ import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemsByStarCoun
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchStarSystemsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SyncExoplanetsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.ToggleFavoriteUseCase
 import com.app.exoplanethunter.ml.ExoplanetClassifier
+import com.app.exoplanethunter.exoplanet.data.local.FavoritesPreferences
 import com.app.exoplanethunter.exoplanet.data.local.SyncPreferences
 import com.app.exoplanethunter.ml.GetHabitabilityInsightUseCase
 import com.app.exoplanethunter.presentation.screens.about.AboutViewModel
+import com.app.exoplanethunter.presentation.screens.favorites.FavoritesViewModel
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailViewModel
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListViewModel
 import com.app.exoplanethunter.presentation.screens.splash.SplashViewModel
@@ -35,7 +40,8 @@ val databaseModule = module {
 
 val dataModule = module {
     single { SyncPreferences(androidContext()) }
-    single<ExoplanetRepository> { ExoplanetRepositoryImpl(androidContext(), get(), get()) }
+    single { FavoritesPreferences(androidContext()) }
+    single<ExoplanetRepository> { ExoplanetRepositoryImpl(androidContext(), get(), get(), get()) }
 }
 
 val mlModule = module {
@@ -55,11 +61,15 @@ val useCaseModule = module {
     factory { GetStarSystemsByStarCountUseCase(get()) }
     factory { GetHabitabilityInsightUseCase(get()) }
     factory { SyncExoplanetsUseCase(get()) }
+    factory { GetFavoriteNamesUseCase(get()) }
+    factory { GetFavoritePlanetsUseCase(get()) }
+    factory { ToggleFavoriteUseCase(get()) }
 }
 
 val viewModelModule = module {
-    viewModel { PlanetListViewModel(get(), get(), get(), get(), get()) }
-    viewModel { PlanetDetailViewModel(get(), get(), get()) }
+    viewModel { PlanetListViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { PlanetDetailViewModel(get(), get(), get(), get(), get()) }
+    viewModel { FavoritesViewModel(get(), get(), get()) }
     viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
     viewModel { SplashViewModel(get(), get()) }

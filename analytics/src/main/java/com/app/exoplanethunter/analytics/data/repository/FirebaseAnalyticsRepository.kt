@@ -28,6 +28,9 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
         is AnalyticsEvent.StarSystemListScreenViewed ->
             Keys.STAR_SYSTEM_LIST_SCREEN_VIEWED to null
 
+        is AnalyticsEvent.FavoritesScreenViewed ->
+            Keys.FAVORITES_SCREEN_VIEWED to null
+
         is AnalyticsEvent.PlanetDetailScreenViewed -> {
             val event = this
             Keys.PLANET_DETAIL_SCREEN_VIEWED to Bundle().apply {
@@ -57,6 +60,22 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
             val event = this
             Keys.STAR_SYSTEM_CLICKED to Bundle().apply {
                 putString(Keys.PARAM_HOST_NAME, event.hostName)
+            }
+        }
+
+        is AnalyticsEvent.PlanetFavorited -> {
+            val event = this
+            Keys.PLANET_FAVORITED to Bundle().apply {
+                putLong(Keys.PARAM_PLANET_ID, event.planetId)
+                putString(Keys.PARAM_PLANET_NAME, event.planetName)
+            }
+        }
+
+        is AnalyticsEvent.PlanetUnfavorited -> {
+            val event = this
+            Keys.PLANET_UNFAVORITED to Bundle().apply {
+                putLong(Keys.PARAM_PLANET_ID, event.planetId)
+                putString(Keys.PARAM_PLANET_NAME, event.planetName)
             }
         }
 

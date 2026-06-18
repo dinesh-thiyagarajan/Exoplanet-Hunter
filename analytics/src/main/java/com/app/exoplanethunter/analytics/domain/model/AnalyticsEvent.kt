@@ -10,6 +10,8 @@ sealed class AnalyticsEvent {
 
     object StarSystemListScreenViewed : AnalyticsEvent()
 
+    object FavoritesScreenViewed : AnalyticsEvent()
+
     data class PlanetDetailScreenViewed(
         val planetId: Long,
         val planetName: String
@@ -29,6 +31,16 @@ sealed class AnalyticsEvent {
 
     data class StarSystemClicked(
         val hostName: String
+    ) : AnalyticsEvent()
+
+    data class PlanetFavorited(
+        val planetId: Long,
+        val planetName: String
+    ) : AnalyticsEvent()
+
+    data class PlanetUnfavorited(
+        val planetId: Long,
+        val planetName: String
     ) : AnalyticsEvent()
 
     // ── Filters & Search ───────────────────────────────────────────────────────

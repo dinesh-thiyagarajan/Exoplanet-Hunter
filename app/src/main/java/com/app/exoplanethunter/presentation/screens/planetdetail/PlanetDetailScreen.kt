@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Card
@@ -75,6 +77,7 @@ import com.app.exoplanethunter.presentation.theme.SurfaceCardLight
 import com.app.exoplanethunter.presentation.theme.TextMuted
 import com.app.exoplanethunter.presentation.theme.TextSecondary
 import kotlinx.coroutines.delay
+import kotlin.math.log10
 
 @Composable
 fun PlanetDetailScreen(
@@ -185,6 +188,13 @@ fun PlanetDetailScreen(
                     // Planet Properties
                     AnimatedSection(delay = 100) {
                         PlanetPropertiesCard(planet = planet)
+                    }
+
+                    // Compared to Earth
+                    if (planet.hasEarthComparisonData()) {
+                        AnimatedSection(delay = 150) {
+                            EarthComparisonCard(planet = planet)
+                        }
                     }
 
                     // Ad banner between property cards
@@ -556,6 +566,107 @@ private fun DetailCard(
             }
 
             content()
+        }
+    }
+}
+
+/** True when at least one property exists that we can meaningfully compare against Earth. */
+private fun Exoplanet.hasEarthComparisonData(): Boolean =
+    planetRadiusEarth != null || planetMassEarth != null ||
+        equilibriumTempK != null || orbitalPeriodDays != null || insolationFlux != null
+
+@Composable
+private fun EarthComparisonCard(planet: Exoplanet) {
+    DetailCard(
+        title = "Compared to Earth",
+        icon = Icons.Default.Public,
+        iconColor = CosmicCyan
+    ) {
+        Text(
+            text = "How this world stacks up against our own. The white line marks Earth (1×).",
+            style = MaterialTheme.typography.bodySmall,
+            color = TextSecondary,
+            lineHeight = 18.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        planet.planetRadiusEarth?.let { r ->
+            EarthComparisonRow("Radius", ratio = r, valueText = "${String.format("%.2f", r)} R⊕")
+        }
+        planet.planetMassEarth?.let { m ->
+            EarthComparisonRow("Mass", ratio = m, valueText = "${String.format("%.2f", m)} M⊕")
+        }
+        // Surface gravity (estimated): g ∝ M / R² in Earth units
+        if (planet.planetMassEarth != null && planet.planetRadiusEarth != null && planet.planetRadiusEarth!! > 0.0) {
+            val g = planet.planetMassEarth!! / (planet.planetRadiusEarth!! * planet.planetRadiusEarth!!)
+            EarthComparisonRow("Surface gravity (est.)", ratio = g, valueText = "${String.format("%.2f", g)} g")
+        }
+        planet.equilibriumTempK?.let { t ->
+            // Earth's equilibrium temperature ≈ 255 K
+            EarthComparisonRow("Eq. temperature", ratio = t / 255.0, valueText = "${t.toInt()} K")
+        }
+        planet.orbitalPeriodDays?.let { p ->
+            EarthComparisonRow("Orbital period", ratio = p / 365.25, valueText = "${String.format("%.1f", p)} d")
+        }
+        planet.insolationFlux?.let { s ->
+            // Insolation flux is already expressed in Earth units
+            EarthComparisonRow("Insolation", ratio = s, valueText = "${String.format("%.2f", s)} S⊕")
+        }
+    }
+}
+
+@Composable
+private fun EarthComparisonRow(label: String, ratio: Double, valueText: String) {
+    // Color by closeness to Earth: similar = green, larger = cyan, smaller = pink
+    val barColor = when {
+        ratio in 0.5..2.0 -> AuroraGreen
+        ratio > 2.0 -> CosmicCyan
+        else -> NebulaPink
+    }
+    // Map ratio to bar fill on a log scale: 0.01× → 0, 1× (Earth) → 0.5, 100× → 1.0
+    val fill = if (ratio > 0.0) {
+        (0.5 + 0.5 * (log10(ratio) / 2.0)).coerceIn(0.02, 1.0).toFloat()
+    } else 0.02f
+    val multiplierText = if (ratio >= 1.0) "${String.format("%.1f", ratio)}× Earth"
+    else "${String.format("%.2f", ratio)}× Earth"
+
+    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(label, style = MaterialTheme.typography.bodyMedium, color = Color.White)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(valueText, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(multiplierText, style = MaterialTheme.typography.labelMedium, color = barColor, fontWeight = FontWeight.SemiBold)
+            }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(SurfaceCardLight)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(fill)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(barColor)
+            )
+            // Earth baseline marker at the 1× midpoint
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxHeight()
+                    .width(2.dp)
+                    .background(Color.White.copy(alpha = 0.7f))
+            )
         }
     }
 }

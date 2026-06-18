@@ -1,6 +1,7 @@
 package com.app.exoplanethunter.exoplanet.domain.repository
 
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
+import com.app.exoplanethunter.exoplanet.domain.model.LabelCount
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +34,11 @@ interface ExoplanetRepository {
 
     fun getSyncStatus(): Flow<SyncStatus>
     suspend fun syncExoplanets(): Flow<SyncStatus>
+
+    // Statistics aggregates
+    fun getDiscoveryMethodCounts(): Flow<List<LabelCount>>
+    fun getDiscoveryYearCounts(): Flow<List<LabelCount>>
+    fun getSizeDistribution(): Flow<List<LabelCount>>
 
     // Favorites — keyed by planetName so they survive catalog syncs (which reassign ids)
     fun getFavoriteNames(): Flow<Set<String>>

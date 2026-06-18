@@ -31,6 +31,9 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
         is AnalyticsEvent.FavoritesScreenViewed ->
             Keys.FAVORITES_SCREEN_VIEWED to null
 
+        is AnalyticsEvent.StatisticsScreenViewed ->
+            Keys.STATISTICS_SCREEN_VIEWED to null
+
         is AnalyticsEvent.PlanetDetailScreenViewed -> {
             val event = this
             Keys.PLANET_DETAIL_SCREEN_VIEWED to Bundle().apply {

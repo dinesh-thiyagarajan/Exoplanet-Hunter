@@ -14,6 +14,7 @@ import com.app.exoplanethunter.exoplanet.domain.usecase.GetMultiPlanetSystemsUse
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetPlanetByIdUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemsByStarCountUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetStatisticsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchStarSystemsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SyncExoplanetsUseCase
@@ -27,6 +28,7 @@ import com.app.exoplanethunter.presentation.screens.favorites.FavoritesViewModel
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailViewModel
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListViewModel
 import com.app.exoplanethunter.presentation.screens.splash.SplashViewModel
+import com.app.exoplanethunter.presentation.screens.statistics.StatisticsViewModel
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemDetailViewModel
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemListViewModel
 import org.koin.android.ext.koin.androidContext
@@ -64,12 +66,14 @@ val useCaseModule = module {
     factory { GetFavoriteNamesUseCase(get()) }
     factory { GetFavoritePlanetsUseCase(get()) }
     factory { ToggleFavoriteUseCase(get()) }
+    factory { GetStatisticsUseCase(get()) }
 }
 
 val viewModelModule = module {
     viewModel { PlanetListViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { PlanetDetailViewModel(get(), get(), get(), get(), get()) }
     viewModel { FavoritesViewModel(get(), get(), get()) }
+    viewModel { StatisticsViewModel(get(), get()) }
     viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
     viewModel { SplashViewModel(get(), get()) }

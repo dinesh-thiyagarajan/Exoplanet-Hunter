@@ -12,6 +12,8 @@ sealed class AnalyticsEvent {
 
     object FavoritesScreenViewed : AnalyticsEvent()
 
+    object StatisticsScreenViewed : AnalyticsEvent()
+
     data class PlanetDetailScreenViewed(
         val planetId: Long,
         val planetName: String

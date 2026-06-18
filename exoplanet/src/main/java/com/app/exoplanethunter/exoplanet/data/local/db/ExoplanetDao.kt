@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.app.exoplanethunter.exoplanet.domain.model.LabelCount
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import kotlinx.coroutines.flow.Flow
 
@@ -60,6 +61,41 @@ interface ExoplanetDao {
 
     @Query("SELECT DISTINCT discoveryMethod FROM exoplanets WHERE isDefault = 1 ORDER BY discoveryMethod")
     suspend fun getDiscoveryMethods(): List<String>
+
+    // ── Statistics aggregates ────────────────────────────────────────────────
+
+    @Query(
+        """
+        SELECT discoveryMethod AS label, COUNT(*) AS count FROM exoplanets
+        WHERE isDefault = 1 GROUP BY discoveryMethod ORDER BY count DESC
+        """
+    )
+    fun getDiscoveryMethodCounts(): Flow<List<LabelCount>>
+
+    @Query(
+        """
+        SELECT CAST(discoveryYear AS TEXT) AS label, COUNT(*) AS count FROM exoplanets
+        WHERE isDefault = 1 GROUP BY discoveryYear ORDER BY discoveryYear ASC
+        """
+    )
+    fun getDiscoveryYearCounts(): Flow<List<LabelCount>>
+
+    @Query(
+        """
+        SELECT
+          CASE
+            WHEN planetRadiusEarth < 1.25 THEN 'Earth-size'
+            WHEN planetRadiusEarth < 2.0 THEN 'Super-Earth'
+            WHEN planetRadiusEarth < 6.0 THEN 'Neptune-like'
+            ELSE 'Jupiter-like'
+          END AS label,
+          COUNT(*) AS count
+        FROM exoplanets
+        WHERE isDefault = 1 AND planetRadiusEarth IS NOT NULL
+        GROUP BY label
+        """
+    )
+    fun getSizeDistribution(): Flow<List<LabelCount>>
 
     @Query(
         """

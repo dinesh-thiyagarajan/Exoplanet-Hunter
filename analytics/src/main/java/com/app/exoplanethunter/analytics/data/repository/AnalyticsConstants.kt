@@ -11,6 +11,7 @@ object AnalyticsConstants {
     const val PLANET_CLICKED = "planet_clicked"
     const val STAR_SYSTEM_CLICKED = "star_system_clicked"
     const val FAVORITES_SCREEN_VIEWED = "favorites_screen_viewed"
+    const val STATISTICS_SCREEN_VIEWED = "statistics_screen_viewed"
     const val PLANET_FAVORITED = "planet_favorited"
     const val PLANET_UNFAVORITED = "planet_unfavorited"
     

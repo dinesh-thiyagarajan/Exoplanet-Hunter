@@ -285,7 +285,9 @@ private fun HabitabilityCard(insight: HabitabilityInsight) {
         iconColor = StarGold
     ) {
         // Overall score
+        val reliable = insight.habitabilityReliable
         val scoreColor = when {
+            !reliable -> TextMuted
             insight.overallScore > 0.7 -> HabitableGreen
             insight.overallScore > 0.4 -> CautionYellow
             else -> HostileRed
@@ -310,8 +312,9 @@ private fun HabitabilityCard(insight: HabitabilityInsight) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "${(insight.overallScore * 100).toInt()}%",
-                    style = MaterialTheme.typography.headlineMedium,
+                    text = if (reliable) "${(insight.overallScore * 100).toInt()}%" else "N/A",
+                    style = if (reliable) MaterialTheme.typography.headlineMedium
+                    else MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = scoreColor
                 )
@@ -327,6 +330,7 @@ private fun HabitabilityCard(insight: HabitabilityInsight) {
                 )
                 Text(
                     text = when {
+                        !reliable -> "Insufficient data to estimate"
                         insight.overallScore > 0.7 -> "High potential for habitability"
                         insight.overallScore > 0.4 -> "Moderate habitability potential"
                         insight.overallScore > 0.2 -> "Low habitability potential"

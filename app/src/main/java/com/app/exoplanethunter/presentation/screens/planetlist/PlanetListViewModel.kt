@@ -115,7 +115,12 @@ class PlanetListViewModel(
     }
 
     fun onFilterSelected(method: String?) {
-        if (selectedFilter == method) return
+        // Only a no-op if this exact discovery-method filter is active AND no other
+        // filter (habitable / latest / year) is overriding the list. Otherwise tapping
+        // "All" (method == null) while Habitable is active would early-return and do nothing.
+        val alreadyActive = selectedFilter == method &&
+            !showHabitableOnly && !showLatestOnly && minDiscoveryYear == null
+        if (alreadyActive) return
         selectedFilter = method
         showHabitableOnly = false
         showLatestOnly = false

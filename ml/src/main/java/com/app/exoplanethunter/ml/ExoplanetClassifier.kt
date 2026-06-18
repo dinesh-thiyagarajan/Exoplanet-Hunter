@@ -11,7 +11,6 @@ import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import kotlin.math.abs
-import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.max
 import kotlin.math.min
@@ -153,6 +152,12 @@ class ExoplanetClassifier(private val context: Context) {
     fun classify(planet: Exoplanet): HabitabilityInsight {
         val rawFeatures = extractFeatures(planet)
 
+        // The habitability model was only trained on planets that have equilibrium
+        // temperature, radius, AND insolation flux (rows missing any of these are
+        // dropped during training). If this planet is missing them, the model is
+        // outside its trained domain and its probability is not trustworthy.
+        val habitabilityReliable = hasHabitabilityInputs(planet)
+
         // Run habitability model
         val habitableProb = runHabitableModel(rawFeatures)
 
@@ -164,25 +169,44 @@ class ExoplanetClassifier(private val context: Context) {
         val planetTypeLabel = planetTypeLabels[planetTypeIndex]
         val planetTypeConfidence = planetTypeProbs[planetTypeIndex]
 
-        val classification = mapToClassification(planetTypeLabel, habitableProb)
+        val classification = mapToClassification(planetTypeLabel, habitableProb, habitabilityReliable)
 
         val scores = linkedMapOf<String, Double>()
-        scores["Habitability"] = habitableProb.toDouble()
+        // Only surface the ML habitability bar when it is within the trained domain.
+        if (habitabilityReliable) {
+            scores["Habitability"] = habitableProb.toDouble()
+        }
         scores["Temperature Zone"] = calculateTempScore(planet)
         scores["Size Compatibility"] = calculateSizeScore(planet)
         scores["Atmospheric Potential"] = calculateAtmosphereScore(planet)
         scores["Stellar Stability"] = calculateStellarScore(planet)
 
         val insights = generateInsights(
-            planet, habitableProb, planetTypeLabel, planetTypeConfidence, planetTypeProbs
+            planet, habitableProb, planetTypeLabel, planetTypeConfidence,
+            planetTypeProbs, habitabilityReliable
         )
 
         return HabitabilityInsight(
-            overallScore = habitableProb.toDouble(),
+            overallScore = if (habitabilityReliable) habitableProb.toDouble() else 0.0,
             scores = scores,
             insights = insights,
-            classification = classification
+            classification = classification,
+            habitabilityReliable = habitabilityReliable
         )
+    }
+
+    /**
+     * Whether the planet has the inputs that *define* the habitability label
+     * (equilibrium temperature, radius, insolation). Mirrors the row-filtering
+     * applied during training so we don't score out-of-domain planets.
+     */
+    private fun hasHabitabilityInputs(planet: Exoplanet): Boolean {
+        val eqt = planet.equilibriumTempK
+        val rade = planet.planetRadiusEarth
+        val insol = planet.insolationFlux
+        return eqt != null && eqt > 0.0 &&
+            rade != null && rade > 0.0 &&
+            insol != null && insol > 0.0
     }
 
     // -----------------------------------------------------------------------
@@ -311,10 +335,11 @@ class ExoplanetClassifier(private val context: Context) {
 
         interpreter.run(inputBuffer, outputBuffer)
         outputBuffer.rewind()
-        val rawOutput = outputBuffer.float
 
-        // Apply sigmoid to convert logit to probability
-        return sigmoid(rawOutput)
+        // The Keras model's final layer is Dense(1, activation="sigmoid"), so the TFLite
+        // output is ALREADY a probability in [0, 1]. Use it directly — applying sigmoid
+        // again would squash every score into [0.5, 0.731].
+        return outputBuffer.float
     }
 
     /**
@@ -338,19 +363,10 @@ class ExoplanetClassifier(private val context: Context) {
         interpreter.run(inputBuffer, outputBuffer)
         outputBuffer.rewind()
 
-        val logits = FloatArray(planetTypeLabels.size) { outputBuffer.float }
-        return softmax(logits)
-    }
-
-    private fun sigmoid(x: Float): Float {
-        return (1.0f / (1.0f + exp(-x.toDouble()))).toFloat()
-    }
-
-    private fun softmax(logits: FloatArray): FloatArray {
-        val maxLogit = logits.max()
-        val exps = FloatArray(logits.size) { exp((logits[it] - maxLogit).toDouble()).toFloat() }
-        val sumExps = exps.sum()
-        return FloatArray(exps.size) { exps[it] / sumExps }
+        // The Keras model's final layer is Dense(n, activation="softmax"), so the TFLite
+        // output is ALREADY a normalized probability distribution. Use it directly —
+        // re-applying softmax would flatten the confidences toward uniform.
+        return FloatArray(planetTypeLabels.size) { outputBuffer.float }
     }
 
     // -----------------------------------------------------------------------
@@ -363,10 +379,12 @@ class ExoplanetClassifier(private val context: Context) {
      */
     private fun mapToClassification(
         planetTypeLabel: String,
-        habitableProb: Float
+        habitableProb: Float,
+        habitabilityReliable: Boolean
     ): PlanetClassification {
-        // If the habitability probability exceeds the threshold, mark potentially habitable
-        if (habitableProb >= habitableThreshold) {
+        // Only mark potentially habitable when the score is trustworthy (in-domain)
+        // and exceeds the threshold. Otherwise fall back to the physical planet type.
+        if (habitabilityReliable && habitableProb >= habitableThreshold) {
             return PlanetClassification.POTENTIALLY_HABITABLE
         }
 
@@ -527,7 +545,8 @@ class ExoplanetClassifier(private val context: Context) {
         habitableProb: Float,
         planetTypeLabel: String,
         planetTypeConfidence: Float,
-        planetTypeProbs: FloatArray
+        planetTypeProbs: FloatArray,
+        habitabilityReliable: Boolean
     ): List<String> {
         val insights = mutableListOf<String>()
 
@@ -551,24 +570,32 @@ class ExoplanetClassifier(private val context: Context) {
         }
 
         // --- Habitability ---
-        val habitPct = "%.1f".format(habitableProb * 100)
-        if (habitableProb >= habitableThreshold) {
+        if (!habitabilityReliable) {
             insights.add(
-                "The ML model gives a habitability probability of $habitPct%, which exceeds " +
-                        "the ${(habitableThreshold * 100).toInt()}% threshold. This planet may " +
-                        "have conditions compatible with life as we know it."
-            )
-        } else if (habitableProb >= 0.3f) {
-            insights.add(
-                "The habitability probability is $habitPct%. While below the " +
-                        "${(habitableThreshold * 100).toInt()}% threshold, this planet shows " +
-                        "some promising characteristics worth further study."
+                "A reliable habitability estimate isn't available for this planet because key " +
+                        "inputs (equilibrium temperature, radius, or insolation flux) are missing. " +
+                        "The model is only trained on planets where all three are known."
             )
         } else {
-            insights.add(
-                "The habitability probability is $habitPct%, indicating conditions are " +
-                        "unlikely to support Earth-like life."
-            )
+            val habitPct = "%.1f".format(habitableProb * 100)
+            if (habitableProb >= habitableThreshold) {
+                insights.add(
+                    "The ML model gives a habitability probability of $habitPct%, which exceeds " +
+                            "the ${(habitableThreshold * 100).toInt()}% threshold. This planet may " +
+                            "have conditions compatible with life as we know it."
+                )
+            } else if (habitableProb >= 0.3f) {
+                insights.add(
+                    "The habitability probability is $habitPct%. While below the " +
+                            "${(habitableThreshold * 100).toInt()}% threshold, this planet shows " +
+                            "some promising characteristics worth further study."
+                )
+            } else {
+                insights.add(
+                    "The habitability probability is $habitPct%, indicating conditions are " +
+                            "unlikely to support Earth-like life."
+                )
+            }
         }
 
         // --- Temperature insights ---

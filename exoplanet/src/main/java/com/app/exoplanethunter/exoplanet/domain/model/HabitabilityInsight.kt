@@ -4,7 +4,14 @@ data class HabitabilityInsight(
     val overallScore: Double,
     val scores: Map<String, Double>,
     val insights: List<String>,
-    val classification: PlanetClassification
+    val classification: PlanetClassification,
+    /**
+     * False when the planet is missing the inputs that define habitability
+     * (equilibrium temperature, radius, insolation). In that case the ML
+     * habitability probability is outside the model's trained domain and must
+     * not be presented as a confident score.
+     */
+    val habitabilityReliable: Boolean = true
 )
 
 enum class PlanetClassification(val label: String, val description: String) {

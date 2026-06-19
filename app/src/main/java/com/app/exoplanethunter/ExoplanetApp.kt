@@ -2,9 +2,9 @@ package com.app.exoplanethunter
 
 import android.app.Application
 import com.app.exoplanethunter.ads.AdManager
+import com.app.exoplanethunter.config.RemoteConfigManager
 import com.app.exoplanethunter.di.appModules
 import com.app.exoplanethunter.spacefacts.SpaceFactNotifier
-import com.app.exoplanethunter.spacefacts.SpaceFactScheduler
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -27,8 +27,8 @@ class ExoplanetApp : Application() {
             modules(appModules)
         }
 
-        // Periodic space-fact notifications
+        // Periodic space-fact notifications — interval & on/off driven by Remote Config.
         SpaceFactNotifier.ensureChannel(this)
-        SpaceFactScheduler.schedule(this)
+        RemoteConfigManager.initializeAndApply(this)
     }
 }

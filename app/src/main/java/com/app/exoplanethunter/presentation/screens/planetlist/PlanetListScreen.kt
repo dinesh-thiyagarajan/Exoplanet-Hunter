@@ -54,6 +54,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -90,6 +91,7 @@ import com.app.exoplanethunter.presentation.theme.TextMuted
 import com.app.exoplanethunter.presentation.theme.TextSecondary
 import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.ads.InterstitialAdController
+import com.app.exoplanethunter.config.FeatureFlags
 import android.app.Activity
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.delay
@@ -104,6 +106,12 @@ fun PlanetListScreen(
     val listState = rememberLazyListState()
     var showSortSheet by remember { mutableStateOf(false) }
     val activity = LocalContext.current as? Activity
+    val compareEnabled by FeatureFlags.compareEnabled.collectAsState()
+
+    // If compare is turned off remotely while it's active, leave compare mode.
+    LaunchedEffect(compareEnabled) {
+        if (!compareEnabled && viewModel.compareMode) viewModel.exitCompareMode()
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
         StarField(starCount = 100)
@@ -151,12 +159,14 @@ fun PlanetListScreen(
                             tint = if (viewModel.sortOption == SortOption.DEFAULT) TextSecondary else CosmicCyan
                         )
                     }
-                    IconButton(onClick = viewModel::toggleCompareMode) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.CompareArrows,
-                            contentDescription = stringResource(R.string.compare_action),
-                            tint = if (viewModel.compareMode) CosmicCyan else TextSecondary
-                        )
+                    if (compareEnabled) {
+                        IconButton(onClick = viewModel::toggleCompareMode) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.CompareArrows,
+                                contentDescription = stringResource(R.string.compare_action),
+                                tint = if (viewModel.compareMode) CosmicCyan else TextSecondary
+                            )
+                        }
                     }
                 }
 

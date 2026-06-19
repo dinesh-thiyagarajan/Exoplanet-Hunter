@@ -10,17 +10,20 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 /**
  * Firebase Remote Config gate for the periodic space-fact notification.
  *
- * Two server-controlled values:
+ * Server-controlled values:
  *  - [KEY_NOTIFICATIONS_ENABLED] — turn the local notification on/off remotely.
  *  - [KEY_INTERVAL_HOURS] — how many hours between notifications.
+ *  - [KEY_COMPARE_ENABLED] — show/hide the planet-compare feature remotely.
  *
- * Remote values are mirrored into [SpaceFactPreferences] so the existing worker/scheduler
- * keep reading a single local source of truth; we just refresh it from the server on launch.
+ * Notification values are mirrored into [SpaceFactPreferences] so the existing worker/scheduler
+ * keep reading a single local source of truth; the compare flag is published to [FeatureFlags]
+ * for the UI to observe. Values are refreshed from the server on launch.
  */
 object RemoteConfigManager {
 
     const val KEY_NOTIFICATIONS_ENABLED = "space_fact_notifications_enabled"
     const val KEY_INTERVAL_HOURS = "space_fact_interval_hours"
+    const val KEY_COMPARE_ENABLED = "compare_feature_enabled"
 
     // Minimum sane interval (also respects WorkManager's 15-minute periodic floor).
     private const val MIN_INTERVAL_HOURS = 1L
@@ -36,7 +39,8 @@ object RemoteConfigManager {
         remoteConfig.setDefaultsAsync(
             mapOf(
                 KEY_NOTIFICATIONS_ENABLED to true,
-                KEY_INTERVAL_HOURS to SpaceFactPreferences.DEFAULT_INTERVAL_HOURS
+                KEY_INTERVAL_HOURS to SpaceFactPreferences.DEFAULT_INTERVAL_HOURS,
+                KEY_COMPARE_ENABLED to true
             )
         )
 
@@ -54,5 +58,7 @@ object RemoteConfigManager {
         prefs.intervalHours = remoteConfig.getLong(KEY_INTERVAL_HOURS)
             .coerceAtLeast(MIN_INTERVAL_HOURS)
         SpaceFactScheduler.schedule(context)
+
+        FeatureFlags.setCompareEnabled(remoteConfig.getBoolean(KEY_COMPARE_ENABLED))
     }
 }

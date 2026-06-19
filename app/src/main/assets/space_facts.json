@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "title": "The Dark Forest Theory",
+    "shortDescription": "Why a universe full of life might still be eerily silent.",
+    "detail": "The Dark Forest hypothesis offers one answer to the Fermi paradox: the cosmos may be teeming with civilizations that all stay silent out of fear. Because any unknown civilization could be a threat, and because technology can advance explosively, the safest survival strategy is to hide rather than broadcast. In this view, every civilization is a hunter in a dark forest, and announcing your position invites destruction. Popularized by Liu Cixin's science-fiction novel, it reframes cosmic silence not as the absence of life but as a deliberate, universal act of caution among intelligent species.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Dark_forest_hypothesis"
+  },
+  {
+    "id": 2,
+    "title": "Dyson Spheres",
+    "shortDescription": "A megastructure that could harvest an entire star's energy.",
+    "detail": "A Dyson sphere is a hypothetical megastructure that an advanced civilization might build to capture a large fraction of a star's total energy output. Proposed by physicist Freeman Dyson in 1960, the realistic version is not a solid shell but a vast swarm of orbiting collectors, a Dyson swarm. Such a structure would absorb starlight and re-radiate waste heat as infrared, so astronomers actually search for Dyson spheres by looking for stars with unusual infrared excess. They serve as a benchmark for Type II civilizations on the Kardashev scale, which harness the energy of their entire host star.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Dyson_sphere"
+  },
+  {
+    "id": 3,
+    "title": "The Three-Body Problem",
+    "shortDescription": "Why three orbiting masses defy a clean mathematical solution.",
+    "detail": "The three-body problem asks how three massive objects move under their mutual gravity. While two bodies trace neat, predictable ellipses, adding a third makes the system chaotic: there is no general closed-form solution, and tiny changes in starting conditions lead to wildly different futures. Astronomers rely on numerical simulation rather than exact equations. The problem matters for real exoplanets in multi-star systems, whose orbits can be unstable or surprising. Special restricted cases and stable configurations like Lagrange points do have solutions, but the general problem remains a classic example of deterministic chaos in physics.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Three-body_problem"
+  },
+  {
+    "id": 4,
+    "title": "The Fermi Paradox",
+    "shortDescription": "If the galaxy should be full of life, where is everybody?",
+    "detail": "The Fermi paradox is the contradiction between high estimates for the likelihood of extraterrestrial civilizations and the total lack of evidence for them. The galaxy is billions of years old, and even slow interstellar travel could colonize it in a few million years, so it should show signs of life. Yet we observe silence. Proposed resolutions range from life being extremely rare, to civilizations self-destructing, to them deliberately hiding or simply being too far away to detect. Named after physicist Enrico Fermi, the paradox frames much of the modern search for extraterrestrial intelligence.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Fermi_paradox"
+  },
+  {
+    "id": 5,
+    "title": "The Drake Equation",
+    "shortDescription": "A formula for estimating how many alien civilizations exist.",
+    "detail": "The Drake equation, written by astronomer Frank Drake in 1961, estimates the number of communicating civilizations in our galaxy by multiplying several factors: the rate of star formation, the fraction of stars with planets, the number of habitable planets per system, how often life and then intelligence arise, the fraction that develop detectable technology, and how long such civilizations last. Many terms are still poorly known, so the equation yields answers ranging from one to millions. Its real value is organizing our ignorance: it shows exactly which questions exoplanet science and astrobiology need to answer.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Drake_equation"
+  },
+  {
+    "id": 6,
+    "title": "The Kardashev Scale",
+    "shortDescription": "Ranking civilizations by how much energy they can command.",
+    "detail": "Proposed by Soviet astronomer Nikolai Kardashev in 1964, the Kardashev scale classifies civilizations by their energy use. A Type I civilization harnesses all the energy available on its home planet; a Type II commands the entire output of its star, for example via a Dyson sphere; and a Type III controls the energy of an entire galaxy. By these measures, humanity is not yet even Type I, sitting around 0.7. The scale is a useful tool in SETI because energy use tends to produce detectable signatures, like waste heat, that we might spot across interstellar distances.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kardashev_scale"
+  },
+  {
+    "id": 7,
+    "title": "The Habitable Zone",
+    "shortDescription": "The orbital Goldilocks band where liquid water can exist.",
+    "detail": "A star's habitable zone, often called the Goldilocks zone, is the range of orbital distances where a planet's surface temperature could allow liquid water, not too hot and not too cold. Its location depends on the star: cool red dwarfs have habitable zones hugging close in, while bright stars push them far out. Sitting in the zone is no guarantee of life, since atmosphere, pressure, and greenhouse effects matter enormously; Venus sits near the inner edge yet is hellish. Still, the habitable zone is the first filter astronomers use when hunting for potentially life-bearing exoplanets.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Circumstellar_habitable_zone"
+  },
+  {
+    "id": 8,
+    "title": "The Transit Method",
+    "shortDescription": "Finding planets by the tiny shadows they cast on their stars.",
+    "detail": "The transit method detects exoplanets by measuring the slight dimming of a star when a planet passes in front of it. The dip is tiny; Earth crossing the Sun would block about 0.008% of its light, but precise instruments can detect it, and repeated transits confirm the planet. NASA's Kepler and TESS missions used this technique to discover thousands of worlds. As a bonus, starlight filtering through a planet's atmosphere during transit carries chemical fingerprints, letting telescopes like JWST probe distant atmospheres. It is the most productive exoplanet-detection method to date.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Transit_(astronomy)"
+  },
+  {
+    "id": 9,
+    "title": "The Radial Velocity Method",
+    "shortDescription": "Detecting planets by the wobble they induce in their star.",
+    "detail": "The radial velocity method finds exoplanets by measuring the tiny back-and-forth wobble a planet's gravity induces in its host star. As the star moves toward and away from us, its light shifts slightly blue then red, like a cosmic Doppler effect. Measuring this shift reveals the planet's minimum mass and orbital period. This was the technique behind 51 Pegasi b in 1995, the first planet found around a Sun-like star, which later earned a Nobel Prize. Radial velocity favors massive planets in close orbits and nicely complements the transit method, together pinning down both a planet's mass and size.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Doppler_spectroscopy"
+  },
+  {
+    "id": 10,
+    "title": "The TRAPPIST-1 System",
+    "shortDescription": "Seven Earth-sized worlds orbiting one tiny, cool star.",
+    "detail": "TRAPPIST-1 is a small, cool red dwarf about 40 light-years away that hosts seven known Earth-sized planets, the largest batch of terrestrial worlds found around a single star. Several orbit within the habitable zone where liquid water could exist. The planets are packed so tightly that their orbits last only days, and from one planet's surface the neighboring worlds would loom larger than our Moon. Their orbits form a delicate resonant chain, ticking in near-perfect ratios. TRAPPIST-1 is a prime target for the James Webb Space Telescope, which is studying whether any of these worlds hold atmospheres.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/TRAPPIST-1"
+  },
+  {
+    "id": 11,
+    "title": "Hot Jupiters",
+    "shortDescription": "Giant planets that orbit scorchingly close to their stars.",
+    "detail": "Hot Jupiters are gas giants similar in mass to Jupiter but orbiting astonishingly close to their stars, often completing an orbit in just a few days. Their surfaces can exceed 1,000 degrees Celsius, and the nearest face is blasted by relentless radiation. Their discovery shocked astronomers, because giant planets were expected to form far from their stars, not roast beside them. The leading explanation is migration: these worlds form in the cold outer disk and then spiral inward. Because they are large and transit frequently, hot Jupiters were among the easiest exoplanets to detect and remain valuable laboratories for atmospheric science.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Hot_Jupiter"
+  },
+  {
+    "id": 12,
+    "title": "Super-Earths",
+    "shortDescription": "Rocky worlds bigger than Earth but smaller than Neptune.",
+    "detail": "A super-Earth is a planet with a mass greater than Earth's but well below that of ice giants like Neptune, roughly one to ten Earth masses. The term refers only to size, not habitability; a super-Earth could be a rocky world, a water world, or wrapped in a thick atmosphere. They appear to be among the most common types of planets in the galaxy, even though our own Solar System has none. Their stronger gravity and possible long-lived geology make them intriguing targets in the search for life, and many orbit within their stars' habitable zones.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Super-Earth"
+  },
+  {
+    "id": 13,
+    "title": "Tidal Locking",
+    "shortDescription": "When a planet always shows the same face to its star.",
+    "detail": "Tidal locking happens when a body's rotation slows until it always shows the same face to the object it orbits, just as the Moon always shows one side to Earth. Many exoplanets around cool red dwarfs are likely tidally locked, because they orbit so close that tidal forces are strong. Such a world would have a permanent dayside baked in starlight and a permanent night side in frozen darkness, with a twilight ring between them that might be the most temperate place to live. Whether atmospheres can redistribute heat enough for habitability is an active research question.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Tidal_locking"
+  },
+  {
+    "id": 14,
+    "title": "Rogue Planets",
+    "shortDescription": "Starless worlds drifting alone through interstellar space.",
+    "detail": "Rogue planets are worlds that do not orbit any star, instead wandering freely through the galaxy. Some were ejected from their birth systems by gravitational encounters; others may have formed alone from collapsing gas clouds. Detected mainly through gravitational microlensing, they could number in the billions across the Milky Way, possibly outnumbering ordinary stars. Without a sun, their surfaces should be frigid, yet internal heat or a thick hydrogen atmosphere might keep subsurface oceans liquid, raising the strange possibility of life on a planet adrift in eternal night. They are among the most mysterious objects in modern astronomy.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Rogue_planet"
+  },
+  {
+    "id": 15,
+    "title": "Proxima Centauri b",
+    "shortDescription": "The closest known exoplanet to our Solar System.",
+    "detail": "Proxima Centauri b is an exoplanet orbiting Proxima Centauri, the nearest star to the Sun at just 4.2 light-years away. Slightly more massive than Earth, it sits within its star's habitable zone, where liquid water could in principle exist. But Proxima is a red dwarf prone to powerful flares, which may strip away any atmosphere, and the planet is probably tidally locked. Despite these challenges, its closeness makes it the most tempting target for future interstellar study, including proposed missions like Breakthrough Starshot that envision sending tiny probes there within a human lifetime.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Proxima_Centauri_b"
+  },
+  {
+    "id": 16,
+    "title": "Pulsar Planets",
+    "shortDescription": "The first exoplanets ever found orbit a dead star.",
+    "detail": "The first confirmed exoplanets were not found around a normal star at all, but orbiting a pulsar, the rapidly spinning, ultra-dense remnant of an exploded star. In 1992, astronomers detected planets around PSR B1257+12 by measuring tiny, regular variations in the pulsar's precise radio beats. These worlds endure intense radiation and likely formed from debris left after the supernova. Their discovery proved that planets exist beyond our Solar System years before the first planet around a Sun-like star was found, and showed that planetary systems can arise in some of the most hostile environments imaginable.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/PSR_B1257%2B12"
+  },
+  {
+    "id": 17,
+    "title": "Gravitational Microlensing",
+    "shortDescription": "Using warped starlight as a natural planet-finding lens.",
+    "detail": "Gravitational microlensing detects planets by exploiting Einstein's relativity: a massive object passing in front of a distant star bends and magnifies its light like a lens. If the foreground star hosts a planet, the planet adds a brief extra spike to the brightening. This method is uniquely sensitive to small planets far from their stars, and even to starless rogue planets, complementing transit and radial-velocity surveys. Its drawback is that each alignment is a one-time event that never repeats, so the planets cannot be re-observed. Upcoming missions like the Nancy Grace Roman Space Telescope will use it extensively.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Gravitational_microlensing"
+  },
+  {
+    "id": 18,
+    "title": "Exomoons",
+    "shortDescription": "Moons orbiting planets in other star systems.",
+    "detail": "Exomoons are moons that orbit exoplanets, just as our Solar System's planets host dozens of moons. None have been definitively confirmed yet, because they are far smaller and harder to detect than planets, though several promising candidates exist. Exomoons are exciting for astrobiology: a large moon orbiting a giant planet in the habitable zone could itself be a haven for life, warmed by both starlight and tidal heating, much as Jupiter's moon Europa hides a subsurface ocean. Detecting them requires extraordinarily precise measurements of how a planet's transits subtly shift in timing and shape.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Exomoon"
+  },
+  {
+    "id": 19,
+    "title": "Biosignatures",
+    "shortDescription": "The chemical fingerprints that could betray alien life.",
+    "detail": "A biosignature is a substance or pattern that provides scientific evidence of life, past or present. On exoplanets, astronomers hunt for atmospheric gases that life produces, such as oxygen and methane, and especially combinations that should not coexist without something constantly replenishing them. By splitting the starlight that passes through a planet's atmosphere during transit, telescopes like JWST can read these chemical fingerprints. The challenge is ruling out non-living explanations, since geology and chemistry can mimic biology. A convincing detection would likely require multiple gases in disequilibrium, making the search for biosignatures one of the most careful pursuits in science.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Biosignature"
+  },
+  {
+    "id": 20,
+    "title": "The Great Filter",
+    "shortDescription": "A barrier that may stop life from becoming a galactic civilization.",
+    "detail": "The Great Filter is a proposed answer to the Fermi paradox: somewhere along the path from lifeless chemistry to a galaxy-spanning civilization lies at least one extremely improbable step, a filter that almost nothing gets past. It could lie behind us, meaning the origin of life or of intelligence is staggeringly rare and we are exceptionally lucky. Or it could lie ahead, meaning civilizations tend to destroy themselves before spreading. Unsettlingly, finding abundant simple alien life might be bad news, suggesting the hardest filter still awaits us. The idea sharpens why cosmic silence is so profound.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Great_Filter"
+  },
+  {
+    "id": 21,
+    "title": "Panspermia",
+    "shortDescription": "The idea that life spreads between worlds aboard space rocks.",
+    "detail": "Panspermia is the hypothesis that life, or its chemical building blocks, can travel between planets and even star systems, carried by comets, asteroids, and the debris blasted off worlds by impacts. Hardy microbes such as tardigrades and certain bacteria can survive vacuum, radiation, and extreme cold, lending the idea some plausibility within a solar system. Panspermia does not explain how life originally began; it only shifts the location of that origin. If true, it raises the possibility that life on Earth and any life elsewhere in our system could share a common, wandering ancestry.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Panspermia"
+  },
+  {
+    "id": 22,
+    "title": "Red Dwarf Habitability",
+    "shortDescription": "Could the galaxy's most common stars host life?",
+    "detail": "Red dwarfs are by far the most common stars in the galaxy, small and cool but extraordinarily long-lived, burning steadily for trillions of years. That longevity could give life ample time to arise. But habitability around them is debated: their habitable zones lie so close that planets are likely tidally locked, and young red dwarfs unleash violent flares and radiation that may strip planetary atmospheres. Because they are so numerous and their small size makes orbiting planets easy to detect, red dwarfs are central to the exoplanet search, and worlds like those of TRAPPIST-1 are key test cases.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Habitability_of_red_dwarf_systems"
+  },
+  {
+    "id": 23,
+    "title": "The Wow! Signal",
+    "shortDescription": "A 72-second radio burst that has never been explained.",
+    "detail": "On August 15, 1977, Ohio State University's Big Ear radio telescope recorded a strong, narrow-band radio signal lasting 72 seconds, coming from the direction of the constellation Sagittarius. The astronomer reviewing the printout circled the reading and wrote the word Wow beside it, giving the signal its name. Its frequency was close to a value many thought a deliberate transmitter might use, and it matched what an extraterrestrial beacon could look like. Despite decades of follow-up, it has never been detected again, and no natural source has been confirmed. It remains the most tantalizing single event in SETI history.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Wow!_signal"
+  },
+  {
+    "id": 24,
+    "title": "Kepler-452b",
+    "shortDescription": "An Earth cousin orbiting a Sun-like star.",
+    "detail": "Announced in 2015, Kepler-452b was hailed as one of the most Earth-like planets found at the time, orbiting a Sun-like star in its habitable zone with a year of about 385 days. Roughly 60% wider than Earth, it likely qualifies as a super-Earth and may be rocky, though its mass is uncertain. Its star is older than the Sun, offering a glimpse of what Earth's future could resemble as our own star brightens. Located some 1,400 light-years away, Kepler-452b is far too distant to study in detail, but it became a symbol of the search for another Earth.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler-452b"
+  },
+  {
+    "id": 25,
+    "title": "The James Webb Space Telescope",
+    "shortDescription": "An infrared eye reading the atmospheres of distant worlds.",
+    "detail": "The James Webb Space Telescope (JWST), launched in December 2021, is the most powerful space observatory ever built. Operating in the infrared from a vantage point 1.5 million kilometers from Earth, it peers through cosmic dust and captures light from the earliest galaxies. For exoplanets, its greatest gift is transmission spectroscopy: as a planet crosses its star, JWST analyzes the starlight filtering through the planet's atmosphere, detecting gases like water vapor, carbon dioxide, and methane. It has already characterized exoplanet atmospheres in unprecedented detail, bringing the search for habitable worlds and biosignatures within scientific reach.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/James_Webb_Space_Telescope"
+  },
+  {
+    "id": 26,
+    "title": "The Kepler Space Telescope",
+    "shortDescription": "The mission that revealed planets outnumber stars.",
+    "detail": "Launched by NASA in 2009, the Kepler Space Telescope transformed exoplanet science by staring continuously at a single patch of sky containing over 150,000 stars, watching for the faint dips in brightness caused by transiting planets. Over its mission it confirmed more than 2,600 exoplanets and revealed that planets outnumber stars in our galaxy, with small, rocky worlds being remarkably common. Kepler showed that many stars host planets in their habitable zones. A failure of its stabilizing reaction wheels in 2013 ended its original mission, but a clever repurposing called K2 kept it discovering worlds until 2018.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler_space_telescope"
+  },
+  {
+    "id": 27,
+    "title": "TESS",
+    "shortDescription": "An all-sky planet hunter scanning the nearest bright stars.",
+    "detail": "NASA's Transiting Exoplanet Survey Satellite (TESS), launched in 2018, is Kepler's successor with a wider ambition: rather than studying distant stars, it surveys almost the entire sky, focusing on the nearest and brightest stars. By finding planets around close, bright stars, TESS provides ideal targets for follow-up by telescopes like JWST, which can probe their atmospheres. Using the transit method, it has identified thousands of candidate planets and confirmed hundreds, including nearby rocky worlds. Its all-sky approach makes it a discovery engine, handing the most promising new exoplanets to the world's most powerful instruments for detailed characterization.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Transiting_Exoplanet_Survey_Satellite"
+  },
+  {
+    "id": 28,
+    "title": "Direct Imaging",
+    "shortDescription": "Actually photographing a planet beside its blinding star.",
+    "detail": "Most exoplanets are detected indirectly, but direct imaging actually photographs them by blocking out their dazzling host star to reveal the faint planet beside it. This is extraordinarily difficult, because a star can be billions of times brighter than its planets. Astronomers use coronagraphs and starshades to suppress starlight, plus adaptive optics to sharpen the view. The technique works best for young, massive, hot planets orbiting far from their stars, which still glow with the heat of their formation. Direct imaging lets scientists analyze a planet's light directly, opening the door to studying atmospheres and someday imaging true Earth-like worlds.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets"
+  },
+  {
+    "id": 29,
+    "title": "51 Pegasi b",
+    "shortDescription": "The first planet found orbiting a normal Sun-like star.",
+    "detail": "Discovered in 1995, 51 Pegasi b was the first exoplanet found orbiting a normal, Sun-like star, a landmark that earned its discoverers the 2019 Nobel Prize in Physics. Detected through the radial-velocity wobble it induces in its star, it stunned astronomers: a planet roughly half Jupiter's mass orbiting blisteringly close, completing a year in just four days. Nothing in our Solar System resembled it, and it forced scientists to rethink how and where planets form. As the prototype hot Jupiter, 51 Pegasi b launched the modern era of exoplanet discovery and showed that other systems can look utterly alien.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/51_Pegasi_b"
+  },
+  {
+    "id": 30,
+    "title": "Planetary Migration",
+    "shortDescription": "How planets drift far from where they were born.",
+    "detail": "Planetary migration is the process by which a planet's orbit changes dramatically after it forms, usually drifting inward or outward through interactions with the surrounding disk of gas and dust or with other planets. It is the leading explanation for hot Jupiters: giant planets that form in the cold outer regions of a system and then spiral inward to roast beside their stars. Migration can also fling planets outward or eject them entirely as rogue worlds. Understanding it is key to explaining the wild diversity of exoplanet systems, many of which look nothing like the relatively orderly architecture of our own Solar System.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Planetary_migration"
+  },
+  {
+    "id": 31,
+    "title": "Protoplanetary Disks",
+    "shortDescription": "The swirling cradles where planets are born.",
+    "detail": "Planets are born from protoplanetary disks: vast, flattened rings of gas and dust swirling around young stars. Within these disks, dust grains collide and stick together, slowly building pebbles, then boulders, then planet-sized bodies over millions of years. Gaps and rings carved into real disks, imaged in stunning detail by the ALMA observatory, are thought to mark where infant planets are sweeping up material. These disks set the raw ingredients and the architecture of every planetary system. Studying them lets astronomers watch planet formation almost in real time and understand why mature systems end up so diverse.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Protoplanetary_disk"
+  },
+  {
+    "id": 32,
+    "title": "Circumbinary Planets",
+    "shortDescription": "Real-life Tatooines that orbit two suns at once.",
+    "detail": "Circumbinary planets orbit not one star but two, circling a binary pair from outside, the real-life version of Tatooine's double sunset from Star Wars. The first confirmed example, Kepler-16b, was announced in 2011. Such planets experience complex, shifting light and gravity as their two suns orbit each other, and their stable orbits must lie far enough out to avoid being torn apart. Their existence proves that planets can form and survive in the chaotic gravitational environment of a double-star system, expanding the range of places astronomers must consider when searching for worlds, and potentially for life.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Circumbinary_planet"
+  },
+  {
+    "id": 33,
+    "title": "Lava Worlds",
+    "shortDescription": "Rocky planets with glowing oceans of molten rock.",
+    "detail": "Lava worlds are rocky exoplanets orbiting so close to their stars that their daysides are hot enough to melt rock, creating glowing oceans of magma. A famous example, 55 Cancri e, is a super-Earth that may reach surface temperatures around 2,000 degrees Celsius, with possible magma seas and exotic, mineral-laden skies. Some lava worlds may even have atmospheres of vaporized rock that rain molten droplets. These extreme planets are surprisingly useful: their searing temperatures make their thermal emission easy to detect, allowing telescopes like JWST to study how rocky worlds behave under conditions far harsher than anything in our Solar System.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Lava_planet"
+  },
+  {
+    "id": 34,
+    "title": "Ocean Worlds",
+    "shortDescription": "Planets and moons drowned beneath global seas.",
+    "detail": "Ocean worlds are planets or moons covered by vast amounts of water, potentially in oceans hundreds of kilometers deep with no land at all. Within our Solar System, moons like Europa and Enceladus hide liquid oceans beneath icy shells, kept warm by tidal heating. Beyond it, some super-Earths may be true water worlds, their entire surfaces drowned. Such oceans are prime targets in the search for life, since liquid water is essential to biology as we know it. But extreme pressure at great depths and the absence of land could create conditions very different from Earth's familiar seas.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Ocean_world"
+  },
+  {
+    "id": 35,
+    "title": "Hycean Worlds",
+    "shortDescription": "Ocean planets cloaked in thick hydrogen atmospheres.",
+    "detail": "Hycean worlds are a proposed class of exoplanet featuring vast liquid-water oceans beneath thick, hydrogen-rich atmospheres. The term, coined in 2021, combines hydrogen and ocean. These planets could be larger and warmer than Earth yet still potentially habitable, dramatically widening the range of worlds where life might exist. The sub-Neptune K2-18b is a leading candidate; JWST observations have detected carbon-bearing molecules and contested hints of a gas sometimes linked to life. Hycean worlds are exciting because their puffy atmospheres are easier to study than those of small rocky planets, making them attractive targets in the search for habitable conditions.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Hycean_planet"
+  },
+  {
+    "id": 36,
+    "title": "Brown Dwarfs",
+    "shortDescription": "Failed stars too small to ignite like the Sun.",
+    "detail": "Brown dwarfs are objects that fall between the largest planets and the smallest stars, sometimes called failed stars. They form like stars, from collapsing gas, but never gather enough mass to ignite sustained hydrogen fusion in their cores. Instead they glow dimly from leftover heat and slowly cool over billions of years, shining mostly in infrared. Their atmospheres can host clouds of exotic materials and even violent storms. Brown dwarfs blur the line between stars and planets, and studying them helps astronomers understand both how stars form and what the atmospheres of giant exoplanets are really like.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Brown_dwarf"
+  },
+  {
+    "id": 37,
+    "title": "Planets Around Dead Stars",
+    "shortDescription": "Worlds that survive their star's fiery death.",
+    "detail": "When a Sun-like star dies, it swells into a red giant and then collapses into a white dwarf, a dense, slowly cooling stellar ember. Astronomers once assumed planets could not survive this violent transformation, but discoveries like the giant planet closely orbiting the white dwarf WD 1856+534 proved otherwise. Some planets endure, while others are torn apart, their debris polluting the white dwarf's surface with elements that reveal what the worlds were made of. Studying these systems offers a sobering glimpse of the distant future of our own Solar System, long after the Sun has died.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/WD_1856b"
+  },
+  {
+    "id": 38,
+    "title": "Tabby's Star",
+    "shortDescription": "A star whose strange dimming sparked alien rumors.",
+    "detail": "Tabby's Star, formally KIC 8462852, captivated astronomers after Kepler recorded bizarre, irregular dips in its brightness, sometimes fading by more than 20%, far more than any planet could cause. The strange pattern fueled speculation that an alien megastructure, like a Dyson swarm, might be orbiting it. More mundane explanations have since gained favor, especially clouds of dust or fragmenting comets, since the dimming is stronger in blue light than red, as expected for dust. While probably natural, Tabby's Star remains a reminder that the universe still holds genuine mysteries, and that good science must rule out the ordinary before invoking the extraordinary.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/KIC_8462852"
+  },
+  {
+    "id": 39,
+    "title": "Atmospheric Escape",
+    "shortDescription": "How a planet can lose its air to space.",
+    "detail": "Atmospheric escape is the gradual loss of a planet's atmosphere to space, and it can decide whether a world stays habitable. Intense stellar radiation and powerful flares, especially from active red dwarf stars, can heat and strip away gases, and a weak or absent magnetic field offers little protection. Mars likely lost most of its atmosphere this way, turning from a possibly wet world into a cold desert. For exoplanets around flare-prone stars, atmospheric escape is a central question: a planet may sit squarely in the habitable zone yet be left airless and barren by its own star's fury.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Atmospheric_escape"
+  },
+  {
+    "id": 40,
+    "title": "The Earth Similarity Index",
+    "shortDescription": "A single score for how Earth-like a planet is.",
+    "detail": "The Earth Similarity Index, or ESI, is a number between 0 and 1 that rates how physically similar an exoplanet is to Earth, with 1 being an exact match. It combines factors like a planet's radius, density, surface temperature, and escape velocity into a single score. Earth itself scores 1, while Mars sits around 0.7. The ESI is a quick, convenient way to rank and compare the thousands of known worlds, highlighting the most Earth-like candidates for further study. But it measures physical resemblance, not actual habitability; a high ESI is a tempting flag, not proof that a world could host life.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Earth_Similarity_Index"
+  },
+  {
+    "id": 41,
+    "title": "Breakthrough Starshot",
+    "shortDescription": "A plan to reach another star within a lifetime.",
+    "detail": "Breakthrough Starshot is an ambitious proposal to send tiny spacecraft to the nearest star system, Alpha Centauri, within a human lifetime. The plan calls for gram-scale probes attached to ultra-light sails, accelerated to about 20% the speed of light by a powerful ground-based laser array. At that speed, the journey would take roughly 20 years rather than tens of thousands. Each probe would carry cameras and sensors to beam back data from Proxima Centauri b and its neighbors. Enormous engineering challenges remain, but the project represents one of the most serious attempts yet to imagine genuine interstellar exploration.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Breakthrough_Starshot"
+  },
+  {
+    "id": 42,
+    "title": "SETI",
+    "shortDescription": "Listening across the galaxy for a signal from someone.",
+    "detail": "SETI, the Search for Extraterrestrial Intelligence, is the scientific effort to detect signs of technological civilizations beyond Earth. Most SETI work scans the skies for artificial radio or laser signals that nature is unlikely to produce, narrow-band transmissions that could betray an intelligent sender. Projects like Breakthrough Listen survey millions of stars with the world's largest telescopes. So far the search has turned up only silence, including the famous unexplained Wow! signal. SETI is a long shot, but its potential payoff is staggering: confirming that we are not alone would be one of the most profound discoveries in human history.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Search_for_extraterrestrial_intelligence"
+  },
+  {
+    "id": 43,
+    "title": "The Arecibo Message",
+    "shortDescription": "Humanity's deliberate postcard to the stars.",
+    "detail": "In 1974, astronomers used the giant Arecibo radio telescope in Puerto Rico to beam a deliberate message toward the globular star cluster M13, some 25,000 light-years away. Designed by Frank Drake and others, the Arecibo message was a simple binary picture encoding the numbers one to ten, the chemical elements of DNA, a human figure, our Solar System, and the telescope itself. It was more a demonstration of human capability than a serious attempt at contact, since any reply would take tens of thousands of years. The message remains a landmark in messaging extraterrestrial intelligence and a symbol of humanity reaching outward.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Arecibo_message"
+  },
+  {
+    "id": 44,
+    "title": "Stellar Classification",
+    "shortDescription": "The OBAFGKM code that sorts every star.",
+    "detail": "Stars are sorted into spectral types using the sequence O, B, A, F, G, K, M, ordered from the hottest, most massive blue stars to the coolest, dimmest red ones. Our Sun is a G-type star. This classification, often memorized with the phrase Oh Be A Fine Guy or Girl, Kiss Me, tells astronomers a star's temperature, color, mass, and lifespan at a glance. It matters enormously for exoplanets: a star's type determines where its habitable zone lies, how long it burns steadily, and how much harmful radiation it emits, all crucial factors in whether its planets could support life.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Stellar_classification"
+  },
+  {
+    "id": 45,
+    "title": "We Are Made of Stardust",
+    "shortDescription": "The atoms in your body were forged inside stars.",
+    "detail": "Nearly every atom heavier than hydrogen and helium in your body was forged inside stars. The Big Bang produced only the lightest elements; everything else, the carbon in our cells, the oxygen we breathe, the iron in our blood, was created by nuclear fusion in stellar cores and in the violent deaths of stars. Supernova explosions and merging neutron stars scatter these elements across space, seeding new clouds that form later stars and planets. As astronomer Carl Sagan put it, we are made of star-stuff. In a literal, physical sense, human beings are the universe contemplating itself.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Stellar_nucleosynthesis"
+  },
+  {
+    "id": 46,
+    "title": "The Cosmic Microwave Background",
+    "shortDescription": "The oldest light in the universe, still glowing today.",
+    "detail": "The cosmic microwave background, or CMB, is the faint afterglow of the Big Bang, the oldest light in the universe. It was released about 380,000 years after the beginning, when the cosmos first cooled enough for atoms to form and light could travel freely. This radiation now fills all of space, stretched by cosmic expansion into faint microwaves just a few degrees above absolute zero. Discovered accidentally in 1965, the CMB is among the strongest evidence for the Big Bang. Tiny variations in its temperature map the seeds of all later structure: the galaxies, stars, and planets that formed across billions of years.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Cosmic_microwave_background"
+  },
+  {
+    "id": 47,
+    "title": "Dark Matter",
+    "shortDescription": "The invisible mass holding galaxies together.",
+    "detail": "Dark matter is an invisible substance thought to make up about 27% of the universe, far more than all the ordinary matter in stars, planets, and gas combined. It emits no light, so we detect it only through its gravity: galaxies spin faster than their visible mass should allow, and light from distant objects bends around unseen concentrations of mass. Something must be holding galaxies together, and dark matter is the leading explanation. Its true nature remains one of the greatest unsolved mysteries in physics, with candidates ranging from undiscovered particles to exotic objects, none yet confirmed despite decades of dedicated searching.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Dark_matter"
+  },
+  {
+    "id": 48,
+    "title": "Dark Energy",
+    "shortDescription": "The mysterious push accelerating the cosmos apart.",
+    "detail": "Dark energy is the mysterious influence thought to be driving the accelerating expansion of the universe. In the 1990s, astronomers studying distant supernovae expected cosmic expansion to be slowing under gravity; instead they found it speeding up, as if a repulsive energy were pushing space apart. Dark energy is estimated to make up roughly 68% of the total content of the universe, dwarfing both ordinary and dark matter. Yet its nature is almost completely unknown; it may be a property of empty space itself. Understanding dark energy is one of the central challenges of modern cosmology and key to the fate of the universe.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Dark_energy"
+  },
+  {
+    "id": 49,
+    "title": "The Roman Space Telescope",
+    "shortDescription": "A wide-eyed survey telescope to census the planets.",
+    "detail": "The Nancy Grace Roman Space Telescope is a NASA observatory planned for launch in the late 2020s, with a field of view about 100 times wider than Hubble's at similar sharpness, making it a survey powerhouse. For exoplanets, Roman will use gravitational microlensing to find thousands of worlds far from their stars, including small, cold planets and free-floating rogue planets that other methods miss. It will also test advanced coronagraph technology for directly imaging planets. Together with its studies of dark energy, Roman is designed to map the sky on an enormous scale and help complete our census of planet types.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Nancy_Grace_Roman_Space_Telescope"
+  },
+  {
+    "id": 50,
+    "title": "The Pale Blue Dot",
+    "shortDescription": "Earth as a single pixel seen from billions of miles away.",
+    "detail": "In 1990, as the Voyager 1 spacecraft sped beyond the outer planets, it turned its camera back toward home at the urging of Carl Sagan and captured Earth as a single, almost invisible point of light suspended in a sunbeam, the Pale Blue Dot. From about six billion kilometers away, our entire world was less than a single pixel. Sagan's reflection on the image became famous: everyone who ever lived, every triumph and tragedy of human history, took place on that tiny mote of dust. The photograph endures as a humbling reminder of our smallness and our shared responsibility for this fragile planet.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Pale_Blue_Dot"
+  }
+]

@@ -7,9 +7,10 @@ import androidx.lifecycle.ViewModel
 import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
 import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
 import com.app.exoplanethunter.spacefacts.SpaceFact
-import com.app.exoplanethunter.spacefacts.SpaceFacts
+import com.app.exoplanethunter.spacefacts.SpaceFactProvider
 
 class SpaceFactDetailViewModel(
+    private val spaceFactProvider: SpaceFactProvider,
     private val trackEvent: TrackEventUseCase
 ) : ViewModel() {
 
@@ -19,7 +20,7 @@ class SpaceFactDetailViewModel(
     private var openTracked = false
 
     fun load(factId: Int) {
-        val loaded = SpaceFacts.byId(factId)
+        val loaded = spaceFactProvider.byId(factId)
         fact = loaded
         if (loaded != null && !openTracked) {
             openTracked = true

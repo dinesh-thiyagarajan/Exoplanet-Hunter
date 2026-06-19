@@ -23,6 +23,7 @@ import com.app.exoplanethunter.ml.ExoplanetClassifier
 import com.app.exoplanethunter.exoplanet.data.local.FavoritesPreferences
 import com.app.exoplanethunter.exoplanet.data.local.SyncPreferences
 import com.app.exoplanethunter.ml.GetHabitabilityInsightUseCase
+import com.app.exoplanethunter.spacefacts.SpaceFactProvider
 import com.app.exoplanethunter.presentation.screens.about.AboutViewModel
 import com.app.exoplanethunter.presentation.screens.compare.CompareViewModel
 import com.app.exoplanethunter.presentation.screens.favorites.FavoritesViewModel
@@ -46,6 +47,7 @@ val dataModule = module {
     single { SyncPreferences(androidContext()) }
     single { FavoritesPreferences(androidContext()) }
     single<ExoplanetRepository> { ExoplanetRepositoryImpl(androidContext(), get(), get(), get()) }
+    single { SpaceFactProvider(androidContext()) }
 }
 
 val mlModule = module {
@@ -81,7 +83,7 @@ val viewModelModule = module {
     viewModel { SplashViewModel(get(), get()) }
     viewModel { AboutViewModel(get(), get(), get()) }
     viewModel { CompareViewModel(get(), get(), get()) }
-    viewModel { SpaceFactDetailViewModel(get()) }
+    viewModel { SpaceFactDetailViewModel(get(), get()) }
 }
 
 val appModules = listOf(

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.presentation.components.PlanetRowCard
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
@@ -125,16 +125,22 @@ fun FavoritesScreen(
                         ),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(
-                            items = viewModel.planets,
-                            key = { it.id }
-                        ) { planet ->
-                            PlanetRowCard(
-                                planet = planet,
-                                isFavorite = true,
-                                onToggleFavorite = { viewModel.toggleFavorite(planet) },
-                                onClick = { onPlanetClick(planet.id) }
-                            )
+                        val planets = viewModel.planets
+                        planets.forEachIndexed { index, planet ->
+                            item(key = planet.id) {
+                                PlanetRowCard(
+                                    planet = planet,
+                                    isFavorite = true,
+                                    onToggleFavorite = { viewModel.toggleFavorite(planet) },
+                                    onClick = { onPlanetClick(planet.id) }
+                                )
+                            }
+                            // Interleave an ad after every 5th favorite (not at the end of the list).
+                            if ((index + 1) % 5 == 0 && index < planets.size - 1) {
+                                item(key = "ad_fav_$index") {
+                                    AdBannerCard()
+                                }
+                            }
                         }
                     }
                 }

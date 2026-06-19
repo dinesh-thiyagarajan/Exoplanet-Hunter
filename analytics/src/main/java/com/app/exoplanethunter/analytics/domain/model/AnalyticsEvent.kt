@@ -67,4 +67,26 @@ sealed class AnalyticsEvent {
     data class StarSystemFilterApplied(
         val filter: String
     ) : AnalyticsEvent()
+
+    // ── Sort ────────────────────────────────────────────────────────────────
+
+    data class PlanetSortApplied(
+        val sortOption: String
+    ) : AnalyticsEvent()
+
+    // ── Compare ─────────────────────────────────────────────────────────────
+
+    object CompareModeEntered : AnalyticsEvent()
+
+    data class PlanetsCompared(
+        val planetAId: Long,
+        val planetAName: String,
+        val planetBId: Long,
+        val planetBName: String
+    ) : AnalyticsEvent()
+
+    data class CompareScreenViewed(
+        val planetAId: Long,
+        val planetBId: Long
+    ) : AnalyticsEvent()
 }

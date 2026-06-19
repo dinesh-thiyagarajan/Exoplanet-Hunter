@@ -27,11 +27,16 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.CompareArrows
+import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -41,9 +46,12 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -87,9 +95,11 @@ import kotlinx.coroutines.delay
 @Composable
 fun PlanetListScreen(
     onPlanetClick: (Long) -> Unit,
+    onCompare: (Long, Long) -> Unit = { _, _ -> },
     viewModel: PlanetListViewModel = koinViewModel()
 ) {
     val listState = rememberLazyListState()
+    var showSortSheet by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
         StarField(starCount = 100)
@@ -110,22 +120,41 @@ fun PlanetListScreen(
                     )
                     .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 8.dp)
             ) {
-                Text(
-                    text = "Exoplanets",
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        brush = Brush.linearGradient(
-                            colors = listOf(CosmicCyan, NebulaPink)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Exoplanets",
+                            style = MaterialTheme.typography.headlineLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                brush = Brush.linearGradient(
+                                    colors = listOf(CosmicCyan, NebulaPink)
+                                )
+                            )
                         )
-                    )
-                )
 
-                Text(
-                    text = "${viewModel.planets.size} planets discovered",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextSecondary,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
+                        Text(
+                            text = "${viewModel.planets.size} planets discovered",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = TextSecondary,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+
+                    IconButton(onClick = { showSortSheet = true }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.Sort,
+                            contentDescription = stringResource(R.string.sort_action),
+                            tint = if (viewModel.sortOption == SortOption.DEFAULT) TextSecondary else CosmicCyan
+                        )
+                    }
+                    IconButton(onClick = viewModel::toggleCompareMode) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.CompareArrows,
+                            contentDescription = stringResource(R.string.compare_action),
+                            tint = if (viewModel.compareMode) CosmicCyan else TextSecondary
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -294,7 +323,7 @@ fun PlanetListScreen(
                             start = 16.dp,
                             end = 16.dp,
                             top = 8.dp,
-                            bottom = 16.dp
+                            bottom = if (viewModel.compareMode) 96.dp else 16.dp
                         ),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
@@ -306,10 +335,16 @@ fun PlanetListScreen(
                                     index = index,
                                     isYearHighlighted = viewModel.showLatestOnly || viewModel.minDiscoveryYear != null,
                                     isFavorite = planet.planetName in viewModel.favoriteNames,
+                                    isSelectedForCompare = viewModel.compareMode &&
+                                        viewModel.isSelectedForCompare(planet),
                                     onToggleFavorite = { viewModel.toggleFavorite(planet) },
                                     onClick = {
-                                        viewModel.trackPlanetClicked(planet)
-                                        onPlanetClick(planet.id)
+                                        if (viewModel.compareMode) {
+                                            viewModel.onCompareSelect(planet)
+                                        } else {
+                                            viewModel.trackPlanetClicked(planet)
+                                            onPlanetClick(planet.id)
+                                        }
                                     }
                                 )
                             }
@@ -324,6 +359,107 @@ fun PlanetListScreen(
                 }
             }
         }
+
+        // Compare action bar (only while in compare mode)
+        if (viewModel.compareMode) {
+            val selected = viewModel.selectedForCompare
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                color = SurfaceCard,
+                shadowElevation = 12.dp
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = if (selected.size < 2) stringResource(R.string.compare_hint)
+                            else selected.joinToString(" vs ") { it.planetName },
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = stringResource(R.string.compare_selected_count, selected.size),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = TextMuted
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Button(
+                        onClick = {
+                            if (selected.size == 2) {
+                                val a = selected[0]
+                                val b = selected[1]
+                                viewModel.trackComparison(a, b)
+                                onCompare(a.id, b.id)
+                                viewModel.exitCompareMode()
+                            }
+                        },
+                        enabled = selected.size == 2,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = CosmicCyan,
+                            contentColor = SpaceBlack,
+                            disabledContainerColor = SurfaceCardLight,
+                            disabledContentColor = TextMuted
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(R.string.compare_button),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+
+        // Sort bottom sheet
+        if (showSortSheet) {
+            val sheetState = rememberModalBottomSheetState()
+            ModalBottomSheet(
+                onDismissRequest = { showSortSheet = false },
+                sheetState = sheetState,
+                containerColor = SurfaceCard
+            ) {
+                Text(
+                    text = stringResource(R.string.sort_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 8.dp)
+                )
+                SortOption.entries.forEach { option ->
+                    val selected = viewModel.sortOption == option
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                viewModel.onSortSelected(option)
+                                showSortSheet = false
+                            }
+                            .padding(horizontal = 20.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(option.labelRes),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = if (selected) CosmicCyan else Color.White,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (selected) {
+                            Icon(Icons.Default.Check, contentDescription = null, tint = CosmicCyan)
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
     }
 }
 
@@ -333,6 +469,7 @@ private fun AnimatedPlanetCard(
     index: Int,
     isYearHighlighted: Boolean,
     isFavorite: Boolean,
+    isSelectedForCompare: Boolean = false,
     onToggleFavorite: () -> Unit,
     onClick: () -> Unit
 ) {
@@ -349,6 +486,13 @@ private fun AnimatedPlanetCard(
                 alpha = progress.value
                 translationY = (1f - progress.value) * 24f
             }
+            .then(
+                if (isSelectedForCompare) {
+                    Modifier
+                        .clip(RoundedCornerShape(20.dp))
+                        .border(2.dp, CosmicCyan, RoundedCornerShape(20.dp))
+                } else Modifier
+            )
     ) {
         PlanetRowCard(
             planet = planet,

@@ -39,6 +39,7 @@ import com.app.exoplanethunter.presentation.screens.favorites.FavoritesScreen
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailScreen
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListScreen
 import com.app.exoplanethunter.presentation.screens.splash.SplashScreen
+import com.app.exoplanethunter.presentation.screens.compare.CompareScreen
 import com.app.exoplanethunter.presentation.screens.statistics.StatisticsScreen
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemDetailScreen
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemListScreen
@@ -61,6 +62,9 @@ sealed class Screen(val route: String) {
     }
     data object StarSystemDetail : Screen(NavRoutes.STAR_SYSTEM_DETAIL) {
         fun createRoute(systemId: Long) = "star_system_detail/$systemId"
+    }
+    data object Compare : Screen(NavRoutes.COMPARE) {
+        fun createRoute(planetAId: Long, planetBId: Long) = "compare/$planetAId/$planetBId"
     }
 }
 
@@ -117,6 +121,9 @@ fun ExoplanetNavigation() {
                 },
                 onSystemClick = { systemId ->
                     navController.navigate(Screen.StarSystemDetail.createRoute(systemId))
+                },
+                onCompare = { planetAId, planetBId ->
+                    navController.navigate(Screen.Compare.createRoute(planetAId, planetBId))
                 }
             )
         }
@@ -145,6 +152,25 @@ fun ExoplanetNavigation() {
                 onBack = { navController.popBackStack() }
             )
         }
+
+        composable(
+            route = Screen.Compare.route,
+            arguments = listOf(
+                navArgument(NavArgs.COMPARE_A) { type = NavType.LongType },
+                navArgument(NavArgs.COMPARE_B) { type = NavType.LongType }
+            )
+        ) { backStackEntry ->
+            val planetAId = backStackEntry.arguments?.getLong(NavArgs.COMPARE_A) ?: return@composable
+            val planetBId = backStackEntry.arguments?.getLong(NavArgs.COMPARE_B) ?: return@composable
+            CompareScreen(
+                planetAId = planetAId,
+                planetBId = planetBId,
+                onPlanetClick = { planetId ->
+                    navController.navigate(Screen.PlanetDetail.createRoute(planetId))
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 
@@ -155,7 +181,8 @@ fun ExoplanetNavigation() {
 @Composable
 private fun MainScreen(
     onPlanetClick: (Long) -> Unit,
-    onSystemClick: (Long) -> Unit
+    onSystemClick: (Long) -> Unit,
+    onCompare: (Long, Long) -> Unit
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(BottomNavTab.Planets.name) }
 
@@ -196,7 +223,8 @@ private fun MainScreen(
         Box(modifier = Modifier.padding(innerPadding)) {
             when (BottomNavTab.valueOf(selectedTab)) {
                 BottomNavTab.Planets -> PlanetListScreen(
-                    onPlanetClick = onPlanetClick
+                    onPlanetClick = onPlanetClick,
+                    onCompare = onCompare
                 )
                 BottomNavTab.StarSystems -> StarSystemListScreen(
                     onSystemClick = onSystemClick

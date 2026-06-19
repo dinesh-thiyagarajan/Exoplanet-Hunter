@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.exoplanet.domain.model.LabelCount
 import com.app.exoplanethunter.exoplanet.domain.model.Statistics
 import com.app.exoplanethunter.presentation.components.StarField
@@ -95,6 +96,10 @@ fun StatisticsScreen(
             StatSection(title = "Discoveries by Method") {
                 HorizontalBars(stats.methodCounts)
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            AdBannerCard()
 
             Spacer(modifier = Modifier.height(24.dp))
 

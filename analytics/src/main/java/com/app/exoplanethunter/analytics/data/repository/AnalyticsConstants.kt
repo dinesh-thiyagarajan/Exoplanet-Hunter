@@ -22,6 +22,11 @@ object AnalyticsConstants {
     const val MANUAL_SYNC_FAILURE = "manual_sync_failure"
     const val STAR_SYSTEM_FILTER_APPLIED = "star_system_filter_applied"
 
+    const val PLANET_SORT_APPLIED = "planet_sort_applied"
+    const val COMPARE_MODE_ENTERED = "compare_mode_entered"
+    const val PLANETS_COMPARED = "planets_compared"
+    const val COMPARE_SCREEN_VIEWED = "compare_screen_viewed"
+
     // Parameter Keys
     const val PARAM_PLANET_ID = "planet_id"
     const val PARAM_PLANET_NAME = "planet_name"
@@ -32,4 +37,9 @@ object AnalyticsConstants {
     const val PARAM_QUERY = "query"
     const val PARAM_FILTER = "filter"
     const val PARAM_ERROR_MESSAGE = "error_message"
+    const val PARAM_SORT_OPTION = "sort_option"
+    const val PARAM_PLANET_A_ID = "planet_a_id"
+    const val PARAM_PLANET_A_NAME = "planet_a_name"
+    const val PARAM_PLANET_B_ID = "planet_b_id"
+    const val PARAM_PLANET_B_NAME = "planet_b_name"
 }

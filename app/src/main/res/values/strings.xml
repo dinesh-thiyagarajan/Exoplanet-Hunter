@@ -101,4 +101,52 @@
     <string name="planet_detail_label_surface_gravity_est">Surface gravity (est.)</string>
     <string name="planet_detail_label_eq_temperature_lower">Eq. temperature</string>
     <string name="planet_detail_label_orbital_period">Orbital period</string>
+
+    <!-- Planet list: sort -->
+    <string name="sort_action">Sort</string>
+    <string name="sort_title">Sort by</string>
+    <string name="sort_default">Default</string>
+    <string name="sort_nearest">Nearest to Earth</string>
+    <string name="sort_largest">Largest first</string>
+    <string name="sort_earth_like">Most Earth-like</string>
+    <string name="sort_newest">Newest first</string>
+    <string name="sort_name_az">Name (A–Z)</string>
+
+    <!-- Planet list: compare -->
+    <string name="compare_action">Compare</string>
+    <string name="compare_exit">Exit compare</string>
+    <string name="compare_hint">Select two planets to compare</string>
+    <string name="compare_selected_count">%1$d / 2 selected</string>
+    <string name="compare_button">Compare</string>
+
+    <!-- Compare screen -->
+    <string name="compare_title">Compare</string>
+    <string name="compare_metric_radius">Radius (R⊕)</string>
+    <string name="compare_metric_mass">Mass (M⊕)</string>
+    <string name="compare_metric_orbital_period">Orbital period (days)</string>
+    <string name="compare_metric_eq_temp">Eq. temperature (K)</string>
+    <string name="compare_metric_distance">Distance (parsecs)</string>
+    <string name="compare_metric_discovery_year">Discovery year</string>
+    <string name="compare_metric_insolation">Insolation (S⊕)</string>
+    <string name="compare_no_data">—</string>
+    <string name="compare_section_ml">ML Habitability Analysis</string>
+    <string name="compare_section_properties">Physical Properties</string>
+    <string name="compare_overall_habitability">Overall habitability</string>
+    <string name="compare_ml_disclaimer">ML estimates from limited data — rough, educational, not scientific fact.</string>
+
+    <!-- Compare: verdict summary -->
+    <string name="compare_verdict_title">At a glance</string>
+    <string name="compare_verdict_more_earthlike">%1$s looks more Earth-like</string>
+    <string name="compare_verdict_similar_earthlike">Both are similarly Earth-like</string>
+    <string name="compare_verdict_unknown_earthlike">Not enough data to judge Earth-likeness</string>
+    <string name="compare_verdict_larger">%1$s is %2$s× larger across</string>
+    <string name="compare_verdict_same_size">Nearly identical in size</string>
+    <string name="compare_verdict_closer">%1$s is closer — %2$s vs %3$s light-years away</string>
+    <string name="compare_verdict_hotter">%1$s is the hotter world</string>
+
+    <!-- Compare: size-to-scale -->
+    <string name="compare_size_title">Size to scale</string>
+    <string name="compare_earth_label">Earth</string>
+    <string name="compare_radius_value">%s R⊕</string>
+    <string name="compare_ratio">%s×</string>
 </resources>

@@ -117,5 +117,35 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
                 putString(Keys.PARAM_FILTER, event.filter)
             }
         }
+
+        // Sort
+        is AnalyticsEvent.PlanetSortApplied -> {
+            val event = this
+            Keys.PLANET_SORT_APPLIED to Bundle().apply {
+                putString(Keys.PARAM_SORT_OPTION, event.sortOption)
+            }
+        }
+
+        // Compare
+        is AnalyticsEvent.CompareModeEntered ->
+            Keys.COMPARE_MODE_ENTERED to null
+
+        is AnalyticsEvent.PlanetsCompared -> {
+            val event = this
+            Keys.PLANETS_COMPARED to Bundle().apply {
+                putLong(Keys.PARAM_PLANET_A_ID, event.planetAId)
+                putString(Keys.PARAM_PLANET_A_NAME, event.planetAName)
+                putLong(Keys.PARAM_PLANET_B_ID, event.planetBId)
+                putString(Keys.PARAM_PLANET_B_NAME, event.planetBName)
+            }
+        }
+
+        is AnalyticsEvent.CompareScreenViewed -> {
+            val event = this
+            Keys.COMPARE_SCREEN_VIEWED to Bundle().apply {
+                putLong(Keys.PARAM_PLANET_A_ID, event.planetAId)
+                putLong(Keys.PARAM_PLANET_B_ID, event.planetBId)
+            }
+        }
     }
 }

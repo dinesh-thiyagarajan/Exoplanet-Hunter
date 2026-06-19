@@ -24,6 +24,7 @@ import com.app.exoplanethunter.exoplanet.data.local.FavoritesPreferences
 import com.app.exoplanethunter.exoplanet.data.local.SyncPreferences
 import com.app.exoplanethunter.ml.GetHabitabilityInsightUseCase
 import com.app.exoplanethunter.presentation.screens.about.AboutViewModel
+import com.app.exoplanethunter.presentation.screens.compare.CompareViewModel
 import com.app.exoplanethunter.presentation.screens.favorites.FavoritesViewModel
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailViewModel
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListViewModel
@@ -78,6 +79,7 @@ val viewModelModule = module {
     viewModel { StarSystemDetailViewModel(get(), get()) }
     viewModel { SplashViewModel(get(), get()) }
     viewModel { AboutViewModel(get(), get(), get()) }
+    viewModel { CompareViewModel(get(), get(), get()) }
 }
 
 val appModules = listOf(

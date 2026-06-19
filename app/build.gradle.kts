@@ -18,6 +18,7 @@ val localProperties = Properties().apply {
 val adsEnabled: String = localProperties.getProperty("ADS_ENABLED", "false")
 val admobAppId: String = localProperties.getProperty("ADMOB_APP_ID", "")
 val admobAdUnitId: String = localProperties.getProperty("ADMOB_AD_UNIT_ID", "")
+val admobInterstitialAdUnitId: String = localProperties.getProperty("ADMOB_INTERSTITIAL_AD_UNIT_ID", "")
 
 android {
     namespace = "com.app.exoplanethunter"
@@ -38,6 +39,7 @@ android {
         // Inject ad config into BuildConfig
         buildConfigField("boolean", "ADS_ENABLED", adsEnabled)
         buildConfigField("String", "ADMOB_AD_UNIT_ID", "\"$admobAdUnitId\"")
+        buildConfigField("String", "ADMOB_INTERSTITIAL_AD_UNIT_ID", "\"$admobInterstitialAdUnitId\"")
 
         // Manifest placeholder for AdMob App ID
         manifestPlaceholders["ADMOB_APP_ID"] = admobAppId

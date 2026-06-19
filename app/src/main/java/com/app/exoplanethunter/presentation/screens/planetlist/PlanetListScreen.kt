@@ -89,6 +89,9 @@ import com.app.exoplanethunter.presentation.theme.SurfaceCardLight
 import com.app.exoplanethunter.presentation.theme.TextMuted
 import com.app.exoplanethunter.presentation.theme.TextSecondary
 import com.app.exoplanethunter.ads.AdBannerCard
+import com.app.exoplanethunter.ads.InterstitialAdController
+import android.app.Activity
+import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,6 +103,7 @@ fun PlanetListScreen(
 ) {
     val listState = rememberLazyListState()
     var showSortSheet by remember { mutableStateOf(false) }
+    val activity = LocalContext.current as? Activity
 
     Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
         StarField(starCount = 100)
@@ -398,7 +402,9 @@ fun PlanetListScreen(
                                 val a = selected[0]
                                 val b = selected[1]
                                 viewModel.trackComparison(a, b)
-                                onCompare(a.id, b.id)
+                                InterstitialAdController.maybeShow(activity) {
+                                    onCompare(a.id, b.id)
+                                }
                                 viewModel.exitCompareMode()
                             }
                         },

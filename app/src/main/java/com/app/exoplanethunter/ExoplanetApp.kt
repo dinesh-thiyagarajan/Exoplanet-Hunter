@@ -15,7 +15,8 @@ class ExoplanetApp : Application() {
         AdManager.initialize(
             context = this,
             enabled = BuildConfig.ADS_ENABLED,
-            unitId = BuildConfig.ADMOB_AD_UNIT_ID
+            unitId = BuildConfig.ADMOB_AD_UNIT_ID,
+            interstitialId = BuildConfig.ADMOB_INTERSTITIAL_AD_UNIT_ID
         )
 
         startKoin {

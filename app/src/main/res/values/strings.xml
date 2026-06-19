@@ -35,4 +35,70 @@
     <string name="about_acknowledgement_text">This application has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.</string>
     <string name="about_acknowledgement_citation">Christiansen et al. (2025), Planetary Science Journal</string>
     <string name="about_acknowledgement_attribution">IPAC / CALTECH / NASA</string>
+
+    <!-- Planet Detail Screen -->
+    <string name="planet_detail_copy_name">Copy planet name</string>
+    <string name="planet_detail_name_copied">Planet name copied</string>
+    <string name="planet_detail_disclaimer_action">About these estimates</string>
+    <string name="planet_detail_disclaimer_title">About these estimates</string>
+    <string name="planet_detail_disclaimer_body">These habitability scores and probabilities are produced by a machine-learning model from limited observational data. They are rough, educational estimates — not confirmed measurements of whether a planet can support life. Real habitability depends on many factors science cannot yet measure for distant worlds. Treat these numbers as an illustrative guide, not scientific fact.</string>
+    <string name="planet_detail_disclaimer_dismiss">Got it</string>
+
+    <!-- Planet Detail: card titles -->
+    <string name="planet_detail_title_habitability">ML Habitability Analysis</string>
+    <string name="planet_detail_title_properties">Planet Properties</string>
+    <string name="planet_detail_title_earth_comparison">Compared to Earth</string>
+    <string name="planet_detail_title_host_star">Host Star: %s</string>
+    <string name="planet_detail_title_discovery">Discovery</string>
+    <string name="planet_detail_title_insights">ML Analysis Insights</string>
+
+    <!-- Planet Detail: habitability card -->
+    <string name="planet_detail_drag_to_rotate">Drag to rotate</string>
+    <string name="planet_detail_score_na">N/A</string>
+    <string name="planet_detail_habitability_score">Habitability Score</string>
+    <string name="planet_detail_hab_desc_insufficient">Insufficient data to estimate</string>
+    <string name="planet_detail_hab_desc_high">High potential for habitability</string>
+    <string name="planet_detail_hab_desc_moderate">Moderate habitability potential</string>
+    <string name="planet_detail_hab_desc_low">Low habitability potential</string>
+    <string name="planet_detail_hab_desc_hostile">Hostile to known life</string>
+
+    <!-- Planet Detail: property labels -->
+    <string name="planet_detail_label_radius">Radius</string>
+    <string name="planet_detail_label_mass">Mass</string>
+    <string name="planet_detail_label_orbit_period">Orbit Period</string>
+    <string name="planet_detail_label_semi_major_axis">Semi-Major Axis</string>
+    <string name="planet_detail_label_eccentricity">Eccentricity</string>
+    <string name="planet_detail_label_eq_temperature">Eq. Temperature</string>
+    <string name="planet_detail_label_insolation">Insolation</string>
+    <string name="planet_detail_label_radius_jup">Radius (Jup)</string>
+    <string name="planet_detail_label_mass_jup">Mass (Jup)</string>
+    <string name="planet_detail_subtitle_earth_radii">Earth radii</string>
+    <string name="planet_detail_subtitle_earth_masses">Earth masses</string>
+    <string name="planet_detail_subtitle_solar_flux">Solar flux</string>
+    <string name="planet_detail_subtitle_jupiter_radii">Jupiter radii</string>
+    <string name="planet_detail_subtitle_jupiter_masses">Jupiter masses</string>
+
+    <!-- Planet Detail: stellar labels -->
+    <string name="planet_detail_label_spectral_type">Spectral Type</string>
+    <string name="planet_detail_label_temperature">Temperature</string>
+    <string name="planet_detail_subtitle_effective">Effective</string>
+    <string name="planet_detail_subtitle_solar_radii">Solar radii</string>
+    <string name="planet_detail_subtitle_solar_masses">Solar masses</string>
+    <string name="planet_detail_label_metallicity">Metallicity</string>
+    <string name="planet_detail_label_surface_gravity">Surface Gravity</string>
+    <string name="planet_detail_label_stars_in_system">Stars in System</string>
+    <string name="planet_detail_label_planets_in_system">Planets in System</string>
+
+    <!-- Planet Detail: discovery labels -->
+    <string name="planet_detail_label_method">Method</string>
+    <string name="planet_detail_label_year">Year</string>
+    <string name="planet_detail_label_facility">Facility</string>
+    <string name="planet_detail_label_distance">Distance</string>
+    <string name="planet_detail_label_coordinates">Coordinates</string>
+
+    <!-- Planet Detail: Earth comparison -->
+    <string name="planet_detail_earth_comparison_desc">How this world stacks up against our own. The white line marks Earth (1×).</string>
+    <string name="planet_detail_label_surface_gravity_est">Surface gravity (est.)</string>
+    <string name="planet_detail_label_eq_temperature_lower">Eq. temperature</string>
+    <string name="planet_detail_label_orbital_period">Orbital period</string>
 </resources>

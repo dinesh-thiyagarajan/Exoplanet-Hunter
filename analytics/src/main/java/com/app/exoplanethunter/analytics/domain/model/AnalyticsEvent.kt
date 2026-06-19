@@ -89,4 +89,16 @@ sealed class AnalyticsEvent {
         val planetAId: Long,
         val planetBId: Long
     ) : AnalyticsEvent()
+
+    // ── Space facts ───────────────────────────────────────────────────────────
+
+    data class SpaceFactOpened(
+        val factId: Int,
+        val title: String
+    ) : AnalyticsEvent()
+
+    data class SpaceFactSourceOpened(
+        val factId: Int,
+        val title: String
+    ) : AnalyticsEvent()
 }

@@ -20,6 +20,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -40,6 +41,7 @@ import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailScr
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListScreen
 import com.app.exoplanethunter.presentation.screens.splash.SplashScreen
 import com.app.exoplanethunter.presentation.screens.compare.CompareScreen
+import com.app.exoplanethunter.presentation.screens.spacefact.SpaceFactDetailScreen
 import com.app.exoplanethunter.presentation.screens.statistics.StatisticsScreen
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemDetailScreen
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemListScreen
@@ -66,6 +68,9 @@ sealed class Screen(val route: String) {
     data object Compare : Screen(NavRoutes.COMPARE) {
         fun createRoute(planetAId: Long, planetBId: Long) = "compare/$planetAId/$planetBId"
     }
+    data object SpaceFact : Screen(NavRoutes.SPACE_FACT) {
+        fun createRoute(factId: Int) = "space_fact/$factId"
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -85,8 +90,22 @@ enum class BottomNavTab(val label: String, val icon: ImageVector) {
 // ---------------------------------------------------------------------------
 
 @Composable
-fun ExoplanetNavigation() {
+fun ExoplanetNavigation(
+    initialFactId: Int? = null,
+    onFactConsumed: () -> Unit = {}
+) {
     val navController = rememberNavController()
+
+    // Handle a tap on the space-fact notification: jump to Main, then push the fact screen.
+    LaunchedEffect(initialFactId) {
+        val factId = initialFactId ?: return@LaunchedEffect
+        navController.navigate(Screen.Main.route) {
+            popUpTo(Screen.Splash.route) { inclusive = true }
+            launchSingleTop = true
+        }
+        navController.navigate(Screen.SpaceFact.createRoute(factId))
+        onFactConsumed()
+    }
 
     NavHost(
         navController = navController,
@@ -169,6 +188,23 @@ fun ExoplanetNavigation() {
                     navController.navigate(Screen.PlanetDetail.createRoute(planetId))
                 },
                 onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Screen.SpaceFact.route,
+            arguments = listOf(navArgument(NavArgs.FACT_ID) { type = NavType.IntType })
+        ) { backStackEntry ->
+            val factId = backStackEntry.arguments?.getInt(NavArgs.FACT_ID) ?: return@composable
+            SpaceFactDetailScreen(
+                factId = factId,
+                onBack = {
+                    if (!navController.popBackStack()) {
+                        navController.navigate(Screen.Main.route) {
+                            popUpTo(Screen.Splash.route) { inclusive = true }
+                        }
+                    }
+                }
             )
         }
     }

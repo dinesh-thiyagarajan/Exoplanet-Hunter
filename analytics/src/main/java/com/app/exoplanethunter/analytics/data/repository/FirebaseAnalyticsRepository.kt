@@ -147,5 +147,22 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
                 putLong(Keys.PARAM_PLANET_B_ID, event.planetBId)
             }
         }
+
+        // Space facts
+        is AnalyticsEvent.SpaceFactOpened -> {
+            val event = this
+            Keys.SPACE_FACT_OPENED to Bundle().apply {
+                putInt(Keys.PARAM_FACT_ID, event.factId)
+                putString(Keys.PARAM_FACT_TITLE, event.title)
+            }
+        }
+
+        is AnalyticsEvent.SpaceFactSourceOpened -> {
+            val event = this
+            Keys.SPACE_FACT_SOURCE_OPENED to Bundle().apply {
+                putInt(Keys.PARAM_FACT_ID, event.factId)
+                putString(Keys.PARAM_FACT_TITLE, event.title)
+            }
+        }
     }
 }

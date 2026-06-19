@@ -108,6 +108,12 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
+    // WorkManager (periodic space-fact notifications)
+    implementation(libs.androidx.work.runtime.ktx)
+
+    // Chrome Custom Tabs (open source articles in-app)
+    implementation(libs.androidx.browser)
+
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)

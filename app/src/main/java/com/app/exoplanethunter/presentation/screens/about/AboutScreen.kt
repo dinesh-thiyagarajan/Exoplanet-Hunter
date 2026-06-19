@@ -20,15 +20,19 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.widget.Toast
+import com.app.exoplanethunter.BuildConfig
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.*
+import com.app.exoplanethunter.spacefacts.SpaceFactScheduler
 import org.koin.androidx.compose.koinViewModel
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -112,9 +116,29 @@ fun AboutScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                // Debug-only: fire a space-fact notification immediately for testing.
+                if (BuildConfig.DEBUG) {
+                    val context = LocalContext.current
+                    OutlinedButton(
+                        onClick = {
+                            SpaceFactScheduler.triggerNow(context)
+                            Toast.makeText(
+                                context,
+                                "Triggering space-fact notification…",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("DEBUG: Show space-fact notification")
+                    }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+
                 // Footer
                 AboutFooter()
-                
+
                 Spacer(modifier = Modifier.height(40.dp))
             }
         }

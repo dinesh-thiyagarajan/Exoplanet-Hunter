@@ -28,6 +28,7 @@ import com.app.exoplanethunter.presentation.screens.compare.CompareViewModel
 import com.app.exoplanethunter.presentation.screens.favorites.FavoritesViewModel
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailViewModel
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListViewModel
+import com.app.exoplanethunter.presentation.screens.spacefact.SpaceFactDetailViewModel
 import com.app.exoplanethunter.presentation.screens.splash.SplashViewModel
 import com.app.exoplanethunter.presentation.screens.statistics.StatisticsViewModel
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemDetailViewModel
@@ -80,6 +81,7 @@ val viewModelModule = module {
     viewModel { SplashViewModel(get(), get()) }
     viewModel { AboutViewModel(get(), get(), get()) }
     viewModel { CompareViewModel(get(), get(), get()) }
+    viewModel { SpaceFactDetailViewModel(get()) }
 }
 
 val appModules = listOf(

@@ -149,4 +149,12 @@
     <string name="compare_earth_label">Earth</string>
     <string name="compare_radius_value">%s R⊕</string>
     <string name="compare_ratio">%s×</string>
+
+    <!-- Space facts -->
+    <string name="space_fact_channel_name">Space Facts</string>
+    <string name="space_fact_channel_description">Periodic facts and theories about space and exoplanets.</string>
+    <string name="space_fact_title">Space Fact</string>
+    <string name="space_fact_not_found">This fact could not be found.</string>
+    <string name="space_fact_read_more">Read the full article</string>
+    <string name="space_fact_disclaimer">Opens an external science article (e.g. Wikipedia) in an in-app browser tab.</string>
 </resources>

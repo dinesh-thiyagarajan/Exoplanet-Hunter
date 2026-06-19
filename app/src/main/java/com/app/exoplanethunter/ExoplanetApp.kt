@@ -3,6 +3,8 @@ package com.app.exoplanethunter
 import android.app.Application
 import com.app.exoplanethunter.ads.AdManager
 import com.app.exoplanethunter.di.appModules
+import com.app.exoplanethunter.spacefacts.SpaceFactNotifier
+import com.app.exoplanethunter.spacefacts.SpaceFactScheduler
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -24,5 +26,9 @@ class ExoplanetApp : Application() {
             androidContext(this@ExoplanetApp)
             modules(appModules)
         }
+
+        // Periodic space-fact notifications
+        SpaceFactNotifier.ensureChannel(this)
+        SpaceFactScheduler.schedule(this)
     }
 }

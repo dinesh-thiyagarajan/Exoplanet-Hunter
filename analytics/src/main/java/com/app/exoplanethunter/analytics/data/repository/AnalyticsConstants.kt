@@ -26,6 +26,8 @@ object AnalyticsConstants {
     const val COMPARE_MODE_ENTERED = "compare_mode_entered"
     const val PLANETS_COMPARED = "planets_compared"
     const val COMPARE_SCREEN_VIEWED = "compare_screen_viewed"
+    const val SPACE_FACT_OPENED = "space_fact_opened"
+    const val SPACE_FACT_SOURCE_OPENED = "space_fact_source_opened"
 
     // Parameter Keys
     const val PARAM_PLANET_ID = "planet_id"
@@ -42,4 +44,6 @@ object AnalyticsConstants {
     const val PARAM_PLANET_A_NAME = "planet_a_name"
     const val PARAM_PLANET_B_ID = "planet_b_id"
     const val PARAM_PLANET_B_NAME = "planet_b_name"
+    const val PARAM_FACT_ID = "fact_id"
+    const val PARAM_FACT_TITLE = "fact_title"
 }

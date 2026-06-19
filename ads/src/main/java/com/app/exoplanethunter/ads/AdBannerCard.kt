@@ -50,18 +50,6 @@ fun AdBannerCard(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth().height(100.dp),
             contentAlignment = Alignment.Center
         ) {
-            // Subtle "Ad" watermark shown behind the ad
-            Text(
-                text = "Ad",
-                color = AdLabelColor.copy(alpha = 0.3f),
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Medium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 4.dp, end = 8.dp)
-            )
-
             AndroidView(
                 modifier = Modifier
                     .fillMaxWidth()

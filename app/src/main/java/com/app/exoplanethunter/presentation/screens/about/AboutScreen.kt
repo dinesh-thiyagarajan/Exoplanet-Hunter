@@ -33,6 +33,7 @@ import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.*
 import com.app.exoplanethunter.spacefacts.SpaceFactScheduler
+import com.app.exoplanethunter.widget.WidgetPinHelper
 import org.koin.androidx.compose.koinViewModel
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -82,6 +83,27 @@ fun AboutScreen(
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
+
+                // One-tap "add widget" promo (only on launchers that support pinning)
+                val widgetContext = LocalContext.current
+                if (WidgetPinHelper.isSupported(widgetContext)) {
+                    AnimatedSection(delay = 150) {
+                        OutlinedButton(
+                            onClick = { WidgetPinHelper.requestPin(widgetContext) },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Widgets,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(stringResource(R.string.widget_add_to_home))
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
 
                 SectionHeader(stringResource(R.string.about_section_scientific_framework))
 

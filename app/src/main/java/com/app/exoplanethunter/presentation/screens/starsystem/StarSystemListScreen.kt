@@ -1,5 +1,9 @@
 package com.app.exoplanethunter.presentation.screens.starsystem
 
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import com.app.exoplanethunter.R
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -99,7 +103,7 @@ fun StarSystemListScreen(
                     .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 8.dp),
             ) {
                 Text(
-                    text = "Star Systems",
+                    text = stringResource(R.string.star_system_list_title),
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                         brush = Brush.linearGradient(
@@ -109,8 +113,8 @@ fun StarSystemListScreen(
                 )
 
                 Text(
-                    text = if (viewModel.isLoading) "Loading..."
-                    else "Explore ${viewModel.starSystems.size} star systems",
+                    text = if (viewModel.isLoading) stringResource(R.string.star_system_list_loading)
+                    else stringResource(R.string.star_system_list_count, viewModel.starSystems.size),
                     style = MaterialTheme.typography.bodyMedium,
                     color = TextSecondary,
                     modifier = Modifier.padding(top = 4.dp),
@@ -123,7 +127,7 @@ fun StarSystemListScreen(
                     value = viewModel.searchQuery,
                     onValueChange = viewModel::onSearchQueryChanged,
                     placeholder = {
-                        Text("Search star systems...", color = TextMuted)
+                        Text(stringResource(R.string.star_system_list_search_hint), color = TextMuted)
                     },
                     leadingIcon = {
                         Icon(Icons.Default.Search, contentDescription = null, tint = TextMuted)
@@ -133,7 +137,7 @@ fun StarSystemListScreen(
                             IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
                                 Icon(
                                     Icons.Default.Close,
-                                    contentDescription = "Clear",
+                                    contentDescription = stringResource(R.string.cd_clear),
                                     tint = TextMuted,
                                 )
                             }
@@ -173,7 +177,7 @@ fun StarSystemListScreen(
                             FilterChip(
                                 selected = isSelected,
                                 onClick = { viewModel.onFilterSelected(filter) },
-                                label = { Text(filter.label, fontSize = 12.sp) },
+                                label = { Text(stringResource(filter.labelRes), fontSize = 12.sp) },
                                 leadingIcon = {
                                     Icon(
                                         Icons.Default.Star,
@@ -319,7 +323,7 @@ private fun StarSystemCard(
 
                 system.spectralType?.takeIf { it.isNotBlank() }?.let {
                     Text(
-                        text = "Spectral type $it",
+                        text = stringResource(R.string.star_system_spectral_type, it),
                         style = MaterialTheme.typography.bodySmall,
                         color = StarGold,
                         maxLines = 1,
@@ -331,10 +335,10 @@ private fun StarSystemCard(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     val planetCount = system.numPlanets
                     SystemInfoChip(
-                        text = "$planetCount ${if (planetCount == 1) "planet" else "planets"}",
+                        text = pluralStringResource(R.plurals.planet_count, planetCount, planetCount),
                         color = CosmicCyan,
                     )
-                    SystemInfoChip(text = starCountLabel(system.numStars), color = SolarOrange)
+                    SystemInfoChip(text = starCountLabel(LocalContext.current, system.numStars), color = SolarOrange)
                     system.distanceParsec?.let { dist ->
                         SystemInfoChip(text = "${String.format("%.0f", dist)} pc", color = TextSecondary)
                     }
@@ -352,11 +356,11 @@ private fun StarSystemCard(
     }
 }
 
-private fun starCountLabel(numStars: Int): String = when (numStars) {
-    0, 1 -> "Single star"
-    2 -> "Binary"
-    3 -> "Trinary"
-    else -> "$numStars stars"
+private fun starCountLabel(context: android.content.Context, numStars: Int): String = when (numStars) {
+    0, 1 -> context.getString(R.string.star_system_multiplicity_single)
+    2 -> context.getString(R.string.star_system_multiplicity_binary)
+    3 -> context.getString(R.string.star_system_multiplicity_trinary)
+    else -> context.getString(R.string.star_system_multiplicity_many, numStars)
 }
 
 @Composable

@@ -1,5 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.favorites
 
+import androidx.compose.ui.res.stringResource
+import com.app.exoplanethunter.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,7 +63,7 @@ fun FavoritesScreen(
                     .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 8.dp)
             ) {
                 Text(
-                    text = "Favorites",
+                    text = stringResource(R.string.favorites_title),
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                         brush = Brush.linearGradient(
@@ -71,7 +73,7 @@ fun FavoritesScreen(
                 )
 
                 Text(
-                    text = "${viewModel.planets.size} saved",
+                    text = stringResource(R.string.favorites_count, viewModel.planets.size),
                     style = MaterialTheme.typography.bodyMedium,
                     color = TextSecondary,
                     modifier = Modifier.padding(top = 4.dp)
@@ -99,14 +101,14 @@ fun FavoritesScreen(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "No favorites yet",
+                                text = stringResource(R.string.favorites_empty_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = TextSecondary,
                                 textAlign = TextAlign.Center
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Tap the star on any planet to save it here.",
+                                text = stringResource(R.string.favorites_empty_subtitle),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = TextMuted,
                                 textAlign = TextAlign.Center

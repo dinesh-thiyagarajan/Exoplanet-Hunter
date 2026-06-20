@@ -1,5 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.statistics
 
+import androidx.compose.ui.res.stringResource
+import com.app.exoplanethunter.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,14 +72,14 @@ fun StatisticsScreen(
                 .padding(20.dp)
         ) {
             Text(
-                text = "Statistics",
+                text = stringResource(R.string.stats_title),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold,
                     brush = Brush.linearGradient(colors = listOf(CosmicCyan, NebulaPink))
                 )
             )
             Text(
-                text = "The catalog at a glance",
+                text = stringResource(R.string.stats_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextSecondary,
                 modifier = Modifier.padding(top = 4.dp)
@@ -87,13 +89,13 @@ fun StatisticsScreen(
 
             // Hero stat tiles
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                HeroStat("Planets", stats.totalPlanets, CosmicCyan, Modifier.weight(1f))
-                HeroStat("Star Systems", stats.totalSystems, NebulaPink, Modifier.weight(1f))
+                HeroStat(stringResource(R.string.stats_hero_planets), stats.totalPlanets, CosmicCyan, Modifier.weight(1f))
+                HeroStat(stringResource(R.string.stats_hero_systems), stats.totalSystems, NebulaPink, Modifier.weight(1f))
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            StatSection(title = "Discoveries by Method") {
+            StatSection(title = stringResource(R.string.stats_section_methods)) {
                 HorizontalBars(stats.methodCounts)
             }
 
@@ -103,7 +105,7 @@ fun StatisticsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            StatSection(title = "Planet Sizes") {
+            StatSection(title = stringResource(R.string.stats_section_sizes)) {
                 val ordered = sizeOrder.mapNotNull { name ->
                     stats.sizeDistribution.firstOrNull { it.label == name }
                 }
@@ -112,7 +114,7 @@ fun StatisticsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            StatSection(title = "Discoveries per Year") {
+            StatSection(title = stringResource(R.string.stats_section_years)) {
                 YearBars(stats.yearCounts.takeLast(20))
             }
 
@@ -167,7 +169,7 @@ private fun StatSection(title: String, content: @Composable () -> Unit) {
 @Composable
 private fun HorizontalBars(data: List<LabelCount>) {
     if (data.isEmpty()) {
-        Text("No data", style = MaterialTheme.typography.bodySmall, color = TextMuted)
+        Text(stringResource(R.string.stats_no_data), style = MaterialTheme.typography.bodySmall, color = TextMuted)
         return
     }
     val max = data.maxOf { it.count }.coerceAtLeast(1)
@@ -219,7 +221,7 @@ private fun HorizontalBars(data: List<LabelCount>) {
 @Composable
 private fun YearBars(data: List<LabelCount>) {
     if (data.isEmpty()) {
-        Text("No data", style = MaterialTheme.typography.bodySmall, color = TextMuted)
+        Text(stringResource(R.string.stats_no_data), style = MaterialTheme.typography.bodySmall, color = TextMuted)
         return
     }
     val max = data.maxOf { it.count }.coerceAtLeast(1)

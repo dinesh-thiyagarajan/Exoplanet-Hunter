@@ -135,7 +135,7 @@ fun PlanetListScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Exoplanets",
+                            text = stringResource(R.string.planet_list_title),
                             style = MaterialTheme.typography.headlineLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 brush = Brush.linearGradient(
@@ -145,7 +145,7 @@ fun PlanetListScreen(
                         )
 
                         Text(
-                            text = "${viewModel.planets.size} planets discovered",
+                            text = stringResource(R.string.planet_list_count, viewModel.planets.size),
                             style = MaterialTheme.typography.bodyMedium,
                             color = TextSecondary,
                             modifier = Modifier.padding(top = 4.dp)
@@ -177,7 +177,7 @@ fun PlanetListScreen(
                     value = viewModel.searchQuery,
                     onValueChange = viewModel::onSearchQueryChanged,
                     placeholder = {
-                        Text("Search planets or stars...", color = TextMuted)
+                        Text(stringResource(R.string.planet_list_search_hint), color = TextMuted)
                     },
                     leadingIcon = {
                         Icon(Icons.Default.Search, contentDescription = null, tint = TextMuted)
@@ -185,7 +185,7 @@ fun PlanetListScreen(
                     trailingIcon = {
                         if (viewModel.searchQuery.isNotBlank()) {
                             IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                                Icon(Icons.Default.Close, contentDescription = "Clear", tint = TextMuted)
+                                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cd_clear), tint = TextMuted)
                             }
                         }
                     },
@@ -323,7 +323,7 @@ fun PlanetListScreen(
                 if (viewModel.planets.isEmpty()) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(
-                            text = "No planets found matching your criteria.",
+                            text = stringResource(R.string.planet_list_empty),
                             style = MaterialTheme.typography.bodyLarge,
                             color = TextMuted,
                             textAlign = TextAlign.Center,

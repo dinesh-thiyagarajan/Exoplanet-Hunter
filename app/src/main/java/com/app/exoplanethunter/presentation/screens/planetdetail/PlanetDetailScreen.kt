@@ -128,7 +128,7 @@ fun PlanetDetailScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.cd_back),
                             tint = Color.White,
                         )
                     }
@@ -155,7 +155,7 @@ fun PlanetDetailScreen(
                     IconButton(onClick = viewModel::toggleFavorite) {
                         Icon(
                             imageVector = if (viewModel.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
-                            contentDescription = if (viewModel.isFavorite) "Remove from favorites" else "Add to favorites",
+                            contentDescription = if (viewModel.isFavorite) stringResource(R.string.favorite_remove) else stringResource(R.string.favorite_add),
                             tint = if (viewModel.isFavorite) StarGold else Color.White,
                         )
                     }

@@ -1,5 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.splash
 
+import androidx.compose.ui.res.stringResource
+import com.app.exoplanethunter.R
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -159,7 +161,7 @@ fun SplashScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "EXOPLANET",
+                text = stringResource(R.string.splash_title_line1),
                 style = MaterialTheme.typography.displayLarge.copy(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 8.sp,
@@ -170,7 +172,7 @@ fun SplashScreen(
             )
 
             Text(
-                text = "HUNTER",
+                text = stringResource(R.string.splash_title_line2),
                 style = MaterialTheme.typography.displayMedium.copy(
                     fontWeight = FontWeight.Light,
                     letterSpacing = 12.sp,
@@ -181,7 +183,8 @@ fun SplashScreen(
             Spacer(modifier = Modifier.height(48.dp))
 
             Text(
-                text = if (isDataLoaded) "Ready" else "Loading exoplanet data...",
+                text = if (isDataLoaded) stringResource(R.string.splash_ready)
+                else stringResource(R.string.splash_loading),
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextSecondary
             )

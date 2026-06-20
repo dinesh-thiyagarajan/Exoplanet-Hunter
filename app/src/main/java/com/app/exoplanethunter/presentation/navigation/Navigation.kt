@@ -1,5 +1,6 @@
 package com.app.exoplanethunter.presentation.navigation
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -28,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
@@ -35,6 +37,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.app.exoplanethunter.R
 import com.app.exoplanethunter.presentation.screens.about.AboutScreen
 import com.app.exoplanethunter.presentation.screens.favorites.FavoritesScreen
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailScreen
@@ -77,12 +80,12 @@ sealed class Screen(val route: String) {
 // Bottom navigation tabs
 // ---------------------------------------------------------------------------
 
-enum class BottomNavTab(val label: String, val icon: ImageVector) {
-    Planets("Planets", Icons.Default.Public),
-    StarSystems("Stars", Icons.Default.Hub),
-    Favorites("Favorites", Icons.Default.Star),
-    Statistics("Stats", Icons.Default.BarChart),
-    About("About", Icons.Default.Info)
+enum class BottomNavTab(@StringRes val labelRes: Int, val icon: ImageVector) {
+    Planets(R.string.nav_planets, Icons.Default.Public),
+    StarSystems(R.string.nav_stars, Icons.Default.Hub),
+    Favorites(R.string.nav_favorites, Icons.Default.Star),
+    Statistics(R.string.nav_stats, Icons.Default.BarChart),
+    About(R.string.nav_about, Icons.Default.Info)
 }
 
 // ---------------------------------------------------------------------------
@@ -248,11 +251,11 @@ private fun MainScreen(
                         selected = selectedTab == tab.name,
                         onClick = { selectedTab = tab.name },
                         icon = {
-                            Icon(tab.icon, contentDescription = tab.label)
+                            Icon(tab.icon, contentDescription = stringResource(tab.labelRes))
                         },
                         label = {
                             Text(
-                                text = tab.label,
+                                text = stringResource(tab.labelRes),
                                 fontWeight = if (selectedTab == tab.name)
                                     FontWeight.Bold else FontWeight.Normal
                             )

@@ -164,4 +164,79 @@
     <string name="widget_empty">Open the app to load planets</string>
     <string name="widget_description">A new exoplanet each day on your home screen.</string>
     <string name="widget_add_to_home">Add Planet of the Day to home screen</string>
+
+    <!-- Common / accessibility -->
+    <string name="cd_back">Back</string>
+    <string name="cd_clear">Clear</string>
+    <string name="favorite_add">Add to favorites</string>
+    <string name="favorite_remove">Remove from favorites</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_planets">Planets</string>
+    <string name="nav_stars">Stars</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_stats">Stats</string>
+    <string name="nav_about">About</string>
+
+    <!-- Splash -->
+    <string name="splash_title_line1">EXOPLANET</string>
+    <string name="splash_title_line2">HUNTER</string>
+    <string name="splash_ready">Ready</string>
+    <string name="splash_loading">Loading exoplanet data…</string>
+
+    <!-- Favorites screen -->
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_count">%d saved</string>
+    <string name="favorites_empty_title">No favorites yet</string>
+    <string name="favorites_empty_subtitle">Tap the star on any planet to save it here.</string>
+
+    <!-- Planet list screen -->
+    <string name="planet_list_title">Exoplanets</string>
+    <string name="planet_list_count">%d planets discovered</string>
+    <string name="planet_list_search_hint">Search planets or stars…</string>
+    <string name="planet_list_empty">No planets found matching your criteria.</string>
+
+    <!-- Statistics screen -->
+    <string name="stats_title">Statistics</string>
+    <string name="stats_subtitle">The catalog at a glance</string>
+    <string name="stats_hero_planets">Planets</string>
+    <string name="stats_hero_systems">Star Systems</string>
+    <string name="stats_section_methods">Discoveries by Method</string>
+    <string name="stats_section_sizes">Planet Sizes</string>
+    <string name="stats_section_years">Discoveries per Year</string>
+    <string name="stats_no_data">No data</string>
+
+    <!-- Star system list screen -->
+    <string name="star_system_list_title">Star Systems</string>
+    <string name="star_system_list_loading">Loading…</string>
+    <string name="star_system_list_count">Explore %d star systems</string>
+    <string name="star_system_list_search_hint">Search star systems…</string>
+    <string name="star_system_spectral_type">Spectral type %s</string>
+    <string name="star_system_multiplicity_single">Single star</string>
+    <string name="star_system_multiplicity_binary">Binary</string>
+    <string name="star_system_multiplicity_trinary">Trinary</string>
+    <string name="star_system_multiplicity_many">%d stars</string>
+    <string name="star_system_filter_single">Single Star</string>
+    <string name="star_system_filter_multi">Multi-Planet</string>
+
+    <!-- Star system detail screen -->
+    <string name="star_system_empty">No data available for this star system</string>
+    <string name="star_system_tap_hint">Tap a planet to select • Tap again to view details</string>
+    <string name="star_system_view">View</string>
+    <string name="star_system_view_arrow">View →</string>
+    <string name="star_system_host_single">Star: %s</string>
+    <string name="star_system_host_multi">Stars: %1$s (%2$s)</string>
+    <string name="star_system_star_count">%d-star system</string>
+    <string name="star_system_label_stars">Stars</string>
+    <string name="star_system_label_planets">Planets</string>
+    <string name="star_system_in_system">in system</string>
+    <string name="star_system_planets_section">Planets (%d)</string>
+    <string name="star_system_label_ra">RA</string>
+    <string name="star_system_label_dec">Dec</string>
+
+    <!-- Plurals -->
+    <plurals name="planet_count">
+        <item quantity="one">%d planet</item>
+        <item quantity="other">%d planets</item>
+    </plurals>
 </resources>

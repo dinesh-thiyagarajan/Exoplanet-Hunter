@@ -1,5 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.starsystem
 
+import androidx.annotation.StringRes
+import com.app.exoplanethunter.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,12 +20,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /** Filters available on the Star System list screen. */
-enum class StarSystemFilter(val label: String) {
-    All("All"),
-    SingleStar("Single Star"),
-    Binary("Binary"),
-    Trinary("Trinary"),
-    MultiPlanet("Multi-Planet")
+enum class StarSystemFilter(@StringRes val labelRes: Int) {
+    All(R.string.filter_all),
+    SingleStar(R.string.star_system_filter_single),
+    Binary(R.string.star_system_multiplicity_binary),
+    Trinary(R.string.star_system_multiplicity_trinary),
+    MultiPlanet(R.string.star_system_filter_multi)
 }
 
 class StarSystemListViewModel(
@@ -76,7 +78,7 @@ class StarSystemListViewModel(
         if (selectedFilter == filter) return
         selectedFilter = filter
         searchQuery = ""
-        trackEvent(AnalyticsEvent.StarSystemFilterApplied(filter = filter.label))
+        trackEvent(AnalyticsEvent.StarSystemFilterApplied(filter = filter.name))
         loadSystems()
     }
 

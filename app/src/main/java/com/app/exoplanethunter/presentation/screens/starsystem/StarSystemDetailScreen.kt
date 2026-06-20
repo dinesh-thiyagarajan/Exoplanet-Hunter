@@ -1,5 +1,8 @@
 package com.app.exoplanethunter.presentation.screens.starsystem
 
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import com.app.exoplanethunter.R
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
@@ -130,7 +133,7 @@ fun StarSystemDetailScreen(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "No data available for this star system",
+                        text = stringResource(R.string.star_system_empty),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.6f)
                     )
@@ -154,7 +157,7 @@ fun StarSystemDetailScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.cd_back),
                             tint = Color.White
                         )
                     }
@@ -166,12 +169,13 @@ fun StarSystemDetailScreen(
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
-                        val systemDesc = buildString {
-                            append("${system.numPlanets} planet${if (system.numPlanets != 1) "s" else ""}")
-                            if (system.numStars > 1) {
-                                append(" \u2022 ${system.numStars}-star system")
-                            }
-                        }
+                        val planetsText = pluralStringResource(
+                            R.plurals.planet_count, system.numPlanets, system.numPlanets
+                        )
+                        val systemDesc = if (system.numStars > 1) {
+                            "$planetsText \u2022 " +
+                                stringResource(R.string.star_system_star_count, system.numStars)
+                        } else planetsText
                         Text(
                             text = systemDesc,
                             style = MaterialTheme.typography.bodySmall,
@@ -181,9 +185,9 @@ fun StarSystemDetailScreen(
 
                     // System type badge
                     val badgeText = when {
-                        system.numStars >= 3 -> "Trinary"
-                        system.numStars == 2 -> "Binary"
-                        else -> "${system.numPlanets} planets"
+                        system.numStars >= 3 -> stringResource(R.string.star_system_multiplicity_trinary)
+                        system.numStars == 2 -> stringResource(R.string.star_system_multiplicity_binary)
+                        else -> pluralStringResource(R.plurals.planet_count, system.numPlanets, system.numPlanets)
                     }
                     val badgeColor = when {
                         system.numStars >= 3 -> NebulaPink
@@ -218,7 +222,7 @@ fun StarSystemDetailScreen(
                 )
 
                 Text(
-                    text = "Tap a planet to select \u2022 Tap again to view details",
+                    text = stringResource(R.string.star_system_tap_hint),
                     style = MaterialTheme.typography.labelSmall,
                     color = TextMuted,
                     modifier = Modifier
@@ -782,7 +786,7 @@ private fun SolarSystemVisualization(
                         }
 
                         Text(
-                            text = "View \u2192",
+                            text = stringResource(R.string.star_system_view_arrow),
                             style = MaterialTheme.typography.labelMedium,
                             color = CosmicCyan,
                             fontWeight = FontWeight.Bold
@@ -1162,9 +1166,17 @@ private fun AnimatedSection(delayMs: Int, content: @Composable () -> Unit) {
 private fun StellarInfoCard(system: StarSystem) {
     DetailCard(
         title = when {
-            system.numStars >= 3 -> "Stars: ${system.hostName} (Trinary)"
-            system.numStars == 2 -> "Stars: ${system.hostName} (Binary)"
-            else -> "Star: ${system.hostName}"
+            system.numStars >= 3 -> stringResource(
+                R.string.star_system_host_multi,
+                system.hostName,
+                stringResource(R.string.star_system_multiplicity_trinary)
+            )
+            system.numStars == 2 -> stringResource(
+                R.string.star_system_host_multi,
+                system.hostName,
+                stringResource(R.string.star_system_multiplicity_binary)
+            )
+            else -> stringResource(R.string.star_system_host_single, system.hostName)
         },
         icon = Icons.Default.Star,
         iconColor = SolarOrange
@@ -1174,32 +1186,32 @@ private fun StellarInfoCard(system: StarSystem) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             system.spectralType?.let {
-                PropertyItem("Spectral Type", it, "")
+                PropertyItem(stringResource(R.string.planet_detail_label_spectral_type), it, "")
             }
             system.stellarEffectiveTempK?.let {
-                PropertyItem("Temperature", "${it.toInt()} K", "Effective")
+                PropertyItem(stringResource(R.string.planet_detail_label_temperature), "${it.toInt()} K", stringResource(R.string.planet_detail_subtitle_effective))
             }
             system.stellarRadiusSolar?.let {
-                PropertyItem("Radius", "${String.format("%.3f", it)} R\u2609", "Solar radii")
+                PropertyItem(stringResource(R.string.planet_detail_label_radius), "${String.format("%.3f", it)} R\u2609", stringResource(R.string.planet_detail_subtitle_solar_radii))
             }
             system.stellarMassSolar?.let {
-                PropertyItem("Mass", "${String.format("%.3f", it)} M\u2609", "Solar masses")
+                PropertyItem(stringResource(R.string.planet_detail_label_mass), "${String.format("%.3f", it)} M\u2609", stringResource(R.string.planet_detail_subtitle_solar_masses))
             }
             system.stellarMetallicity?.let {
-                PropertyItem("Metallicity", String.format("%.3f", it), "[Fe/H]")
+                PropertyItem(stringResource(R.string.planet_detail_label_metallicity), String.format("%.3f", it), "[Fe/H]")
             }
             system.stellarSurfaceGravity?.let {
-                PropertyItem("Surface Gravity", String.format("%.3f", it), "log(g)")
+                PropertyItem(stringResource(R.string.planet_detail_label_surface_gravity), String.format("%.3f", it), "log(g)")
             }
             system.distanceParsec?.let { dist ->
-                PropertyItem("Distance", "${String.format("%.2f", dist)} pc", "${String.format("%.1f", dist * 3.26156)} ly")
+                PropertyItem(stringResource(R.string.planet_detail_label_distance), "${String.format("%.2f", dist)} pc", "${String.format("%.1f", dist * 3.26156)} ly")
             }
             if (system.ra != null && system.dec != null) {
-                PropertyItem("RA", String.format("%.5f\u00B0", system.ra), "")
-                PropertyItem("Dec", String.format("%.5f\u00B0", system.dec), "")
+                PropertyItem(stringResource(R.string.star_system_label_ra), String.format("%.5f\u00B0", system.ra), "")
+                PropertyItem(stringResource(R.string.star_system_label_dec), String.format("%.5f\u00B0", system.dec), "")
             }
-            PropertyItem("Stars", system.numStars.toString(), "in system")
-            PropertyItem("Planets", system.numPlanets.toString(), "in system")
+            PropertyItem(stringResource(R.string.star_system_label_stars), system.numStars.toString(), stringResource(R.string.star_system_in_system))
+            PropertyItem(stringResource(R.string.star_system_label_planets), system.numPlanets.toString(), stringResource(R.string.star_system_in_system))
         }
     }
 }
@@ -1210,7 +1222,7 @@ private fun PlanetsInfoCard(
     onPlanetClick: (Long) -> Unit
 ) {
     DetailCard(
-        title = "Planets (${planets.size})",
+        title = stringResource(R.string.star_system_planets_section, planets.size),
         icon = Icons.Default.Info,
         iconColor = CosmicCyan
     ) {
@@ -1284,7 +1296,7 @@ private fun PlanetsInfoCard(
                     }
 
                     Text(
-                        text = "View",
+                        text = stringResource(R.string.star_system_view),
                         style = MaterialTheme.typography.labelSmall,
                         color = CosmicCyan
                     )

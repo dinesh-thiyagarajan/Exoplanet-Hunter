@@ -23,6 +23,7 @@ import com.app.exoplanethunter.presentation.theme.SpaceBlack
 import com.app.exoplanethunter.review.AppReviewManager
 import com.app.exoplanethunter.review.ReviewPreferences
 import com.app.exoplanethunter.spacefacts.SpaceFactNotifier
+import com.app.exoplanethunter.widget.PlanetOfDayWidget
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -31,12 +32,16 @@ class MainActivity : ComponentActivity() {
     // Holds a space-fact id when the activity is (re)launched from its notification.
     private var pendingFactId by mutableStateOf<Int?>(null)
 
+    // Holds a planet id when launched from the Planet-of-the-Day widget.
+    private var pendingPlanetId by mutableStateOf<Long?>(null)
+
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* no-op */ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pendingFactId = intent.factId()
+        pendingPlanetId = intent.planetId()
         requestNotificationPermissionIfNeeded()
 
         if (savedInstanceState == null) {
@@ -60,7 +65,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     ExoplanetNavigation(
                         initialFactId = pendingFactId,
-                        onFactConsumed = { pendingFactId = null }
+                        onFactConsumed = { pendingFactId = null },
+                        initialPlanetId = pendingPlanetId,
+                        onPlanetConsumed = { pendingPlanetId = null }
                     )
                 }
             }
@@ -71,11 +78,17 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         intent.factId()?.let { pendingFactId = it }
+        intent.planetId()?.let { pendingPlanetId = it }
     }
 
     private fun Intent.factId(): Int? {
         val id = getIntExtra(SpaceFactNotifier.EXTRA_FACT_ID, -1)
         return if (id >= 0) id else null
+    }
+
+    private fun Intent.planetId(): Long? {
+        val id = getLongExtra(PlanetOfDayWidget.EXTRA_PLANET_ID, -1L)
+        return if (id >= 0L) id else null
     }
 
     private fun requestNotificationPermissionIfNeeded() {

@@ -157,4 +157,10 @@
     <string name="space_fact_not_found">This fact could not be found.</string>
     <string name="space_fact_read_more">Read the full article</string>
     <string name="space_fact_disclaimer">Opens an external science article (e.g. Wikipedia) in an in-app browser tab.</string>
+
+    <!-- Planet of the Day widget -->
+    <string name="widget_label">PLANET OF THE DAY</string>
+    <string name="widget_subtitle">%1$s · Discovered %2$d</string>
+    <string name="widget_empty">Open the app to load planets</string>
+    <string name="widget_description">A new exoplanet each day on your home screen.</string>
 </resources>

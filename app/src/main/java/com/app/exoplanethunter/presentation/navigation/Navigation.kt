@@ -92,7 +92,9 @@ enum class BottomNavTab(val label: String, val icon: ImageVector) {
 @Composable
 fun ExoplanetNavigation(
     initialFactId: Int? = null,
-    onFactConsumed: () -> Unit = {}
+    onFactConsumed: () -> Unit = {},
+    initialPlanetId: Long? = null,
+    onPlanetConsumed: () -> Unit = {}
 ) {
     val navController = rememberNavController()
 
@@ -105,6 +107,17 @@ fun ExoplanetNavigation(
         }
         navController.navigate(Screen.SpaceFact.createRoute(factId))
         onFactConsumed()
+    }
+
+    // Handle a tap on the Planet-of-the-Day widget: jump to Main, then push planet detail.
+    LaunchedEffect(initialPlanetId) {
+        val planetId = initialPlanetId ?: return@LaunchedEffect
+        navController.navigate(Screen.Main.route) {
+            popUpTo(Screen.Splash.route) { inclusive = true }
+            launchSingleTop = true
+        }
+        navController.navigate(Screen.PlanetDetail.createRoute(planetId))
+        onPlanetConsumed()
     }
 
     NavHost(

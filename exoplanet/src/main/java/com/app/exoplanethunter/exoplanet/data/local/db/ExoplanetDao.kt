@@ -44,6 +44,14 @@ interface ExoplanetDao {
     @Query("SELECT * FROM exoplanets WHERE id = :id")
     suspend fun getPlanetById(id: Long): ExoplanetEntity?
 
+    // ── One-shot queries for the home-screen widget ───────────────────────────
+
+    @Query("SELECT COUNT(*) FROM exoplanets WHERE isDefault = 1")
+    suspend fun getPlanetCountOnce(): Int
+
+    @Query("SELECT * FROM exoplanets WHERE isDefault = 1 ORDER BY planetName ASC LIMIT 1 OFFSET :offset")
+    suspend fun getPlanetAtOffset(offset: Int): ExoplanetEntity?
+
     @Query("SELECT * FROM exoplanets WHERE isDefault = 1 AND planetName IN (:names) ORDER BY planetName ASC")
     fun getPlanetsByNames(names: Set<String>): Flow<List<ExoplanetEntity>>
 

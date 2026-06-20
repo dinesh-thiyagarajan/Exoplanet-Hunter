@@ -28,8 +28,8 @@ android {
         applicationId = "com.app.exoplanethunter"
         minSdk = libs.versions.min.sdk.get().toInt()
         targetSdk = libs.versions.target.sdk.get().toInt()
-        versionCode = 26
-        versionName = "1.15.4"
+        versionCode = 27
+        versionName = "1.15.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

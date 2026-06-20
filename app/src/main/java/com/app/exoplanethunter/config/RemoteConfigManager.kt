@@ -24,6 +24,8 @@ object RemoteConfigManager {
     const val KEY_NOTIFICATIONS_ENABLED = "space_fact_notifications_enabled"
     const val KEY_INTERVAL_HOURS = "space_fact_interval_hours"
     const val KEY_COMPARE_ENABLED = "compare_feature_enabled"
+    const val KEY_REVIEW_ENABLED = "in_app_review_enabled"
+    const val KEY_REVIEW_MIN_DAYS = "in_app_review_min_days"
 
     // Minimum sane interval (also respects WorkManager's 15-minute periodic floor).
     private const val MIN_INTERVAL_HOURS = 1L
@@ -40,7 +42,9 @@ object RemoteConfigManager {
             mapOf(
                 KEY_NOTIFICATIONS_ENABLED to true,
                 KEY_INTERVAL_HOURS to SpaceFactPreferences.DEFAULT_INTERVAL_HOURS,
-                KEY_COMPARE_ENABLED to true
+                KEY_COMPARE_ENABLED to true,
+                KEY_REVIEW_ENABLED to true,
+                KEY_REVIEW_MIN_DAYS to 3L
             )
         )
 
@@ -60,5 +64,7 @@ object RemoteConfigManager {
         SpaceFactScheduler.schedule(context)
 
         FeatureFlags.setCompareEnabled(remoteConfig.getBoolean(KEY_COMPARE_ENABLED))
+        FeatureFlags.reviewEnabled = remoteConfig.getBoolean(KEY_REVIEW_ENABLED)
+        FeatureFlags.reviewMinDays = remoteConfig.getLong(KEY_REVIEW_MIN_DAYS).toInt().coerceAtLeast(0)
     }
 }

@@ -18,4 +18,11 @@ object FeatureFlags {
     fun setCompareEnabled(enabled: Boolean) {
         _compareEnabled.value = enabled
     }
+
+    /** In-app review prompt: whether it's allowed, and the minimum days of use before asking. */
+    @Volatile
+    var reviewEnabled: Boolean = true
+
+    @Volatile
+    var reviewMinDays: Int = 3
 }

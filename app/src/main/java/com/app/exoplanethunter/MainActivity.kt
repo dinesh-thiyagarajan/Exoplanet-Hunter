@@ -16,10 +16,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.app.exoplanethunter.presentation.navigation.ExoplanetNavigation
 import com.app.exoplanethunter.presentation.theme.ExoplanetHunterTheme
 import com.app.exoplanethunter.presentation.theme.SpaceBlack
+import com.app.exoplanethunter.review.AppReviewManager
+import com.app.exoplanethunter.review.ReviewPreferences
 import com.app.exoplanethunter.spacefacts.SpaceFactNotifier
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -33,6 +38,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         pendingFactId = intent.factId()
         requestNotificationPermissionIfNeeded()
+
+        if (savedInstanceState == null) {
+            ReviewPreferences(this).recordLaunch()
+            // Ask for a review after a short settle delay, unless we were opened from a
+            // notification (don't interrupt the user reading a space fact).
+            lifecycleScope.launch {
+                delay(2500)
+                if (pendingFactId == null) {
+                    AppReviewManager.maybeRequestReview(this@MainActivity)
+                }
+            }
+        }
+
         enableEdgeToEdge()
         setContent {
             ExoplanetHunterTheme {

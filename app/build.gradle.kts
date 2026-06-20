@@ -114,6 +114,9 @@ dependencies {
     // Chrome Custom Tabs (open source articles in-app)
     implementation(libs.androidx.browser)
 
+    // Google Play In-App Review
+    implementation(libs.play.review.ktx)
+
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)

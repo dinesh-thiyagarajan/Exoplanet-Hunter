@@ -28,6 +28,7 @@ object AnalyticsConstants {
     const val COMPARE_SCREEN_VIEWED = "compare_screen_viewed"
     const val SPACE_FACT_OPENED = "space_fact_opened"
     const val SPACE_FACT_SOURCE_OPENED = "space_fact_source_opened"
+    const val WIDGET_PLANET_OPENED = "widget_planet_opened"
 
     // Parameter Keys
     const val PARAM_PLANET_ID = "planet_id"

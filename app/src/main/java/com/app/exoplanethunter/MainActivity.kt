@@ -22,10 +22,13 @@ import com.app.exoplanethunter.presentation.theme.ExoplanetHunterTheme
 import com.app.exoplanethunter.presentation.theme.SpaceBlack
 import com.app.exoplanethunter.review.AppReviewManager
 import com.app.exoplanethunter.review.ReviewPreferences
+import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
+import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
 import com.app.exoplanethunter.spacefacts.SpaceFactNotifier
 import com.app.exoplanethunter.widget.PlanetOfDayWidget
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
@@ -35,13 +38,17 @@ class MainActivity : ComponentActivity() {
     // Holds a planet id when launched from the Planet-of-the-Day widget.
     private var pendingPlanetId by mutableStateOf<Long?>(null)
 
+    private val trackEvent: TrackEventUseCase by inject()
+
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* no-op */ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pendingFactId = intent.factId()
-        pendingPlanetId = intent.planetId()
+        pendingPlanetId = intent.planetId()?.also {
+            trackEvent(AnalyticsEvent.WidgetPlanetOpened)
+        }
         requestNotificationPermissionIfNeeded()
 
         if (savedInstanceState == null) {
@@ -78,7 +85,10 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         intent.factId()?.let { pendingFactId = it }
-        intent.planetId()?.let { pendingPlanetId = it }
+        intent.planetId()?.let {
+            pendingPlanetId = it
+            trackEvent(AnalyticsEvent.WidgetPlanetOpened)
+        }
     }
 
     private fun Intent.factId(): Int? {

@@ -34,13 +34,8 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
         is AnalyticsEvent.StatisticsScreenViewed ->
             Keys.STATISTICS_SCREEN_VIEWED to null
 
-        is AnalyticsEvent.PlanetDetailScreenViewed -> {
-            val event = this
-            Keys.PLANET_DETAIL_SCREEN_VIEWED to Bundle().apply {
-                putLong(Keys.PARAM_PLANET_ID, event.planetId)
-                putString(Keys.PARAM_PLANET_NAME, event.planetName)
-            }
-        }
+        is AnalyticsEvent.PlanetDetailScreenViewed ->
+            Keys.PLANET_DETAIL_SCREEN_VIEWED to null
 
         is AnalyticsEvent.StarSystemDetailScreenViewed -> {
             val event = this
@@ -53,8 +48,6 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
         is AnalyticsEvent.PlanetClicked -> {
             val event = this
             Keys.PLANET_CLICKED to Bundle().apply {
-                putLong(Keys.PARAM_PLANET_ID, event.planetId)
-                putString(Keys.PARAM_PLANET_NAME, event.planetName)
                 putString(Keys.PARAM_DISCOVERY_METHOD, event.discoveryMethod)
             }
         }
@@ -164,5 +157,9 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
                 putString(Keys.PARAM_FACT_TITLE, event.title)
             }
         }
+
+        // Widget
+        is AnalyticsEvent.WidgetPlanetOpened ->
+            Keys.WIDGET_PLANET_OPENED to null
     }
 }

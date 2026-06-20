@@ -66,12 +66,7 @@ class PlanetDetailViewModel(
             val loadedPlanet = getPlanetByIdUseCase(id)
             planet = loadedPlanet
             loadedPlanet?.let {
-                trackEvent(
-                    AnalyticsEvent.PlanetDetailScreenViewed(
-                        planetId = it.id,
-                        planetName = it.planetName
-                    )
-                )
+                trackEvent(AnalyticsEvent.PlanetDetailScreenViewed)
                 insight = getHabitabilityInsightUseCase(it)
             }
             isLoading = false

@@ -14,10 +14,7 @@ sealed class AnalyticsEvent {
 
     object StatisticsScreenViewed : AnalyticsEvent()
 
-    data class PlanetDetailScreenViewed(
-        val planetId: Long,
-        val planetName: String
-    ) : AnalyticsEvent()
+    object PlanetDetailScreenViewed : AnalyticsEvent()
 
     data class StarSystemDetailScreenViewed(
         val hostName: String
@@ -25,9 +22,8 @@ sealed class AnalyticsEvent {
 
     // ── Click / navigation ────────────────────────────────────────────────────
 
+    /** Low-cardinality only: which discovery method drives engagement. No per-planet id/name. */
     data class PlanetClicked(
-        val planetId: Long,
-        val planetName: String,
         val discoveryMethod: String
     ) : AnalyticsEvent()
 
@@ -101,4 +97,9 @@ sealed class AnalyticsEvent {
         val factId: Int,
         val title: String
     ) : AnalyticsEvent()
+
+    // ── Widget ──────────────────────────────────────────────────────────────
+
+    /** User opened a planet by tapping the Planet-of-the-Day home-screen widget. */
+    object WidgetPlanetOpened : AnalyticsEvent()
 }

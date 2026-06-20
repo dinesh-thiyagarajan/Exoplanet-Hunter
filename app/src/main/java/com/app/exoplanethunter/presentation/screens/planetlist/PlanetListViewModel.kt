@@ -196,13 +196,7 @@ class PlanetListViewModel(
     }
 
     fun trackPlanetClicked(planet: Exoplanet) {
-        trackEvent(
-            AnalyticsEvent.PlanetClicked(
-                planetId = planet.id,
-                planetName = planet.planetName,
-                discoveryMethod = planet.discoveryMethod
-            )
-        )
+        trackEvent(AnalyticsEvent.PlanetClicked(discoveryMethod = planet.discoveryMethod))
     }
 
     private fun applyCurrentFilter() {

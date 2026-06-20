@@ -50,6 +50,9 @@ fun AboutScreen(
 
     Scaffold(
         containerColor = SpaceBlack,
+        // Hosted inside MainScreen's Scaffold, which already applies system-bar/bottom-nav
+        // insets. Zero these so the bottom inset isn't padded twice (which left a black gap).
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize()) {

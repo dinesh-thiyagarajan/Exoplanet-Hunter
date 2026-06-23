@@ -22,6 +22,9 @@ object SpaceFactNotifier {
     private const val CHANNEL_ID = "space_facts"
     private const val NOTIFICATION_ID = 4201
 
+    /** Accent tint for the small icon / app name on the expanded notification (CosmicCyan). */
+    private const val NOTIFICATION_ACCENT = 0xFF4DD0E1.toInt()
+
     fun ensureChannel(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val channel = NotificationChannel(
@@ -58,7 +61,8 @@ object SpaceFactNotifier {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.app_logo)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setColor(NOTIFICATION_ACCENT)
             .setContentTitle(fact.title)
             .setContentText(fact.shortDescription)
             .setStyle(NotificationCompat.BigTextStyle().bigText(fact.shortDescription))

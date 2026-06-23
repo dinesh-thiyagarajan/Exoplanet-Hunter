@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import com.app.exoplanethunter.presentation.components.SkyChartCard
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.NebulaPink
 import com.app.exoplanethunter.presentation.theme.SolarOrange
@@ -172,6 +173,13 @@ fun StarSystemDetailScreen(
                 ) {
                     AnimatedSection(delayMs = 0) {
                         StellarInfoCard(system = system)
+                    }
+                    AnimatedSection(delayMs = 100) {
+                        SkyChartCard(
+                            ra = system.ra,
+                            dec = system.dec,
+                            hostName = system.hostName
+                        )
                     }
                     AnimatedSection(delayMs = 150) {
                         PlanetsInfoCard(

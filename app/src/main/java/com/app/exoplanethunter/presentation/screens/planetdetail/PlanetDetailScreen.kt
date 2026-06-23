@@ -55,6 +55,7 @@ import com.app.exoplanethunter.R
 import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
 import com.app.exoplanethunter.presentation.components.Planet3DRenderer
+import com.app.exoplanethunter.presentation.components.SkyChartCard
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CautionYellow
@@ -230,6 +231,15 @@ fun PlanetDetailContent(
                         // Discovery Info
                         AnimatedSection(delay = 300) {
                             DiscoveryCard(planet = planet)
+                        }
+
+                        // Where to find the host star in the sky
+                        AnimatedSection(delay = 350) {
+                            SkyChartCard(
+                                ra = planet.ra,
+                                dec = planet.dec,
+                                hostName = planet.hostName
+                            )
                         }
 
                         // ML Insights

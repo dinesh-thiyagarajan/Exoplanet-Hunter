@@ -219,6 +219,15 @@
     <string name="galaxy_map_card_meta">%1$d known planets · spectral type %2$s</string>
     <string name="galaxy_map_card_view">View this system</string>
 
+    <!-- Sky chart (find it in the night sky) -->
+    <string name="sky_chart_title">Find it in the night sky</string>
+    <string name="sky_chart_subtitle">Where %1$s sits on the celestial sphere</string>
+    <string name="sky_chart_coords">RA %1$s · Dec %2$s</string>
+    <string name="sky_chart_hemi_north">Best seen from the Northern Hemisphere</string>
+    <string name="sky_chart_hemi_south">Best seen from the Southern Hemisphere</string>
+    <string name="sky_chart_hemi_both">Visible from both hemispheres</string>
+    <string name="sky_chart_best_month">Highest in the sky around %1$s</string>
+
     <!-- Star system list screen -->
     <string name="star_system_list_title">Star Systems</string>
     <string name="star_system_list_loading">Loading…</string>

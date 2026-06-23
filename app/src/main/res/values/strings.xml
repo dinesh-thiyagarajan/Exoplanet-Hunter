@@ -204,6 +204,11 @@
     <string name="stats_section_methods">Discoveries by Method</string>
     <string name="stats_section_sizes">Planet Sizes</string>
     <string name="stats_section_years">Discoveries per Year</string>
+    <string name="stats_section_transit">How the Transit Method Works</string>
+    <string name="stats_transit_caption">Most of these worlds were found by watching a star dim as a planet crosses in front of it. The deeper the dip, the bigger the planet.</string>
+    <string name="stats_transit_legend_star">Star</string>
+    <string name="stats_transit_legend_planet">Planet</string>
+    <string name="stats_transit_legend_brightness">Brightness</string>
     <string name="stats_no_data">No data</string>
 
     <!-- Star system list screen -->

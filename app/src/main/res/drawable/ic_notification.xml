@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Monochrome status-bar notification icon. Android renders small icons using only the
+  alpha channel (as a white silhouette), so this is a single solid white sparkle shape.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Central 4-point sparkle -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,1.5 C12.6,5.6 14.4,7.4 18.5,8 C14.4,8.6 12.6,10.4 12,14.5 C11.4,10.4 9.6,8.6 5.5,8 C9.6,7.4 11.4,5.6 12,1.5 Z" />
+    <!-- Small secondary sparkle -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M18,14 C18.3,16 19,16.7 21,17 C19,17.3 18.3,18 18,20 C17.7,18 17,17.3 15,17 C17,16.7 17.7,16 18,14 Z" />
+</vector>

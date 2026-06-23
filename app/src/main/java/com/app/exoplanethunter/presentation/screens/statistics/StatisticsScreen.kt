@@ -103,6 +103,12 @@ fun StatisticsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            StatSection(title = stringResource(R.string.stats_section_transit)) {
+                TransitMethodContent()
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             AdBannerCard()
 
             Spacer(modifier = Modifier.height(24.dp))

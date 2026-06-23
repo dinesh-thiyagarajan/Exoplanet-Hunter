@@ -102,6 +102,7 @@ fun GalaxyMapScreen(
         } else {
             GalaxyMapContent(
                 stars = viewModel.stars,
+                onStarSelected = viewModel::onStarSelected,
                 onSystemClick = onSystemClick
             )
         }
@@ -133,6 +134,7 @@ fun GalaxyMapScreen(
 @Composable
 private fun GalaxyMapContent(
     stars: List<StarPosition>,
+    onStarSelected: () -> Unit,
     onSystemClick: (Long) -> Unit
 ) {
     val textMeasurer = rememberTextMeasurer()
@@ -170,13 +172,17 @@ private fun GalaxyMapContent(
                             val dx = tap.x - p.x; val dy = tap.y - p.y
                             dx * dx + dy * dy
                         }
-                        selectedId = if (hit != null) {
+                        val newId = if (hit != null) {
                             val dx = tap.x - hit.value.x; val dy = tap.y - hit.value.y
                             if (sqrt(dx * dx + dy * dy) < 48f) {
                                 autoRotate = false
                                 hit.key
                             } else null
                         } else null
+                        if (newId != null && newId != selectedId) {
+                            onStarSelected()
+                        }
+                        selectedId = newId
                     }
                 }
                 .pointerInput(Unit) {

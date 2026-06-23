@@ -20,6 +20,8 @@ sealed class AnalyticsEvent {
         val hostName: String
     ) : AnalyticsEvent()
 
+    object GalaxyMapScreenViewed : AnalyticsEvent()
+
     // ── Click / navigation ────────────────────────────────────────────────────
 
     /** Low-cardinality only: which discovery method drives engagement. No per-planet id/name. */
@@ -30,6 +32,9 @@ sealed class AnalyticsEvent {
     data class StarSystemClicked(
         val hostName: String
     ) : AnalyticsEvent()
+
+    /** A star tapped on the 3D galaxy map. */
+    object GalaxyMapStarSelected : AnalyticsEvent()
 
     data class PlanetFavorited(
         val planetId: Long,

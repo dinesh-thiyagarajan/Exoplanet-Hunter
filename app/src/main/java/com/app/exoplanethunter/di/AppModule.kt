@@ -83,7 +83,7 @@ val viewModelModule = module {
     viewModel { StatisticsViewModel(get(), get()) }
     viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
-    viewModel { GalaxyMapViewModel(get()) }
+    viewModel { GalaxyMapViewModel(get(), get()) }
     viewModel { SplashViewModel(get(), get()) }
     viewModel { AboutViewModel(get(), get(), get()) }
     viewModel { CompareViewModel(get(), get(), get()) }

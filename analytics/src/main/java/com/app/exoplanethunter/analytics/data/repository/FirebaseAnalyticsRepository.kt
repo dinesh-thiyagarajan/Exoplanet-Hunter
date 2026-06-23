@@ -44,6 +44,9 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
             }
         }
 
+        is AnalyticsEvent.GalaxyMapScreenViewed ->
+            Keys.GALAXY_MAP_SCREEN_VIEWED to null
+
         // Clicks / navigation
         is AnalyticsEvent.PlanetClicked -> {
             val event = this
@@ -58,6 +61,9 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
                 putString(Keys.PARAM_HOST_NAME, event.hostName)
             }
         }
+
+        is AnalyticsEvent.GalaxyMapStarSelected ->
+            Keys.GALAXY_MAP_STAR_SELECTED to null
 
         is AnalyticsEvent.PlanetFavorited -> {
             val event = this

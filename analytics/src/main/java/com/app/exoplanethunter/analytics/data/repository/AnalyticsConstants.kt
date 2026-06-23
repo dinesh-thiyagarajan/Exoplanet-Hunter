@@ -7,9 +7,11 @@ object AnalyticsConstants {
     const val STAR_SYSTEM_LIST_SCREEN_VIEWED = "star_system_list_screen_viewed"
     const val PLANET_DETAIL_SCREEN_VIEWED = "planet_detail_screen_viewed"
     const val STAR_SYSTEM_DETAIL_SCREEN_VIEWED = "star_system_detail_screen_viewed"
-    
+    const val GALAXY_MAP_SCREEN_VIEWED = "galaxy_map_screen_viewed"
+
     const val PLANET_CLICKED = "planet_clicked"
     const val STAR_SYSTEM_CLICKED = "star_system_clicked"
+    const val GALAXY_MAP_STAR_SELECTED = "galaxy_map_star_selected"
     const val FAVORITES_SCREEN_VIEWED = "favorites_screen_viewed"
     const val STATISTICS_SCREEN_VIEWED = "statistics_screen_viewed"
     const val PLANET_FAVORITED = "planet_favorited"

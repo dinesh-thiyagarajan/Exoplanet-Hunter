@@ -30,6 +30,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -75,6 +76,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun StarSystemListScreen(
     onSystemClick: (Long) -> Unit,
+    onOpenGalaxyMap: () -> Unit = {},
     viewModel: StarSystemListViewModel = koinViewModel(),
 ) {
     val listState = rememberLazyListState()
@@ -102,15 +104,34 @@ fun StarSystemListScreen(
                     )
                     .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 8.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.star_system_list_title),
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        brush = Brush.linearGradient(
-                            colors = listOf(StarGold, SolarOrange),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.star_system_list_title),
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            brush = Brush.linearGradient(
+                                colors = listOf(StarGold, SolarOrange),
+                            ),
                         ),
-                    ),
-                )
+                    )
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(SurfaceCard)
+                            .clickable(onClick = onOpenGalaxyMap)
+                            .padding(10.dp),
+                    ) {
+                        Icon(
+                            Icons.Default.Explore,
+                            contentDescription = stringResource(R.string.galaxy_map_title),
+                            tint = CosmicCyan,
+                        )
+                    }
+                }
 
                 Text(
                     text = if (viewModel.isLoading) stringResource(R.string.star_system_list_loading)

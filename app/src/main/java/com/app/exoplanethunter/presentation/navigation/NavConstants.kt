@@ -8,6 +8,7 @@ object NavRoutes {
     const val STAR_SYSTEM_DETAIL = "star_system_detail/{${NavArgs.SYSTEM_ID}}"
     const val COMPARE = "compare/{${NavArgs.COMPARE_A}}/{${NavArgs.COMPARE_B}}"
     const val SPACE_FACT = "space_fact/{${NavArgs.FACT_ID}}"
+    const val GALAXY_MAP = "galaxy_map"
 }
 
 object NavArgs {

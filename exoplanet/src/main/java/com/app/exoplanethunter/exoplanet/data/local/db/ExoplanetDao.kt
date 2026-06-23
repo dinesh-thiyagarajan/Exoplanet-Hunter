@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.app.exoplanethunter.exoplanet.domain.model.LabelCount
+import com.app.exoplanethunter.exoplanet.domain.model.StarPosition
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import kotlinx.coroutines.flow.Flow
 
@@ -128,6 +129,21 @@ interface ExoplanetDao {
         """
     )
     fun getAllStarSystems(): Flow<List<StarSystemSummary>>
+
+    @Query(
+        """
+        SELECT ss.id AS id, ss.hostName AS hostName,
+               MAX(e.ra) AS ra, MAX(e.dec) AS dec, MAX(e.distanceParsec) AS distanceParsec,
+               COUNT(e.id) AS numPlanets, MAX(e.spectralType) AS spectralType
+        FROM star_systems ss
+        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1
+        WHERE e.ra IS NOT NULL AND e.dec IS NOT NULL AND e.distanceParsec IS NOT NULL
+        GROUP BY ss.id
+        ORDER BY distanceParsec ASC
+        LIMIT :limit
+        """
+    )
+    fun getNearbyStarPositions(limit: Int): Flow<List<StarPosition>>
 
     @Query("SELECT * FROM exoplanets WHERE systemId = :systemId AND isDefault = 1 ORDER BY orbitSemiMajorAxisAu ASC")
     suspend fun getPlanetsForSystem(systemId: Long): List<ExoplanetEntity>

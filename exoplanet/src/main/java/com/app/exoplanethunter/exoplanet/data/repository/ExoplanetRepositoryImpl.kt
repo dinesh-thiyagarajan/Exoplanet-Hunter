@@ -10,6 +10,7 @@ import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetEntity
 import com.app.exoplanethunter.exoplanet.data.worker.DataSyncWorker
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.LabelCount
+import com.app.exoplanethunter.exoplanet.domain.model.StarPosition
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
@@ -111,6 +112,9 @@ class ExoplanetRepositoryImpl(
 
     override fun getStarSystemsByStarCount(starCount: Int): Flow<List<StarSystemSummary>> =
         dao.getStarSystemsByStarCount(starCount)
+
+    override fun getNearbyStarPositions(limit: Int): Flow<List<StarPosition>> =
+        dao.getNearbyStarPositions(limit)
 
     override fun getDiscoveryMethodCounts(): Flow<List<LabelCount>> = dao.getDiscoveryMethodCounts()
 

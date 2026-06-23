@@ -11,6 +11,7 @@ import com.app.exoplanethunter.exoplanet.domain.usecase.GetDiscoveryMethodsUseCa
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetFavoriteNamesUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetFavoritePlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetMultiPlanetSystemsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetNearbyStarPositionsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetPlanetByIdUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemsByStarCountUseCase
@@ -27,6 +28,7 @@ import com.app.exoplanethunter.spacefacts.SpaceFactProvider
 import com.app.exoplanethunter.presentation.screens.about.AboutViewModel
 import com.app.exoplanethunter.presentation.screens.compare.CompareViewModel
 import com.app.exoplanethunter.presentation.screens.favorites.FavoritesViewModel
+import com.app.exoplanethunter.presentation.screens.galaxymap.GalaxyMapViewModel
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailViewModel
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListViewModel
 import com.app.exoplanethunter.presentation.screens.spacefact.SpaceFactDetailViewModel
@@ -65,6 +67,7 @@ val useCaseModule = module {
     factory { SearchStarSystemsUseCase(get()) }
     factory { GetMultiPlanetSystemsUseCase(get()) }
     factory { GetStarSystemsByStarCountUseCase(get()) }
+    factory { GetNearbyStarPositionsUseCase(get()) }
     factory { GetHabitabilityInsightUseCase(get()) }
     factory { SyncExoplanetsUseCase(get()) }
     factory { GetFavoriteNamesUseCase(get()) }
@@ -80,6 +83,7 @@ val viewModelModule = module {
     viewModel { StatisticsViewModel(get(), get()) }
     viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
+    viewModel { GalaxyMapViewModel(get()) }
     viewModel { SplashViewModel(get(), get()) }
     viewModel { AboutViewModel(get(), get(), get()) }
     viewModel { CompareViewModel(get(), get(), get()) }

@@ -211,6 +211,14 @@
     <string name="stats_transit_legend_brightness">Brightness</string>
     <string name="stats_no_data">No data</string>
 
+    <!-- Galaxy map (3D neighborhood) -->
+    <string name="galaxy_map_title">Galaxy Map</string>
+    <string name="galaxy_map_hint">%1$d nearby stars · drag to rotate, pinch to zoom</string>
+    <string name="galaxy_map_empty">No star positions available yet.</string>
+    <string name="galaxy_map_card_distance">%1$d parsecs · %2$d light-years away</string>
+    <string name="galaxy_map_card_meta">%1$d known planets · spectral type %2$s</string>
+    <string name="galaxy_map_card_view">View this system</string>
+
     <!-- Star system list screen -->
     <string name="star_system_list_title">Star Systems</string>
     <string name="star_system_list_loading">Loading…</string>

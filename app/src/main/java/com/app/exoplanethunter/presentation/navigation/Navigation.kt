@@ -40,6 +40,7 @@ import androidx.navigation.navArgument
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.presentation.screens.about.AboutScreen
 import com.app.exoplanethunter.presentation.screens.favorites.FavoritesScreen
+import com.app.exoplanethunter.presentation.screens.galaxymap.GalaxyMapScreen
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailScreen
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListScreen
 import com.app.exoplanethunter.presentation.screens.splash.SplashScreen
@@ -74,6 +75,7 @@ sealed class Screen(val route: String) {
     data object SpaceFact : Screen(NavRoutes.SPACE_FACT) {
         fun createRoute(factId: Int) = "space_fact/$factId"
     }
+    data object GalaxyMap : Screen(NavRoutes.GALAXY_MAP)
 }
 
 // ---------------------------------------------------------------------------
@@ -159,7 +161,19 @@ fun ExoplanetNavigation(
                 },
                 onCompare = { planetAId, planetBId ->
                     navController.navigate(Screen.Compare.createRoute(planetAId, planetBId))
+                },
+                onOpenGalaxyMap = {
+                    navController.navigate(Screen.GalaxyMap.route)
                 }
+            )
+        }
+
+        composable(Screen.GalaxyMap.route) {
+            GalaxyMapScreen(
+                onSystemClick = { systemId ->
+                    navController.navigate(Screen.StarSystemDetail.createRoute(systemId))
+                },
+                onBack = { navController.popBackStack() }
             )
         }
 
@@ -234,7 +248,8 @@ fun ExoplanetNavigation(
 private fun MainScreen(
     onPlanetClick: (Long) -> Unit,
     onSystemClick: (Long) -> Unit,
-    onCompare: (Long, Long) -> Unit
+    onCompare: (Long, Long) -> Unit,
+    onOpenGalaxyMap: () -> Unit
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(BottomNavTab.Planets.name) }
 
@@ -279,7 +294,8 @@ private fun MainScreen(
                     onCompare = onCompare
                 )
                 BottomNavTab.StarSystems -> StarSystemListScreen(
-                    onSystemClick = onSystemClick
+                    onSystemClick = onSystemClick,
+                    onOpenGalaxyMap = onOpenGalaxyMap
                 )
                 BottomNavTab.Favorites -> FavoritesScreen(
                     onPlanetClick = onPlanetClick

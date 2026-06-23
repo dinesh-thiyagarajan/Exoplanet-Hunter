@@ -209,6 +209,8 @@
     <string name="stats_transit_legend_star">Star</string>
     <string name="stats_transit_legend_planet">Planet</string>
     <string name="stats_transit_legend_brightness">Brightness</string>
+    <string name="stats_section_radial_velocity">How the Radial-Velocity Method Works</string>
+    <string name="stats_rv_caption">A planet\'s gravity makes its star wobble around a shared centre of mass. The light blueshifts as the star swings toward us and redshifts as it pulls away — betraying the unseen planet.</string>
     <string name="stats_no_data">No data</string>
 
     <!-- Galaxy map (3D neighborhood) -->
@@ -227,6 +229,10 @@
     <string name="sky_chart_hemi_south">Best seen from the Southern Hemisphere</string>
     <string name="sky_chart_hemi_both">Visible from both hemispheres</string>
     <string name="sky_chart_best_month">Highest in the sky around %1$s</string>
+
+    <!-- Tidal locking -->
+    <string name="tidal_lock_badge">Tidally locked</string>
+    <string name="tidal_lock_desc">Orbiting so close that one face stays in eternal daylight while the other is locked in perpetual night.</string>
 
     <!-- Star system list screen -->
     <string name="star_system_list_title">Star Systems</string>

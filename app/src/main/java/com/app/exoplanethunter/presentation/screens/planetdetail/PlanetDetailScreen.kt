@@ -50,12 +50,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
 import com.app.exoplanethunter.presentation.components.Planet3DRenderer
 import com.app.exoplanethunter.presentation.components.SkyChartCard
+import com.app.exoplanethunter.presentation.components.isLikelyTidallyLocked
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CautionYellow
@@ -162,6 +164,8 @@ fun PlanetDetailContent(
                         .weight(1f)
                         .verticalScroll(rememberScrollState()),
                 ) {
+                    val tidallyLocked = remember(planet) { isLikelyTidallyLocked(planet) }
+
                     // 3D Planet
                     Box(
                         modifier = Modifier
@@ -174,6 +178,7 @@ fun PlanetDetailContent(
                             size = 280.dp,
                             enableRotation = true,
                             autoRotate = true,
+                            tidallyLocked = tidallyLocked,
                         )
                     }
 
@@ -183,6 +188,14 @@ fun PlanetDetailContent(
                         color = TextMuted,
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                     )
+
+                    if (tidallyLocked) {
+                        TidalLockBadge(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(top = 12.dp),
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -306,6 +319,35 @@ private fun ClassificationBadge(
             style = MaterialTheme.typography.labelLarge,
             color = color,
             fontWeight = FontWeight.Bold,
+        )
+    }
+}
+
+@Composable
+internal fun TidalLockBadge(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(20.dp))
+                .background(SolarOrange.copy(alpha = 0.15f))
+                .padding(horizontal = 20.dp, vertical = 8.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.tidal_lock_badge),
+                style = MaterialTheme.typography.labelLarge,
+                color = SolarOrange,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+        Text(
+            text = stringResource(R.string.tidal_lock_desc),
+            style = MaterialTheme.typography.bodySmall,
+            color = TextMuted,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 6.dp, start = 32.dp, end = 32.dp),
         )
     }
 }

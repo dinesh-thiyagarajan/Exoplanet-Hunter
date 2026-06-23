@@ -41,6 +41,16 @@ import kotlin.math.min
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+/**
+ * A close-in planet whose rotation has synchronised with its orbit, so one face
+ * is in permanent daylight and the other in eternal night. Heuristic: a short
+ * orbital period (tight orbit) — these are widely presumed to be tidally locked.
+ */
+fun isLikelyTidallyLocked(planet: Exoplanet): Boolean {
+    val period = planet.orbitalPeriodDays ?: return false
+    return period < 10.0
+}
+
 @Composable
 fun Planet3DRenderer(
     planet: Exoplanet,
@@ -48,6 +58,7 @@ fun Planet3DRenderer(
     size: Dp = 280.dp,
     enableRotation: Boolean = true,
     autoRotate: Boolean = true,
+    tidallyLocked: Boolean = false,
 ) {
     // Full 360° rotation — no clamping on Y, gentle clamp on X (tilt)
     var rotationX by remember { mutableFloatStateOf(0.3f) }
@@ -105,8 +116,11 @@ fun Planet3DRenderer(
             val centerY = this.size.height / 2
             val radius = min(centerX, centerY) * 0.75f
 
+            // A tidally locked world keeps one face to its star — no auto spin.
+            val effectiveAutoRotate = autoRotate && !tidallyLocked
+
             // Combine manual + auto rotation (both in radians now)
-            val currentRotY = if (autoRotate) {
+            val currentRotY = if (effectiveAutoRotate) {
                 rotationY + autoRotateAngle
             } else {
                 rotationY
@@ -124,8 +138,13 @@ fun Planet3DRenderer(
             // Specular highlight
             drawSpecularHighlight(centerX, centerY, radius)
 
-            // Terminator line (day/night boundary) — subtle shadow
-            drawTerminator(centerX, centerY, radius, currentRotY)
+            // Day/night boundary. A tidally locked world has a fixed, hard split
+            // (eternal day vs night); otherwise a subtle moving terminator.
+            if (tidallyLocked) {
+                drawTidalLock(centerX, centerY, radius)
+            } else {
+                drawTerminator(centerX, centerY, radius, currentRotY)
+            }
 
             // Ring system for gas giants
             if (planetType == PlanetType.GAS_GIANT || planetType == PlanetType.ICE_GIANT) {
@@ -435,6 +454,39 @@ private fun DrawScope.drawTerminator(
         ),
         radius = radius,
         center = Offset(cx, cy)
+    )
+}
+
+/**
+ * Fixed day/night split for a tidally locked world: the star-facing (left) half
+ * stays lit with a hot substellar point, the far (right) half in permanent night.
+ */
+private fun DrawScope.drawTidalLock(cx: Float, cy: Float, radius: Float) {
+    // Permanent night on the far hemisphere.
+    drawCircle(
+        brush = Brush.horizontalGradient(
+            colors = listOf(
+                Color.Transparent,
+                Color.Transparent,
+                Color(0x99000010),
+                Color(0xEE000008)
+            ),
+            startX = cx - radius,
+            endX = cx + radius
+        ),
+        radius = radius,
+        center = Offset(cx, cy)
+    )
+    // Hot substellar point on the day side facing the star.
+    val sub = Offset(cx - radius * 0.4f, cy)
+    drawCircle(
+        brush = Brush.radialGradient(
+            colors = listOf(Color.White.copy(alpha = 0.30f), Color.Transparent),
+            center = sub,
+            radius = radius * 0.7f
+        ),
+        radius = radius * 0.7f,
+        center = sub
     )
 }
 

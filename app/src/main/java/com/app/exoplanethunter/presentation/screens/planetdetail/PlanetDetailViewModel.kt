@@ -16,6 +16,14 @@ import com.app.exoplanethunter.ml.GetHabitabilityInsightUseCase
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/** Everything the planet-detail UI needs to render. Lets the screen be stateless/previewable. */
+data class PlanetDetailUiState(
+    val isLoading: Boolean = true,
+    val planet: Exoplanet? = null,
+    val insight: HabitabilityInsight? = null,
+    val isFavorite: Boolean = false,
+)
+
 class PlanetDetailViewModel(
     private val getPlanetByIdUseCase: GetPlanetByIdUseCase,
     private val getHabitabilityInsightUseCase: GetHabitabilityInsightUseCase,
@@ -37,6 +45,15 @@ class PlanetDetailViewModel(
 
     val isFavorite: Boolean
         get() = planet?.planetName?.let { it in favoriteNames } ?: false
+
+    /** State-backed snapshot consumed by the stateless content composable. */
+    val uiState: PlanetDetailUiState
+        get() = PlanetDetailUiState(
+            isLoading = isLoading,
+            planet = planet,
+            insight = insight,
+            isFavorite = isFavorite,
+        )
 
     init {
         observeFavorites()

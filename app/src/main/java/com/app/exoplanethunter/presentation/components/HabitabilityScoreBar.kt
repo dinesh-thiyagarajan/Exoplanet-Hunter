@@ -1,4 +1,6 @@
 package com.app.exoplanethunter.presentation.components
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -106,4 +108,10 @@ fun HabitabilityScoreBar(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun HabitabilityScoreBarPreview() = PreviewSurface {
+    HabitabilityScoreBar(label = "Temperature Zone", score = 0.72)
 }

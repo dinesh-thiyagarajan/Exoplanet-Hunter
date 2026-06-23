@@ -1,4 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.starsystem
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
+import com.app.exoplanethunter.presentation.preview.PreviewData
 
 import androidx.compose.ui.res.stringResource
 import com.app.exoplanethunter.R
@@ -306,4 +309,14 @@ private fun PropertyItem(label: String, value: String, subtitle: String) {
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun StellarInfoCardPreview() = PreviewSurface { StellarInfoCard(PreviewData.starSystem) }
+
+@Preview
+@Composable
+private fun PlanetsInfoCardPreview() = PreviewSurface {
+    PlanetsInfoCard(planets = PreviewData.planets, onPlanetClick = {})
 }

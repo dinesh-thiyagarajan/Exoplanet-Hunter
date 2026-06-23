@@ -1,4 +1,7 @@
 package com.app.exoplanethunter.presentation.components
+import com.app.exoplanethunter.presentation.preview.PreviewData
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -188,4 +191,15 @@ private fun InfoChip(text: String, isHighlighted: Boolean = false) {
             fontWeight = if (isHighlighted) FontWeight.Bold else FontWeight.Normal,
         )
     }
+}
+
+@Preview
+@Composable
+private fun PlanetRowCardPreview() = PreviewSurface {
+    PlanetRowCard(
+        planet = PreviewData.planet,
+        isFavorite = true,
+        onToggleFavorite = {},
+        onClick = {},
+    )
 }

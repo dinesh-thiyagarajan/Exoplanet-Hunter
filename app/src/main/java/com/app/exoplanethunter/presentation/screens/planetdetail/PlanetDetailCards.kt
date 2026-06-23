@@ -1,4 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.planetdetail
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
+import com.app.exoplanethunter.presentation.preview.PreviewData
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -698,3 +701,27 @@ private fun PropertyItem(label: String, value: String, subtitle: String) {
         }
     }
 }
+
+@Preview
+@Composable
+private fun HabitabilityCardPreview() = PreviewSurface { HabitabilityCard(PreviewData.insight) }
+
+@Preview
+@Composable
+private fun PlanetPropertiesCardPreview() = PreviewSurface { PlanetPropertiesCard(PreviewData.planet) }
+
+@Preview
+@Composable
+private fun StellarPropertiesCardPreview() = PreviewSurface { StellarPropertiesCard(PreviewData.planet) }
+
+@Preview
+@Composable
+private fun DiscoveryCardPreview() = PreviewSurface { DiscoveryCard(PreviewData.planet) }
+
+@Preview
+@Composable
+private fun InsightsCardPreview() = PreviewSurface { InsightsCard(PreviewData.insight.insights) }
+
+@Preview
+@Composable
+private fun EarthComparisonCardPreview() = PreviewSurface { EarthComparisonCard(PreviewData.planet) }

@@ -1,4 +1,7 @@
 package com.app.exoplanethunter.presentation.components
+import com.app.exoplanethunter.presentation.preview.PreviewData
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -468,3 +471,9 @@ private data class PlanetColorScheme(
     val secondary: Color,
     val atmosphere: Color
 )
+
+@Preview
+@Composable
+private fun Planet3DRendererPreview() = PreviewSurface {
+    Planet3DRenderer(planet = PreviewData.planet, size = 200.dp, autoRotate = false)
+}

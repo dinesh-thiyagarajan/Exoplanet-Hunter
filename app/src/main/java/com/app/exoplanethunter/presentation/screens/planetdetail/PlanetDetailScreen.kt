@@ -1,4 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.planetdetail
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewData
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -74,7 +77,19 @@ fun PlanetDetailScreen(
     LaunchedEffect(planetId) {
         viewModel.loadPlanet(planetId)
     }
+    PlanetDetailContent(
+        state = viewModel.uiState,
+        onBack = onBack,
+        onToggleFavorite = viewModel::toggleFavorite,
+    )
+}
 
+@Composable
+fun PlanetDetailContent(
+    state: PlanetDetailUiState,
+    onBack: () -> Unit,
+    onToggleFavorite: () -> Unit,
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -82,13 +97,13 @@ fun PlanetDetailScreen(
     ) {
         StarField(starCount = 80)
 
-        if (viewModel.isLoading) {
+        if (state.isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = CosmicCyan)
             }
         } else {
-            val planet = viewModel.planet ?: return@Box
-            val insight = viewModel.insight
+            val planet = state.planet ?: return@Box
+            val insight = state.insight
             val clipboardManager = LocalClipboardManager.current
             val context = LocalContext.current
 
@@ -130,11 +145,11 @@ fun PlanetDetailScreen(
                             tint = Color.White,
                         )
                     }
-                    IconButton(onClick = viewModel::toggleFavorite) {
+                    IconButton(onClick = onToggleFavorite) {
                         Icon(
-                            imageVector = if (viewModel.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
-                            contentDescription = if (viewModel.isFavorite) stringResource(R.string.favorite_remove) else stringResource(R.string.favorite_add),
-                            tint = if (viewModel.isFavorite) StarGold else Color.White,
+                            imageVector = if (state.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
+                            contentDescription = if (state.isFavorite) stringResource(R.string.favorite_remove) else stringResource(R.string.favorite_add),
+                            tint = if (state.isFavorite) StarGold else Color.White,
                         )
                     }
                 }
@@ -285,3 +300,34 @@ private fun ClassificationBadge(
     }
 }
 
+
+@Preview
+@Composable
+private fun ClassificationBadgePreview() = PreviewSurface {
+    ClassificationBadge(classification = PlanetClassification.POTENTIALLY_HABITABLE)
+}
+
+@Preview
+@Composable
+private fun PlanetDetailContentLoadedPreview() = PreviewSurface {
+    PlanetDetailContent(
+        state = PlanetDetailUiState(
+            isLoading = false,
+            planet = PreviewData.planet,
+            insight = PreviewData.insight,
+            isFavorite = true,
+        ),
+        onBack = {},
+        onToggleFavorite = {},
+    )
+}
+
+@Preview
+@Composable
+private fun PlanetDetailContentLoadingPreview() = PreviewSurface {
+    PlanetDetailContent(
+        state = PlanetDetailUiState(isLoading = true),
+        onBack = {},
+        onToggleFavorite = {},
+    )
+}

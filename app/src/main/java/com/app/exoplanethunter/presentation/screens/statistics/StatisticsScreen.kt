@@ -1,4 +1,6 @@
 package com.app.exoplanethunter.presentation.screens.statistics
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
 
 import androidx.compose.ui.res.stringResource
 import com.app.exoplanethunter.R
@@ -269,3 +271,7 @@ private fun YearBars(data: List<LabelCount>) {
         )
     }
 }
+
+@Preview
+@Composable
+private fun HeroStatPreview() = PreviewSurface { HeroStat("Planets", 5234, CosmicCyan) }

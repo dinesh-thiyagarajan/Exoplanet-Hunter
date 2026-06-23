@@ -1,4 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.compare
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
+import com.app.exoplanethunter.presentation.preview.PreviewData
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -725,4 +728,16 @@ private fun format(value: Double?, decimals: Int, groupThousands: Boolean, none:
     if (value == null) return none
     val pattern = if (groupThousands) "%,.${decimals}f" else "%.${decimals}f"
     return String.format(pattern, value)
+}
+
+@Preview
+@Composable
+private fun VerdictBannerPreview() = PreviewSurface {
+    VerdictBanner(PreviewData.planet, PreviewData.hotPlanet, PreviewData.insight, PreviewData.insight)
+}
+
+@Preview
+@Composable
+private fun SizeComparisonPreview() = PreviewSurface {
+    SizeComparison(PreviewData.planet, PreviewData.hotPlanet)
 }

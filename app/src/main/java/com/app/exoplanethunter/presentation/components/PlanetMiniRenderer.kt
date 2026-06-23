@@ -1,4 +1,7 @@
 package com.app.exoplanethunter.presentation.components
+import com.app.exoplanethunter.presentation.preview.PreviewData
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -93,4 +96,10 @@ fun PlanetMiniRenderer(
             center = Offset(cx - radius * 0.3f, cy - radius * 0.3f)
         )
     }
+}
+
+@Preview
+@Composable
+private fun PlanetMiniRendererPreview() = PreviewSurface {
+    PlanetMiniRenderer(planet = PreviewData.planet, size = 72.dp)
 }

@@ -1,4 +1,6 @@
 package com.app.exoplanethunter.presentation.screens.about
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.preview.PreviewSurface
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
@@ -486,3 +488,26 @@ internal fun AboutFooter() {
     }
 }
 
+
+@Preview
+@Composable
+private fun AboutHeaderPreview() = PreviewSurface { AboutHeader(planetCount = 5234, systemCount = 3891) }
+
+@Preview
+@Composable
+private fun SectionHeaderPreview() = PreviewSurface { SectionHeader("Scientific Framework") }
+
+@Preview
+@Composable
+private fun AboutSectionPreview() = PreviewSurface {
+    AboutSection(
+        icon = Icons.Default.Dataset,
+        iconColor = CosmicCyan,
+        title = "NASA Exoplanet Archive",
+        description = "The global standard for confirmed exoplanet data.",
+    )
+}
+
+@Preview
+@Composable
+private fun AboutFooterPreview() = PreviewSurface { AboutFooter() }

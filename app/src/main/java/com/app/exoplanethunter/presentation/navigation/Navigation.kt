@@ -8,12 +8,13 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BarChart
-import androidx.compose.material.icons.filled.Hub
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Public
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.Hub
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -32,6 +33,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -49,11 +51,12 @@ import com.app.exoplanethunter.presentation.screens.spacefact.SpaceFactDetailScr
 import com.app.exoplanethunter.presentation.screens.statistics.StatisticsScreen
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemDetailScreen
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemListScreen
-import com.app.exoplanethunter.presentation.theme.CosmicCyan
+import com.app.exoplanethunter.presentation.theme.Brass
+import com.app.exoplanethunter.presentation.theme.InkRaised
+import com.app.exoplanethunter.presentation.theme.InkText
+import com.app.exoplanethunter.presentation.theme.InkTextFaint
+import com.app.exoplanethunter.presentation.theme.MonoFamily
 import com.app.exoplanethunter.presentation.theme.SpaceBlack
-import com.app.exoplanethunter.presentation.theme.SurfaceCard
-import com.app.exoplanethunter.presentation.theme.SurfaceDark
-import com.app.exoplanethunter.presentation.theme.TextMuted
 
 // ---------------------------------------------------------------------------
 // Screen routes
@@ -83,11 +86,11 @@ sealed class Screen(val route: String) {
 // ---------------------------------------------------------------------------
 
 enum class BottomNavTab(@StringRes val labelRes: Int, val icon: ImageVector) {
-    Planets(R.string.nav_planets, Icons.Default.Public),
-    StarSystems(R.string.nav_stars, Icons.Default.Hub),
-    Favorites(R.string.nav_favorites, Icons.Default.Star),
-    Statistics(R.string.nav_stats, Icons.Default.BarChart),
-    About(R.string.nav_about, Icons.Default.Info)
+    Planets(R.string.nav_planets, Icons.Outlined.Public),
+    StarSystems(R.string.nav_stars, Icons.Outlined.Hub),
+    Favorites(R.string.nav_favorites, Icons.Outlined.StarBorder),
+    Statistics(R.string.nav_stats, Icons.Outlined.BarChart),
+    About(R.string.nav_about, Icons.Outlined.Info)
 }
 
 // ---------------------------------------------------------------------------
@@ -257,30 +260,37 @@ private fun MainScreen(
         containerColor = SpaceBlack,
         bottomBar = {
             NavigationBar(
-                containerColor = SurfaceDark,
-                contentColor = Color.White,
-                tonalElevation = 8.dp
+                containerColor = InkRaised,
+                contentColor = InkText,
+                tonalElevation = 0.dp
             ) {
                 BottomNavTab.entries.forEach { tab ->
+                    val isSelected = selectedTab == tab.name
                     NavigationBarItem(
-                        selected = selectedTab == tab.name,
+                        selected = isSelected,
                         onClick = { selectedTab = tab.name },
                         icon = {
-                            Icon(tab.icon, contentDescription = stringResource(tab.labelRes))
+                            Icon(
+                                tab.icon,
+                                contentDescription = stringResource(tab.labelRes),
+                                modifier = Modifier.size(22.dp)
+                            )
                         },
                         label = {
                             Text(
-                                text = stringResource(tab.labelRes),
-                                fontWeight = if (selectedTab == tab.name)
-                                    FontWeight.Bold else FontWeight.Normal
+                                text = stringResource(tab.labelRes).uppercase(),
+                                fontFamily = MonoFamily,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 9.sp,
+                                letterSpacing = 1.sp
                             )
                         },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = CosmicCyan,
-                            selectedTextColor = CosmicCyan,
-                            unselectedIconColor = TextMuted,
-                            unselectedTextColor = TextMuted,
-                            indicatorColor = SurfaceCard
+                            selectedIconColor = Brass,
+                            selectedTextColor = Brass,
+                            unselectedIconColor = InkTextFaint,
+                            unselectedTextColor = InkTextFaint,
+                            indicatorColor = Color.Transparent
                         )
                     )
                 }

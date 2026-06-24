@@ -95,8 +95,6 @@ fun SplashScreen(
             )
         }
 
-        StarField(starCount = 200)
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,

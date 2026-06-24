@@ -59,8 +59,6 @@ fun StarSystemDetailScreen(
             .fillMaxSize()
             .background(SpaceBlack)
     ) {
-        StarField(starCount = 80)
-
         if (viewModel.isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = StarGold)

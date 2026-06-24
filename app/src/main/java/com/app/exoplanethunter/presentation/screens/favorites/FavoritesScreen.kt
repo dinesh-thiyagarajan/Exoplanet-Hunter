@@ -31,7 +31,8 @@ import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.presentation.components.PlanetRowCard
-import com.app.exoplanethunter.presentation.components.StarField
+import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
+import com.app.exoplanethunter.presentation.theme.AlmanacMeta
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
 import com.app.exoplanethunter.presentation.theme.NebulaPink
 import com.app.exoplanethunter.presentation.theme.SpaceBlack
@@ -44,38 +45,22 @@ fun FavoritesScreen(
     viewModel: FavoritesViewModel = koinViewModel()
 ) {
     Box(modifier = Modifier.fillMaxSize().background(SpaceBlack)) {
-        StarField(starCount = 100)
-
         Column(modifier = Modifier.fillMaxSize()) {
             // Header
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                SpaceBlack,
-                                SpaceBlack.copy(alpha = 0.95f),
-                                Color.Transparent
-                            )
-                        )
-                    )
-                    .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 8.dp)
+                    .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
             ) {
+                Text(stringResource(R.string.favorites_eyebrow), style = AlmanacEyebrow)
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stringResource(R.string.favorites_title),
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        brush = Brush.linearGradient(
-                            colors = listOf(CosmicCyan, NebulaPink)
-                        )
-                    )
+                    style = MaterialTheme.typography.displayMedium
                 )
-
                 Text(
                     text = stringResource(R.string.favorites_count, viewModel.planets.size),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextSecondary,
+                    style = AlmanacMeta,
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }

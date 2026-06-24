@@ -7,6 +7,7 @@ import com.app.exoplanethunter.R
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,7 +59,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
-import com.app.exoplanethunter.presentation.components.StarField
+import com.app.exoplanethunter.presentation.components.AlmanacChip
+import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
+import com.app.exoplanethunter.presentation.theme.Brass
+import com.app.exoplanethunter.presentation.theme.Hairline
+import com.app.exoplanethunter.presentation.theme.InkText
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
 import com.app.exoplanethunter.presentation.theme.NebulaPink
@@ -86,49 +91,38 @@ fun StarSystemListScreen(
             .fillMaxSize()
             .background(SpaceBlack),
     ) {
-        StarField(starCount = 100)
-
         Column(modifier = Modifier.fillMaxSize()) {
             // Header
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                SpaceBlack,
-                                SpaceBlack.copy(alpha = 0.95f),
-                                Color.Transparent,
-                            ),
-                        ),
-                    )
-                    .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 8.dp),
+                    .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 10.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.Top,
                 ) {
-                    Text(
-                        text = stringResource(R.string.star_system_list_title),
-                        style = MaterialTheme.typography.headlineLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            brush = Brush.linearGradient(
-                                colors = listOf(StarGold, SolarOrange),
-                            ),
-                        ),
-                    )
+                    Column {
+                        Text(stringResource(R.string.star_system_list_eyebrow), style = AlmanacEyebrow)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(R.string.star_system_list_title),
+                            style = MaterialTheme.typography.displayMedium,
+                        )
+                    }
                     Box(
                         modifier = Modifier
-                            .clip(CircleShape)
+                            .clip(RoundedCornerShape(8.dp))
                             .background(SurfaceCard)
+                            .border(0.5.dp, Brass, RoundedCornerShape(8.dp))
                             .clickable(onClick = onOpenGalaxyMap)
                             .padding(10.dp),
                     ) {
                         Icon(
                             Icons.Default.Explore,
                             contentDescription = stringResource(R.string.galaxy_map_title),
-                            tint = CosmicCyan,
+                            tint = Brass,
                         )
                     }
                 }
@@ -165,15 +159,15 @@ fun StarSystemListScreen(
                         }
                     },
                     singleLine = true,
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(8.dp),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = SurfaceCard,
                         unfocusedContainerColor = SurfaceCard,
-                        cursorColor = StarGold,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
+                        cursorColor = Brass,
+                        focusedIndicatorColor = Brass,
+                        unfocusedIndicatorColor = Hairline,
+                        focusedTextColor = InkText,
+                        unfocusedTextColor = InkText,
                     ),
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -187,33 +181,10 @@ fun StarSystemListScreen(
                 ) {
                     StarSystemFilter.entries.forEach { filter ->
                         item(key = filter.name) {
-                            val isSelected = viewModel.selectedFilter == filter
-                            val chipColor = when (filter) {
-                                StarSystemFilter.All -> StarGold
-                                StarSystemFilter.SingleStar -> CosmicCyan
-                                StarSystemFilter.Binary -> SolarOrange
-                                StarSystemFilter.Trinary -> NebulaPink
-                                StarSystemFilter.MultiPlanet -> AuroraGreen
-                            }
-                            FilterChip(
-                                selected = isSelected,
-                                onClick = { viewModel.onFilterSelected(filter) },
-                                label = { Text(stringResource(filter.labelRes), fontSize = 12.sp) },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Default.Star,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp),
-                                        tint = if (isSelected) SpaceBlack else chipColor,
-                                    )
-                                },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    containerColor = SurfaceCard,
-                                    labelColor = TextSecondary,
-                                    selectedContainerColor = chipColor,
-                                    selectedLabelColor = SpaceBlack,
-                                ),
-                            )
+                            AlmanacChip(
+                                label = stringResource(filter.labelRes),
+                                selected = viewModel.selectedFilter == filter,
+                            ) { viewModel.onFilterSelected(filter) }
                         }
                     }
                 }
@@ -225,7 +196,7 @@ fun StarSystemListScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    CircularProgressIndicator(color = StarGold)
+                    CircularProgressIndicator(color = Brass)
                 }
             } else {
                 LazyColumn(

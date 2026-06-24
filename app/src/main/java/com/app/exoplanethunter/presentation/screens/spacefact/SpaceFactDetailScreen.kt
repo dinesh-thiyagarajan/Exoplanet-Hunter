@@ -61,8 +61,6 @@ fun SpaceFactDetailScreen(
             .fillMaxSize()
             .background(SpaceBlack)
     ) {
-        StarField(starCount = 80)
-
         Column(modifier = Modifier.fillMaxSize()) {
             // Top bar
             Row(

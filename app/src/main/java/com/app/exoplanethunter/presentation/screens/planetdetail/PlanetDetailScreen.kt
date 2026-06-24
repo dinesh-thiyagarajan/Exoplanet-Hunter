@@ -57,7 +57,13 @@ import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
 import com.app.exoplanethunter.presentation.components.Planet3DRenderer
 import com.app.exoplanethunter.presentation.components.SkyChartCard
+import com.app.exoplanethunter.presentation.components.catalogueId
 import com.app.exoplanethunter.presentation.components.isLikelyTidallyLocked
+import com.app.exoplanethunter.presentation.theme.AlmanacCaption
+import com.app.exoplanethunter.presentation.theme.AlmanacMeta
+import com.app.exoplanethunter.presentation.theme.Brass
+import com.app.exoplanethunter.presentation.theme.InkText
+import com.app.exoplanethunter.presentation.theme.InkTextDim
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CautionYellow
@@ -98,11 +104,9 @@ fun PlanetDetailContent(
             .fillMaxSize()
             .background(SpaceBlack),
     ) {
-        StarField(starCount = 80)
-
         if (state.isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = CosmicCyan)
+                CircularProgressIndicator(color = Brass)
             }
         } else {
             val planet = state.planet ?: return@Box
@@ -125,14 +129,12 @@ fun PlanetDetailContent(
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.cd_back),
-                            tint = Color.White,
+                            tint = InkText,
                         )
                     }
                     Text(
-                        text = planet.planetName,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
+                        text = catalogueId(planet.id),
+                        style = AlmanacMeta,
                         modifier = Modifier.weight(1f),
                     )
                     val copiedMessage = stringResource(R.string.planet_detail_name_copied)
@@ -145,14 +147,14 @@ fun PlanetDetailContent(
                         Icon(
                             imageVector = Icons.Default.ContentCopy,
                             contentDescription = stringResource(R.string.planet_detail_copy_name),
-                            tint = Color.White,
+                            tint = InkTextDim,
                         )
                     }
                     IconButton(onClick = onToggleFavorite) {
                         Icon(
                             imageVector = if (state.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
                             contentDescription = if (state.isFavorite) stringResource(R.string.favorite_remove) else stringResource(R.string.favorite_add),
-                            tint = if (state.isFavorite) StarGold else Color.White,
+                            tint = if (state.isFavorite) Brass else InkTextDim,
                         )
                     }
                 }
@@ -182,10 +184,30 @@ fun PlanetDetailContent(
                         )
                     }
 
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = planet.planetName,
+                        style = MaterialTheme.typography.displayMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(horizontal = 24.dp),
+                    )
+                    Text(
+                        text = stringResource(R.string.planet_detail_subtitle, planet.hostName),
+                        style = AlmanacCaption,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(top = 4.dp),
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
                     Text(
                         text = stringResource(R.string.planet_detail_drag_to_rotate),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TextMuted,
+                        style = AlmanacMeta,
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                     )
 

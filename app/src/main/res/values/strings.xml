@@ -54,6 +54,7 @@
 
     <!-- Planet Detail: habitability card -->
     <string name="planet_detail_drag_to_rotate">Drag to rotate</string>
+    <string name="planet_detail_subtitle">A world orbiting %1$s</string>
     <string name="planet_detail_score_na">N/A</string>
     <string name="planet_detail_habitability_score">Habitability Score</string>
     <string name="planet_detail_hab_desc_insufficient">Insufficient data to estimate</string>
@@ -186,6 +187,7 @@
 
     <!-- Favorites screen -->
     <string name="favorites_title">Favorites</string>
+    <string name="favorites_eyebrow">SAVED PLATES</string>
     <string name="favorites_count">%d saved</string>
     <string name="favorites_empty_title">No favorites yet</string>
     <string name="favorites_empty_subtitle">Tap the star on any planet to save it here.</string>
@@ -205,6 +207,11 @@
     <string name="stats_hero_planets">Planets</string>
     <string name="stats_hero_systems">Star Systems</string>
     <string name="stats_section_methods">Discoveries by Method</string>
+    <string name="stats_eyebrow">THE CATALOGUE</string>
+    <string name="stats_glance">At a glance</string>
+    <string name="stats_confirmed_worlds">CONFIRMED WORLDS</string>
+    <string name="stats_star_systems">STAR SYSTEMS</string>
+    <string name="stats_how_found">HOW THEY WERE FOUND</string>
     <string name="stats_section_sizes">Planet Sizes</string>
     <string name="stats_section_years">Discoveries per Year</string>
     <string name="stats_section_transit">How the Transit Method Works</string>
@@ -239,6 +246,7 @@
 
     <!-- Star system list screen -->
     <string name="star_system_list_title">Star Systems</string>
+    <string name="star_system_list_eyebrow">STELLAR INDEX</string>
     <string name="star_system_list_loading">Loading…</string>
     <string name="star_system_list_count">Explore %d star systems</string>
     <string name="star_system_list_search_hint">Search star systems…</string>

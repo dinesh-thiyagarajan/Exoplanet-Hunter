@@ -42,8 +42,6 @@ fun AboutScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize()) {
-            StarField(starCount = 100)
-            
             Column(
                 modifier = Modifier
                     .fillMaxSize()

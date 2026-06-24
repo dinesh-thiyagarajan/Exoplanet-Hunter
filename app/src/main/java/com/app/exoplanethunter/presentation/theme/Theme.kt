@@ -8,26 +8,26 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val SpaceColorScheme = darkColorScheme(
-    primary = CosmicCyan,
-    onPrimary = SpaceBlack,
-    primaryContainer = CosmicBlue,
-    onPrimaryContainer = StarWhite,
-    secondary = NebulaPink,
-    onSecondary = SpaceBlack,
-    secondaryContainer = NebulaPurple,
-    onSecondaryContainer = StarWhite,
-    tertiary = AuroraGreen,
-    onTertiary = SpaceBlack,
-    background = SpaceBlack,
-    onBackground = StarWhite,
-    surface = SurfaceDark,
-    onSurface = StarWhite,
-    surfaceVariant = SurfaceCard,
-    onSurfaceVariant = TextSecondary,
-    error = HostileRed,
-    onError = SpaceBlack,
-    outline = TextMuted
+private val AlmanacColorScheme = darkColorScheme(
+    primary = Brass,
+    onPrimary = Ink,
+    primaryContainer = SurfaceRaised,
+    onPrimaryContainer = InkText,
+    secondary = Brass,
+    onSecondary = Ink,
+    secondaryContainer = Surface,
+    onSecondaryContainer = InkText,
+    tertiary = TempTemperate,
+    onTertiary = Ink,
+    background = Ink,
+    onBackground = InkText,
+    surface = Surface,
+    onSurface = InkText,
+    surfaceVariant = SurfaceRaised,
+    onSurfaceVariant = InkTextDim,
+    error = TempHot,
+    onError = Ink,
+    outline = Hairline
 )
 
 @Composable
@@ -44,7 +44,7 @@ fun ExoplanetHunterTheme(content: @Composable () -> Unit) {
     }
 
     MaterialTheme(
-        colorScheme = SpaceColorScheme,
+        colorScheme = AlmanacColorScheme,
         typography = Typography,
         content = content
     )

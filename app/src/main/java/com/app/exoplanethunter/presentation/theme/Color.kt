@@ -2,39 +2,67 @@ package com.app.exoplanethunter.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Deep space palette
-val SpaceBlack = Color(0xFF0A0E1A)
-val DeepSpaceBlue = Color(0xFF0F1629)
-val NebulaPurple = Color(0xFF1A1040)
-val CosmicBlue = Color(0xFF1E3A5F)
+// ===========================================================================
+// Observatory Almanac palette
+// An observatory logbook: ink canvas, brass as the single decorative colour,
+// a warm text ramp, and temperature as the only semantic encoding.
+// ===========================================================================
 
-// Accent colors
-val StarWhite = Color(0xFFE8E8F0)
-val StarGold = Color(0xFFFFD54F)
-val NebulaPink = Color(0xFFFF6B9D)
-val CosmicCyan = Color(0xFF4FC3F7)
-val AuroraGreen = Color(0xFF69F0AE)
-val SolarOrange = Color(0xFFFFAB40)
+// Foundation
+val Ink = Color(0xFF0E1319)          // canvas / background
+val InkRaised = Color(0xFF11161E)    // nav bars, sunken areas
+val Surface = Color(0xFF161C24)      // raised card
+val SurfaceRaised = Color(0xFF1E2630) // elevated fills, track backgrounds
+val Hairline = Color(0xFF2A313C)     // dividers, rules, borders
 
-// Surface colors
-val SurfaceDark = Color(0xFF141A2E)
-val SurfaceCard = Color(0xFF1C2340)
-val SurfaceCardLight = Color(0xFF232B4A)
+// Brand — the ONLY decorative colour. Used once per view.
+val Brass = Color(0xFFC68A3E)
+val BrassDim = Color(0xFF8C6026)
 
-// Status colors
-val HabitableGreen = Color(0xFF4CAF50)
-val CautionYellow = Color(0xFFFFC107)
-val HostileRed = Color(0xFFEF5350)
+// Text ramp (warm)
+val InkText = Color(0xFFECE7DA)      // primary
+val InkTextDim = Color(0xFF9A9488)   // secondary
+val InkTextFaint = Color(0xFF5E5C54) // muted / captions
 
-// Planet temperature colors
-val FrozenBlue = Color(0xFF42A5F5)
-val CoolBlue = Color(0xFF26C6DA)
-val TemperateGreen = Color(0xFF66BB6A)
-val WarmYellow = Color(0xFFFFEE58)
-val HotOrange = Color(0xFFFF7043)
-val ScorchingRed = Color(0xFFEF5350)
+// Semantic — encodes temperature only
+val TempTemperate = Color(0xFF6F9D5A)
+val TempHot = Color(0xFFC0524A)
+val TempCold = Color(0xFF5B7CA0)
+val TempUnknown = Color(0xFF8B8275)
 
-// Text colors
-val TextPrimary = Color(0xFFE8E8F0)
-val TextSecondary = Color(0xFFAAAAAA)
-val TextMuted = Color(0xFF666680)
+// ===========================================================================
+// Legacy token names — repointed to the almanac palette so existing screens
+// keep compiling while they are migrated. Prefer the tokens above for new work.
+// ===========================================================================
+
+val SpaceBlack = Ink
+val DeepSpaceBlue = InkRaised
+val NebulaPurple = Surface
+val CosmicBlue = SurfaceRaised
+
+val StarWhite = InkText
+val StarGold = Brass
+val NebulaPink = Brass
+val CosmicCyan = Brass
+val AuroraGreen = TempTemperate
+val SolarOrange = Brass
+
+val SurfaceDark = InkRaised
+val SurfaceCard = Surface
+val SurfaceCardLight = SurfaceRaised
+
+val HabitableGreen = TempTemperate
+val CautionYellow = Brass
+val HostileRed = TempHot
+
+// Planet temperature colours (used by the 3D renderer)
+val FrozenBlue = TempCold
+val CoolBlue = Color(0xFF6E96B0)
+val TemperateGreen = TempTemperate
+val WarmYellow = Brass
+val HotOrange = Color(0xFFC0703E)
+val ScorchingRed = TempHot
+
+val TextPrimary = InkText
+val TextSecondary = InkTextDim
+val TextMuted = InkTextFaint

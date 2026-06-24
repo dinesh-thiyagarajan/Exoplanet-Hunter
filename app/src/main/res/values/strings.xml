@@ -191,7 +191,10 @@
     <string name="favorites_empty_subtitle">Tap the star on any planet to save it here.</string>
 
     <!-- Planet list screen -->
-    <string name="planet_list_title">Exoplanets</string>
+    <string name="planet_list_title">Planets</string>
+    <string name="planet_list_eyebrow">FIELD CATALOGUE</string>
+    <string name="planet_list_confirmed">CONFIRMED</string>
+    <string name="planet_list_sorted_by">SORTED · %1$s</string>
     <string name="planet_list_count">%d planets discovered</string>
     <string name="planet_list_search_hint">Search planets or stars…</string>
     <string name="planet_list_empty">No planets found matching your criteria.</string>

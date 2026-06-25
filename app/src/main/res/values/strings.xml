@@ -179,7 +179,7 @@
     <!-- Bottom navigation -->
     <string name="nav_planets">Planets</string>
     <string name="nav_stars">Stars</string>
-    <string name="nav_favorites">Favorites</string>
+    <string name="nav_favorites">Fav</string>
     <string name="nav_stats">Stats</string>
     <string name="nav_about">About</string>
 

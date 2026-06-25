@@ -35,7 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
-import com.app.exoplanethunter.presentation.components.StarField
+import com.app.exoplanethunter.presentation.components.graticule
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
 import com.app.exoplanethunter.presentation.theme.NebulaPink
 import com.app.exoplanethunter.presentation.theme.SpaceBlack
@@ -94,6 +94,9 @@ fun SplashScreen(
                 )
             )
         }
+
+        // Measuring graticule above the background
+        Box(modifier = Modifier.fillMaxSize().graticule())
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

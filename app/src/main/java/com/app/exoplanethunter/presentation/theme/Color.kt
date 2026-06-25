@@ -8,27 +8,28 @@ import androidx.compose.ui.graphics.Color
 // a warm text ramp, and temperature as the only semantic encoding.
 // ===========================================================================
 
-// Foundation
+// Foundation (exact handoff tokens)
 val Ink = Color(0xFF0E1319)          // canvas / background
-val InkRaised = Color(0xFF11161E)    // nav bars, sunken areas
-val Surface = Color(0xFF161C24)      // raised card
+val InkRaised = Color(0xFF0B1016)    // recessed wells: nav bar, charts, insets
+val Surface = Color(0xFF161C24)      // raised surface: cards, widget
 val SurfaceRaised = Color(0xFF1E2630) // elevated fills, track backgrounds
-val Hairline = Color(0xFF2A313C)     // dividers, rules, borders
+val Hairline = Color(0xFF20262E)     // hairline borders / dividers on dark
 
 // Brand — the ONLY decorative colour. Used once per view.
 val Brass = Color(0xFFC68A3E)
+val BrassLight = Color(0xFFD29A4C)   // brass as text/strokes on dark
 val BrassDim = Color(0xFF8C6026)
 
-// Text ramp (warm)
-val InkText = Color(0xFFECE7DA)      // primary
-val InkTextDim = Color(0xFF9A9488)   // secondary
-val InkTextFaint = Color(0xFF5E5C54) // muted / captions
+// Text ramp (warm off-white, not pure white)
+val InkText = Color(0xFFECE6D8)      // primary — headlines, key values
+val InkTextDim = Color(0xFFC9C3B4)   // secondary — body copy
+val InkTextFaint = Color(0xFF8A8478) // tertiary/muted — labels, captions, ticks
 
 // Semantic — encodes temperature only
-val TempTemperate = Color(0xFF6F9D5A)
-val TempHot = Color(0xFFC0524A)
-val TempCold = Color(0xFF5B7CA0)
-val TempUnknown = Color(0xFF8B8275)
+val TempTemperate = Color(0xFF7BA05B)
+val TempHot = Color(0xFFC25A45)
+val TempCold = Color(0xFF5B7E9C)
+val TempUnknown = Color(0xFF8A8478)
 
 // ===========================================================================
 // Legacy token names — repointed to the almanac palette so existing screens

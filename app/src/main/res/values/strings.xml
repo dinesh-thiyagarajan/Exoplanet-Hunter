@@ -55,6 +55,10 @@
     <!-- Planet Detail: habitability card -->
     <string name="planet_detail_drag_to_rotate">Drag to rotate</string>
     <string name="planet_detail_subtitle">A world orbiting %1$s</string>
+    <string name="planet_detail_earth_similarity">EARTH SIMILARITY</string>
+    <string name="planet_detail_ml_verdict">ML VERDICT · %1$s</string>
+    <string name="planet_detail_confidence_high">HIGH CONFIDENCE</string>
+    <string name="planet_detail_confidence_low">LOW CONFIDENCE</string>
     <string name="planet_detail_score_na">N/A</string>
     <string name="planet_detail_habitability_score">Habitability Score</string>
     <string name="planet_detail_hab_desc_insufficient">Insufficient data to estimate</string>
@@ -225,6 +229,7 @@
 
     <!-- Galaxy map (3D neighborhood) -->
     <string name="galaxy_map_title">Galaxy Map</string>
+    <string name="galaxy_map_eyebrow">DEEP FIELD</string>
     <string name="galaxy_map_hint">%1$d nearby stars · drag to rotate, pinch to zoom</string>
     <string name="galaxy_map_empty">No star positions available yet.</string>
     <string name="galaxy_map_card_distance">%1$d parsecs · %2$d light-years away</string>
@@ -247,6 +252,7 @@
     <!-- Star system list screen -->
     <string name="star_system_list_title">Star Systems</string>
     <string name="star_system_list_eyebrow">STELLAR INDEX</string>
+    <string name="star_system_detail_eyebrow">STAR SYSTEM</string>
     <string name="star_system_list_loading">Loading…</string>
     <string name="star_system_list_count">Explore %d star systems</string>
     <string name="star_system_list_search_hint">Search star systems…</string>

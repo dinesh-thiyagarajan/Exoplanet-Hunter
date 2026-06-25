@@ -49,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -125,6 +126,7 @@ fun PlanetListScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Underline-only search (no box)
                 TextField(
                     value = viewModel.searchQuery,
                     onValueChange = viewModel::onSearchQueryChanged,
@@ -142,10 +144,9 @@ fun PlanetListScreen(
                         }
                     },
                     singleLine = true,
-                    shape = RoundedCornerShape(8.dp),
                     colors = TextFieldDefaults.colors(
-                        focusedContainerColor = SurfaceColor,
-                        unfocusedContainerColor = SurfaceColor,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
                         cursorColor = Brass,
                         focusedIndicatorColor = Brass,
                         unfocusedIndicatorColor = Hairline,

@@ -12,6 +12,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -49,8 +52,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
+import com.app.exoplanethunter.presentation.theme.AlmanacData
+import com.app.exoplanethunter.presentation.theme.AlmanacMeta
+import com.app.exoplanethunter.presentation.theme.AlmanacSectionLabel
+import com.app.exoplanethunter.presentation.theme.Brass
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
+import com.app.exoplanethunter.presentation.theme.Hairline
+import com.app.exoplanethunter.presentation.theme.InkText
+import com.app.exoplanethunter.presentation.theme.InkTextDim
 import com.app.exoplanethunter.presentation.theme.SolarOrange
+import com.app.exoplanethunter.presentation.theme.Surface
 import com.app.exoplanethunter.presentation.theme.SurfaceCard
 import com.app.exoplanethunter.presentation.theme.SurfaceCardLight
 import com.app.exoplanethunter.presentation.theme.TextMuted
@@ -238,76 +249,39 @@ private fun DetailCard(
     iconColor: Color,
     content: @Composable () -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceCard),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(Surface)
+            .border(0.5.dp, Hairline, RoundedCornerShape(8.dp))
+            .padding(18.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(20.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 16.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(iconColor.copy(alpha = 0.15f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        icon,
-                        contentDescription = null,
-                        tint = iconColor,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
-                )
-            }
-
-            content()
-        }
+        Text(text = title.uppercase(), style = AlmanacSectionLabel)
+        Spacer(modifier = Modifier.height(10.dp))
+        Box(modifier = Modifier.fillMaxWidth().height(0.5.dp).background(Hairline))
+        Spacer(modifier = Modifier.height(16.dp))
+        content()
     }
 }
 
 @Composable
 private fun PropertyItem(label: String, value: String, subtitle: String) {
-    Column(
+    Row(
         modifier = Modifier
-            .width(140.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(SurfaceCardLight)
-            .padding(12.dp)
+            .fillMaxWidth()
+            .padding(vertical = 7.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom
     ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = TextMuted,
-            fontSize = 10.sp
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleMedium,
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold
-        )
-        if (subtitle.isNotBlank()) {
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.labelSmall,
-                color = CosmicCyan,
-                fontSize = 10.sp
-            )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(label, style = MaterialTheme.typography.bodyMedium, color = InkTextDim)
+            if (subtitle.isNotBlank()) {
+                Text(subtitle, style = AlmanacMeta)
+            }
         }
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(value, style = AlmanacData)
     }
 }
 

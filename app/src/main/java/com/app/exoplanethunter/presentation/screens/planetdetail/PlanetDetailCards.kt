@@ -4,11 +4,13 @@ import com.app.exoplanethunter.presentation.preview.PreviewSurface
 import com.app.exoplanethunter.presentation.preview.PreviewData
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -51,6 +53,17 @@ import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.HabitabilityInsight
 import com.app.exoplanethunter.presentation.components.HabitabilityScoreBar
+import com.app.exoplanethunter.presentation.components.temperatureColor
+import com.app.exoplanethunter.presentation.components.temperatureLabel
+import com.app.exoplanethunter.presentation.theme.AlmanacData
+import com.app.exoplanethunter.presentation.theme.AlmanacHeroFigure
+import com.app.exoplanethunter.presentation.theme.AlmanacMeta
+import com.app.exoplanethunter.presentation.theme.AlmanacSectionLabel
+import com.app.exoplanethunter.presentation.theme.Brass
+import com.app.exoplanethunter.presentation.theme.Hairline
+import com.app.exoplanethunter.presentation.theme.InkText
+import com.app.exoplanethunter.presentation.theme.InkTextDim
+import com.app.exoplanethunter.presentation.theme.Surface
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CautionYellow
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
@@ -494,47 +507,103 @@ private fun DetailCard(
     headerAction: (@Composable () -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceCard),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(Surface)
+            .border(0.5.dp, Hairline, RoundedCornerShape(8.dp))
+            .padding(18.dp),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = title.uppercase(),
+                style = AlmanacSectionLabel,
+                modifier = Modifier.weight(1f),
+            )
+            headerAction?.invoke()
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Box(modifier = Modifier.fillMaxWidth().height(0.5.dp).background(Hairline))
+        Spacer(modifier = Modifier.height(16.dp))
+        content()
+    }
+}
+
+/**
+ * Earth Similarity Index (0–1) from planet radius and equilibrium temperature —
+ * a transparent, open formula (distinct from the ML habitability verdict). Returns
+ * null when neither input is known.
+ */
+internal fun earthSimilarity(planet: Exoplanet): Double? {
+    val r = planet.planetRadiusEarth
+    val t = planet.equilibriumTempK
+    val terms = mutableListOf<Double>()
+    if (r != null && r > 0) terms.add(1.0 - kotlin.math.abs(r - 1.0) / (r + 1.0))
+    if (t != null && t > 0) terms.add(1.0 - kotlin.math.abs(t - 255.0) / (t + 255.0))
+    if (terms.isEmpty()) return null
+    // Geometric mean of the available similarity terms.
+    val product = terms.fold(1.0) { acc, v -> acc * v }
+    return Math.pow(product, 1.0 / terms.size).coerceIn(0.0, 1.0)
+}
+
+@Composable
+internal fun EarthSimilarityFigure(planet: Exoplanet, modifier: Modifier = Modifier) {
+    val esi = earthSimilarity(planet) ?: return
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text("%.2f".format(esi), style = AlmanacHeroFigure)
+        Text(stringResource(R.string.planet_detail_earth_similarity), style = AlmanacSectionLabel)
+    }
+}
+
+/**
+ * The verdict instrument: a two-cell bordered row pairing the temperature verdict
+ * (left, on a tint of its semantic colour) with the Earth-similarity figure (right).
+ */
+@Composable
+internal fun VerdictInstrument(
+    planet: Exoplanet,
+    insight: HabitabilityInsight?,
+    modifier: Modifier = Modifier,
+) {
+    val sem = temperatureColor(planet.equilibriumTempK)
+    val word = temperatureLabel(planet.equilibriumTempK)
+    val esi = earthSimilarity(planet)
+    val confidence = if (insight?.habitabilityReliable == true)
+        stringResource(R.string.planet_detail_confidence_high)
+    else stringResource(R.string.planet_detail_confidence_low)
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .clip(RoundedCornerShape(8.dp))
+            .border(0.5.dp, Hairline, RoundedCornerShape(8.dp)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+                .background(sem.copy(alpha = 0.10f))
+                .padding(14.dp),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(iconColor.copy(alpha = 0.15f)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        icon,
-                        contentDescription = null,
-                        tint = iconColor,
-                        modifier = Modifier.size(18.dp),
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White,
-                    modifier = Modifier.weight(1f),
-                )
-                headerAction?.invoke()
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(sem))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(word, style = AlmanacSectionLabel.copy(color = sem))
             }
-
-            content()
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(stringResource(R.string.planet_detail_ml_verdict, confidence), style = AlmanacMeta)
+        }
+        Box(modifier = Modifier.width(0.5.dp).fillMaxHeight().background(Hairline))
+        Column(
+            modifier = Modifier.weight(1f).padding(14.dp),
+        ) {
+            Text(esi?.let { "%.2f".format(it) } ?: "—", style = AlmanacData.copy(fontSize = 26.sp))
+            Text(stringResource(R.string.planet_detail_earth_similarity), style = AlmanacSectionLabel)
         }
     }
 }
@@ -612,59 +681,48 @@ internal fun EarthComparisonCard(planet: Exoplanet) {
 
 @Composable
 private fun EarthComparisonRow(label: String, ratio: Double, valueText: String) {
-    // Color by closeness to Earth: similar = green, larger = cyan, smaller = pink
-    val barColor = when {
-        ratio in 0.5..2.0 -> AuroraGreen
-        ratio > 2.0 -> CosmicCyan
-        else -> NebulaPink
-    }
     // Map ratio to bar fill on a log scale: 0.01× → 0, 1× (Earth) → 0.5, 100× → 1.0
     val fill = if (ratio > 0.0) {
         (0.5 + 0.5 * (log10(ratio) / 2.0)).coerceIn(0.02, 1.0).toFloat()
     } else 0.02f
-    val multiplierText = if (ratio >= 1.0) "${String.format("%.1f", ratio)}× Earth"
-    else "${String.format("%.2f", ratio)}× Earth"
+    val multiplierText = if (ratio >= 1.0) "${String.format("%.1f", ratio)}× E"
+    else "${String.format("%.2f", ratio)}× E"
 
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Bottom,
         ) {
-            Text(label, style = MaterialTheme.typography.bodyMedium, color = Color.White)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(valueText, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    multiplierText,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = barColor,
-                    fontWeight = FontWeight.SemiBold,
-                )
+            Text(label, style = MaterialTheme.typography.bodyMedium, color = InkTextDim)
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(valueText, style = AlmanacData)
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(multiplierText, style = AlmanacMeta.copy(color = Brass))
             }
         }
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(7.dp))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(8.dp)
-                .clip(RoundedCornerShape(4.dp))
+                .height(6.dp)
+                .clip(RoundedCornerShape(3.dp))
                 .background(SurfaceCardLight),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth(fill)
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(barColor),
+                    .clip(RoundedCornerShape(3.dp))
+                    .background(Brass),
             )
             // Earth baseline marker at the 1× midpoint
             Box(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxHeight()
-                    .width(2.dp)
-                    .background(Color.White.copy(alpha = 0.7f)),
+                    .width(1.5.dp)
+                    .background(InkText.copy(alpha = 0.8f)),
             )
         }
     }
@@ -672,33 +730,21 @@ private fun EarthComparisonRow(label: String, ratio: Double, valueText: String) 
 
 @Composable
 private fun PropertyItem(label: String, value: String, subtitle: String) {
-    Column(
+    Row(
         modifier = Modifier
-            .width(140.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(SurfaceCardLight)
-            .padding(12.dp),
+            .fillMaxWidth()
+            .padding(vertical = 7.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom,
     ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = TextMuted,
-            fontSize = 10.sp,
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleMedium,
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold,
-        )
-        if (subtitle.isNotBlank()) {
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.labelSmall,
-                color = CosmicCyan,
-                fontSize = 10.sp,
-            )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(label, style = MaterialTheme.typography.bodyMedium, color = InkTextDim)
+            if (subtitle.isNotBlank()) {
+                Text(subtitle, style = AlmanacMeta)
+            }
         }
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(value, style = AlmanacData)
     }
 }
 

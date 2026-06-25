@@ -4,6 +4,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.app.exoplanethunter.R
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,10 @@ import com.app.exoplanethunter.presentation.theme.SpaceBlack
 import com.app.exoplanethunter.presentation.theme.StarGold
 import com.app.exoplanethunter.presentation.theme.TextMuted
 import com.app.exoplanethunter.presentation.theme.TextSecondary
+import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
+import com.app.exoplanethunter.presentation.theme.AlmanacMeta
+import com.app.exoplanethunter.presentation.theme.Brass
+import com.app.exoplanethunter.presentation.theme.InkText
 
 @Composable
 fun StarSystemDetailScreen(
@@ -92,16 +97,16 @@ fun StarSystemDetailScreen(
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.cd_back),
-                            tint = Color.White
+                            tint = InkText
                         )
                     }
 
                     Column(modifier = Modifier.weight(1f)) {
+                        Text(stringResource(R.string.star_system_detail_eyebrow), style = AlmanacEyebrow)
                         Text(
                             text = system.hostName,
                             style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = InkText
                         )
                         val planetsText = pluralStringResource(
                             R.plurals.planet_count, system.numPlanets, system.numPlanets
@@ -112,8 +117,7 @@ fun StarSystemDetailScreen(
                         } else planetsText
                         Text(
                             text = systemDesc,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondary
+                            style = AlmanacMeta
                         )
                     }
 
@@ -123,23 +127,13 @@ fun StarSystemDetailScreen(
                         system.numStars == 2 -> stringResource(R.string.star_system_multiplicity_binary)
                         else -> pluralStringResource(R.plurals.planet_count, system.numPlanets, system.numPlanets)
                     }
-                    val badgeColor = when {
-                        system.numStars >= 3 -> NebulaPink
-                        system.numStars == 2 -> SolarOrange
-                        else -> StarGold
-                    }
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(badgeColor.copy(alpha = 0.15f))
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                            .clip(RoundedCornerShape(6.dp))
+                            .border(0.5.dp, Brass, RoundedCornerShape(6.dp))
+                            .padding(horizontal = 10.dp, vertical = 5.dp)
                     ) {
-                        Text(
-                            text = badgeText,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = badgeColor,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Text(text = badgeText.uppercase(), style = AlmanacEyebrow)
                     }
                 }
 

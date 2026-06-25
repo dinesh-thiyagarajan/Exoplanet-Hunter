@@ -61,6 +61,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.domain.model.StarPosition
+import com.app.exoplanethunter.presentation.components.graticule
+import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
+import com.app.exoplanethunter.presentation.theme.InkText
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
 import com.app.exoplanethunter.presentation.theme.SpaceBlack
 import com.app.exoplanethunter.presentation.theme.StarGold
@@ -118,15 +121,17 @@ fun GalaxyMapScreen(
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.cd_back),
-                    tint = Color.White
+                    tint = InkText
                 )
             }
-            Text(
-                text = stringResource(R.string.galaxy_map_title),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
+            Column {
+                Text(stringResource(R.string.galaxy_map_eyebrow), style = AlmanacEyebrow)
+                Text(
+                    text = stringResource(R.string.galaxy_map_title),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = InkText
+                )
+            }
         }
     }
 }
@@ -162,7 +167,7 @@ private fun GalaxyMapContent(
 
     val selectedStar = remember(selectedId, stars) { stars.firstOrNull { it.id == selectedId } }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().graticule()) {
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -274,7 +279,7 @@ private fun GalaxyMapContent(
             )
             drawCircle(color = StarGold, radius = 5.5f, center = Offset(cx, cy))
             val sunLayout = textMeasurer.measure(
-                "Sun",
+                "SOL ☉",
                 style = TextStyle(color = StarGold, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
             )
             drawText(sunLayout, topLeft = Offset(cx + 10f, cy - sunLayout.size.height - 4f))

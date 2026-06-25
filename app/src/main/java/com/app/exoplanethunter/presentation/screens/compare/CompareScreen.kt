@@ -54,6 +54,8 @@ import com.app.exoplanethunter.presentation.components.PlanetMiniRenderer
 import com.app.exoplanethunter.presentation.components.StarField
 import com.app.exoplanethunter.presentation.theme.AuroraGreen
 import com.app.exoplanethunter.presentation.theme.CautionYellow
+import com.app.exoplanethunter.presentation.theme.Brass
+import com.app.exoplanethunter.presentation.theme.InkText
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
 import com.app.exoplanethunter.presentation.theme.HabitableGreen
 import com.app.exoplanethunter.presentation.theme.HostileRed
@@ -105,14 +107,13 @@ fun CompareScreen(
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.cd_back),
-                        tint = Color.White
+                        tint = InkText
                     )
                 }
                 Text(
                     text = stringResource(R.string.compare_title),
                     style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = InkText
                 )
             }
 
@@ -121,7 +122,7 @@ fun CompareScreen(
 
             if (viewModel.isLoading || a == null || b == null) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    if (viewModel.isLoading) CircularProgressIndicator(color = CosmicCyan)
+                    if (viewModel.isLoading) CircularProgressIndicator(color = Brass)
                 }
                 return@Column
             }

@@ -56,7 +56,9 @@ import com.app.exoplanethunter.R
 import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
 import com.app.exoplanethunter.presentation.components.Planet3DRenderer
+import com.app.exoplanethunter.presentation.components.ReticleOverlay
 import com.app.exoplanethunter.presentation.components.SkyChartCard
+import com.app.exoplanethunter.presentation.components.graticule
 import com.app.exoplanethunter.presentation.components.catalogueId
 import com.app.exoplanethunter.presentation.components.isLikelyTidallyLocked
 import com.app.exoplanethunter.presentation.theme.AlmanacCaption
@@ -168,16 +170,18 @@ fun PlanetDetailContent(
                 ) {
                     val tidallyLocked = remember(planet) { isLikelyTidallyLocked(planet) }
 
-                    // 3D Planet
+                    // 3D Planet, sighted in a brass reticle over a graticule
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp),
+                            .height(300.dp)
+                            .graticule(),
                         contentAlignment = Alignment.Center,
                     ) {
+                        ReticleOverlay(modifier = Modifier.size(290.dp))
                         Planet3DRenderer(
                             planet = planet,
-                            size = 280.dp,
+                            size = 240.dp,
                             enableRotation = true,
                             autoRotate = true,
                             tidallyLocked = tidallyLocked,
@@ -236,6 +240,9 @@ fun PlanetDetailContent(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
+                        // Verdict instrument: temperature verdict + Earth-similarity figure
+                        VerdictInstrument(planet = planet, insight = insight)
+
                         // ML Habitability Insight
                         insight?.let { ins ->
                             AnimatedSection(delay = 0) {

@@ -14,7 +14,6 @@
 
     <!-- About Screen -->
     <string name="about_nasa_archive_dataset">NASA ARCHIVE DATASET</string>
-    <string name="about_version">Version 1.12.4</string>
     <string name="about_planets">Planets</string>
     <string name="about_systems">Systems</string>
     <string name="about_section_scientific_framework">Scientific Framework</string>
@@ -191,7 +190,7 @@
 
     <!-- Favorites screen -->
     <string name="favorites_title">Favorites</string>
-    <string name="favorites_eyebrow">SAVED PLATES</string>
+    <string name="favorites_eyebrow">SAVED PLANETS</string>
     <string name="favorites_count">%d saved</string>
     <string name="favorites_empty_title">No favorites yet</string>
     <string name="favorites_empty_subtitle">Tap the star on any planet to save it here.</string>

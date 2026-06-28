@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.exoplanethunter.BuildConfig
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
 import com.app.exoplanethunter.presentation.theme.*
@@ -100,7 +101,7 @@ internal fun AboutHeader(planetCount: Int, systemCount: Int) {
         )
 
         Text(
-            text = stringResource(R.string.about_version),
+            text = "Version ${BuildConfig.VERSION_NAME}",
             style = MaterialTheme.typography.bodySmall,
             color = TextMuted,
             modifier = Modifier.padding(top = 8.dp)

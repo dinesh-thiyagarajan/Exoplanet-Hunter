@@ -128,7 +128,8 @@ fun AboutScreen(
                                 iconColor = HabitableGreen,
                                 title = stringResource(R.string.about_acknowledgement_row_title),
                                 description = stringResource(R.string.about_acknowledgement_text) + "\n\n" +
-                                    stringResource(R.string.about_acknowledgement_citation)
+                                    stringResource(R.string.about_acknowledgement_citation) + "\n" +
+                                    stringResource(R.string.about_acknowledgement_attribution)
                             )
                         )
                     )
@@ -157,9 +158,7 @@ fun AboutScreen(
                 Spacer(modifier = Modifier.height(28.dp))
             }
 
-            AttributionLine()
-
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

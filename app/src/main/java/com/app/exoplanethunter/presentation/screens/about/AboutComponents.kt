@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.BuildConfig
@@ -426,20 +425,6 @@ private fun SyncMessage(message: String, color: Color, icon: ImageVector) {
         )
     }
 }
-
-@Composable
-internal fun AttributionLine() {
-    Text(
-        text = stringResource(R.string.about_acknowledgement_attribution),
-        style = MaterialTheme.typography.labelSmall,
-        color = TextMuted,
-        fontWeight = FontWeight.Bold,
-        letterSpacing = 2.sp,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth()
-    )
-}
-
 
 @Preview
 @Composable

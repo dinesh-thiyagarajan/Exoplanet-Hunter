@@ -14,9 +14,9 @@ class ExoplanetApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        // Ads stay off until Remote Config enables them ("ads_enabled", default false),
+        // applied by RemoteConfigManager below.
         AdManager.initialize(
-            context = this,
-            enabled = BuildConfig.ADS_ENABLED,
             unitId = BuildConfig.ADMOB_AD_UNIT_ID,
             interstitialId = BuildConfig.ADMOB_INTERSTITIAL_AD_UNIT_ID
         )

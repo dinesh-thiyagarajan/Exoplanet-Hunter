@@ -15,7 +15,6 @@ val localProperties = Properties().apply {
     }
 }
 
-val adsEnabled: String = localProperties.getProperty("ADS_ENABLED", "false")
 val admobAppId: String = localProperties.getProperty("ADMOB_APP_ID", "")
 val admobAdUnitId: String = localProperties.getProperty("ADMOB_AD_UNIT_ID", "")
 val admobInterstitialAdUnitId: String = localProperties.getProperty("ADMOB_INTERSTITIAL_AD_UNIT_ID", "")
@@ -36,8 +35,8 @@ android {
             useSupportLibrary = true
         }
 
-        // Inject ad config into BuildConfig
-        buildConfigField("boolean", "ADS_ENABLED", adsEnabled)
+        // Inject ad config into BuildConfig. Whether ads are shown at all is controlled
+        // by Firebase Remote Config ("ads_enabled", default off) — see RemoteConfigManager.
         buildConfigField("String", "ADMOB_AD_UNIT_ID", "\"$admobAdUnitId\"")
         buildConfigField("String", "ADMOB_INTERSTITIAL_AD_UNIT_ID", "\"$admobInterstitialAdUnitId\"")
 

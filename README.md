@@ -92,15 +92,16 @@ Both `.tflite` models were trained offline on a dataset derived from the NASA Ex
 
 ### Ad configuration
 
-Ads are gated by `local.properties` entries (kept out of source control):
+Ad-unit IDs come from `local.properties` entries (kept out of source control):
 
 ```properties
-ADS_ENABLED=true
 ADMOB_APP_ID=ca-app-pub-xxxxx~yyyyy
 ADMOB_AD_UNIT_ID=ca-app-pub-xxxxx/zzzzz
 ```
 
-When `ADS_ENABLED=false` (the default), no ad SDK calls are made.
+Whether ads are shown is controlled by the Firebase Remote Config boolean
+`ads_enabled` (see `RemoteConfigManager`). It is fail-closed: ads stay off —
+and no ad SDK calls are made — until the server value enables them.
 
 ---
 

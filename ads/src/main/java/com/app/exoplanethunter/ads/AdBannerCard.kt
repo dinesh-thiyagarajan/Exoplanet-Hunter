@@ -10,6 +10,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,8 +34,10 @@ private val AdLabelColor = Color(0xFF666680) // TextMuted
  */
 @Composable
 fun AdBannerCard(modifier: Modifier = Modifier) {
-    // When ads are disabled, render nothing at all
-    if (!AdManager.adsEnabled) return
+    // When ads are disabled, render nothing at all. Collected as state so a runtime
+    // toggle (Remote Config) shows/hides banners without a restart.
+    val adsEnabled by AdManager.adsEnabledFlow.collectAsState()
+    if (!adsEnabled) return
 
     val adUnitId = AdManager.adUnitId
     if (adUnitId.isBlank()) return

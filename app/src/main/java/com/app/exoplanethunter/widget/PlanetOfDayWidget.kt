@@ -11,6 +11,7 @@ import com.app.exoplanethunter.MainActivity
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetDatabase
 import com.app.exoplanethunter.exoplanet.data.local.db.ExoplanetEntity
+import com.app.exoplanethunter.presentation.components.planetTypeLabel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,6 +56,7 @@ class PlanetOfDayWidget : AppWidgetProvider() {
 
         if (planet == null) {
             views.setViewVisibility(R.id.widget_planet_icon, View.GONE)
+            views.setViewVisibility(R.id.widget_planet_stats, View.GONE)
             views.setTextViewText(R.id.widget_planet_name, context.getString(R.string.widget_empty))
             views.setTextViewText(R.id.widget_planet_subtitle, "")
             views.setOnClickPendingIntent(R.id.widget_root, launchIntent(context, null))
@@ -66,17 +68,35 @@ class PlanetOfDayWidget : AppWidgetProvider() {
             sizePx = iconPx,
             equilibriumTempK = planet.equilibriumTempK,
             radiusEarth = planet.planetRadiusEarth,
-            massEarth = planet.planetMassEarth
+            massEarth = planet.planetMassEarth,
+            seed = planet.planetName.hashCode()
         )
         views.setViewVisibility(R.id.widget_planet_icon, View.VISIBLE)
         views.setImageViewBitmap(R.id.widget_planet_icon, planetBitmap)
         views.setTextViewText(R.id.widget_planet_name, planet.planetName)
+
+        val stats = statsLine(planet)
+        views.setViewVisibility(R.id.widget_planet_stats, if (stats.isEmpty()) View.GONE else View.VISIBLE)
+        views.setTextViewText(R.id.widget_planet_stats, stats)
+
         views.setTextViewText(
             R.id.widget_planet_subtitle,
             context.getString(R.string.widget_subtitle, planet.hostName, planet.discoveryYear)
         )
         views.setOnClickPendingIntent(R.id.widget_root, launchIntent(context, planet.id))
         return views
+    }
+
+    /** Compact facts line, e.g. "Super-Earth · 1.3× Earth · 288 K · 41 ly". Skips missing values. */
+    private fun statsLine(planet: ExoplanetEntity): String {
+        val parts = mutableListOf(planetTypeLabel(planet.planetRadiusEarth, planet.planetMassEarth))
+        planet.planetRadiusEarth?.let { parts.add("%.1f× Earth".format(it)) }
+        planet.equilibriumTempK?.let { parts.add("${it.toInt()} K") }
+        planet.distanceParsec?.let {
+            val ly = it * PARSEC_TO_LIGHT_YEARS
+            parts.add(if (ly >= 1000) "%,d ly".format(ly.toInt()) else "%.0f ly".format(ly))
+        }
+        return parts.filter { it != "Unknown" }.joinToString(" · ")
     }
 
     private fun launchIntent(context: Context, planetId: Long?): PendingIntent {
@@ -95,6 +115,7 @@ class PlanetOfDayWidget : AppWidgetProvider() {
     companion object {
         const val EXTRA_PLANET_ID = "extra_widget_planet_id"
         private const val DAY_MILLIS = 24 * 60 * 60 * 1000L
-        private const val ICON_DP = 56
+        private const val ICON_DP = 64
+        private const val PARSEC_TO_LIGHT_YEARS = 3.26156
     }
 }

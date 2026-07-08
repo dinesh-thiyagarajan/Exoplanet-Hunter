@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Hub
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -90,7 +90,7 @@ enum class BottomNavTab(@StringRes val labelRes: Int, val icon: ImageVector) {
     StarSystems(R.string.nav_stars, Icons.Outlined.Hub),
     Favorites(R.string.nav_favorites, Icons.Outlined.StarBorder),
     Statistics(R.string.nav_stats, Icons.Outlined.BarChart),
-    About(R.string.nav_about, Icons.Outlined.Info)
+    About(R.string.nav_about, Icons.Outlined.Settings)
 }
 
 // ---------------------------------------------------------------------------

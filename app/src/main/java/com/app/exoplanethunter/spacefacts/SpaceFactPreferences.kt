@@ -14,10 +14,19 @@ class SpaceFactPreferences(context: Context) {
     private val prefs = context.applicationContext
         .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    /** Whether the periodic fact notification is enabled. */
-    var notificationsEnabled: Boolean
+    /** Server-side kill switch, mirrored from Remote Config on each launch. */
+    var remoteNotificationsEnabled: Boolean
         get() = prefs.getBoolean(KEY_ENABLED, true)
         set(value) = prefs.edit().putBoolean(KEY_ENABLED, value).apply()
+
+    /** The user's own in-app toggle (Settings screen). Never touched by Remote Config. */
+    var userNotificationsEnabled: Boolean
+        get() = prefs.getBoolean(KEY_USER_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(KEY_USER_ENABLED, value).apply()
+
+    /** Effective state: notifications fire only when the user opted in AND the remote switch is on. */
+    val notificationsEnabled: Boolean
+        get() = remoteNotificationsEnabled && userNotificationsEnabled
 
     /** Notification interval in hours (default [DEFAULT_INTERVAL_HOURS]). */
     var intervalHours: Long
@@ -52,6 +61,7 @@ class SpaceFactPreferences(context: Context) {
     companion object {
         private const val PREFS_NAME = "space_facts_prefs"
         private const val KEY_ENABLED = "notifications_enabled"
+        private const val KEY_USER_ENABLED = "user_notifications_enabled"
         private const val KEY_INTERVAL_HOURS = "interval_hours"
         private const val KEY_SHOWN_IDS = "shown_fact_ids"
         private const val KEY_LAST_SHOWN_ID = "last_shown_id"

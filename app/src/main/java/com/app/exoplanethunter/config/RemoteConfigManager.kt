@@ -61,8 +61,10 @@ object RemoteConfigManager {
     }
 
     private fun applyToPrefs(context: Context, remoteConfig: FirebaseRemoteConfig) {
+        // Remote value is a kill switch only — the user's own toggle (Settings screen) is a
+        // separate preference so a config refresh never reverts their choice.
         val prefs = SpaceFactPreferences(context)
-        prefs.notificationsEnabled = remoteConfig.getBoolean(KEY_NOTIFICATIONS_ENABLED)
+        prefs.remoteNotificationsEnabled = remoteConfig.getBoolean(KEY_NOTIFICATIONS_ENABLED)
         prefs.intervalHours = remoteConfig.getLong(KEY_INTERVAL_HOURS)
             .coerceAtLeast(MIN_INTERVAL_HOURS)
         SpaceFactScheduler.schedule(context)

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,7 +54,7 @@ internal fun AboutHeader(planetCount: Int, systemCount: Int) {
             // Rotating ring
             Box(
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(84.dp)
                     .rotate(rotation)
                     .border(
                         width = 2.dp,
@@ -63,9 +64,9 @@ internal fun AboutHeader(planetCount: Int, systemCount: Int) {
                         shape = CircleShape
                     )
             )
-            
+
             Surface(
-                modifier = Modifier.size(80.dp),
+                modifier = Modifier.size(58.dp),
                 shape = CircleShape,
                 color = SurfaceCard,
                 tonalElevation = 8.dp
@@ -75,113 +76,38 @@ internal fun AboutHeader(planetCount: Int, systemCount: Int) {
                         imageVector = Icons.Default.Public,
                         contentDescription = null,
                         tint = CosmicCyan,
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier.size(28.dp)
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = stringResource(R.string.about_title),
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineMedium,
             color = Color.White,
             fontWeight = FontWeight.ExtraBold,
             letterSpacing = 1.sp
         )
-        
+
         Text(
             text = stringResource(R.string.about_nasa_archive_dataset),
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelSmall,
             color = CosmicCyan,
             fontWeight = FontWeight.Bold,
-            letterSpacing = 4.sp,
+            letterSpacing = 3.sp,
             modifier = Modifier.padding(top = 4.dp)
         )
 
         Text(
-            text = "Version ${BuildConfig.VERSION_NAME}",
+            text = "v${BuildConfig.VERSION_NAME}  •  " +
+                "${"%,d".format(planetCount)} ${stringResource(R.string.about_planets).lowercase()}  •  " +
+                "${"%,d".format(systemCount)} ${stringResource(R.string.about_systems).lowercase()}",
             style = MaterialTheme.typography.bodySmall,
             color = TextMuted,
             modifier = Modifier.padding(top = 8.dp)
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Improved Stats Bar
-        Surface(
-            color = SurfaceCard.copy(alpha = 0.5f),
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier.widthIn(max = 320.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                CountBadge(
-                    count = planetCount,
-                    label = stringResource(R.string.about_planets),
-                    icon = Icons.Default.Public,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .height(32.dp)
-                        .width(1.dp)
-                        .background(SurfaceCardLight)
-                )
-
-                CountBadge(
-                    count = systemCount,
-                    label = stringResource(R.string.about_systems),
-                    icon = Icons.Default.Star,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun CountBadge(
-    count: Int, 
-    label: String, 
-    icon: ImageVector,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = CosmicCyan,
-                modifier = Modifier.size(16.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = String.format("%,d", count),
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Text(
-            text = label.uppercase(),
-            style = MaterialTheme.typography.labelSmall,
-            color = TextMuted,
-            letterSpacing = 1.sp,
-            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
@@ -192,7 +118,7 @@ internal fun SectionHeader(title: String) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp, start = 4.dp)
+            .padding(bottom = 12.dp, start = 4.dp)
     ) {
         Text(
             text = title.uppercase(),
@@ -211,6 +137,170 @@ internal fun SectionHeader(title: String) {
 }
 
 @Composable
+private fun IconBadge(icon: ImageVector, color: Color) {
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(color.copy(alpha = 0.1f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(22.dp)
+        )
+    }
+}
+
+/** A settings row with a trailing switch. */
+@Composable
+internal fun SettingsToggleRow(
+    icon: ImageVector,
+    iconColor: Color,
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = SurfaceCard),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconBadge(icon, iconColor)
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextMuted,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                colors = SwitchDefaults.colors(
+                    checkedTrackColor = CosmicCyan,
+                    checkedThumbColor = SpaceBlack
+                )
+            )
+        }
+    }
+}
+
+/** A tappable settings row with a trailing chevron. */
+@Composable
+internal fun SettingsActionRow(
+    icon: ImageVector,
+    iconColor: Color,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit
+) {
+    Card(
+        onClick = onClick,
+        colors = CardDefaults.cardColors(containerColor = SurfaceCard),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconBadge(icon, iconColor)
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextMuted,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+            }
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = TextMuted,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
+/** A collapsed info row that expands to show its description when tapped. */
+@Composable
+internal fun ExpandableInfoRow(
+    icon: ImageVector,
+    iconColor: Color,
+    title: String,
+    description: String
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val chevronRotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        label = "chevron_rotation"
+    )
+
+    Card(
+        onClick = { expanded = !expanded },
+        colors = CardDefaults.cardColors(containerColor = SurfaceDark),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconBadge(icon, iconColor)
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    imageVector = Icons.Default.ExpandMore,
+                    contentDescription = null,
+                    tint = TextMuted,
+                    modifier = Modifier
+                        .size(20.dp)
+                        .rotate(chevronRotation)
+                )
+            }
+            AnimatedVisibility(visible = expanded) {
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextSecondary,
+                    lineHeight = 22.sp,
+                    modifier = Modifier.padding(top = 12.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun SyncControl(
     status: SyncStatus,
     lastSyncTime: Long,
@@ -218,81 +308,32 @@ fun SyncControl(
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = SurfaceCard),
-        shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(20.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(CosmicCyan.copy(alpha = 0.1f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.CloudDownload,
-                        contentDescription = null,
-                        tint = CosmicCyan,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconBadge(Icons.Default.CloudDownload, CosmicCyan)
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = stringResource(R.string.about_sync_title),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = stringResource(R.string.about_sync_subtitle),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = CosmicCyan,
-                        letterSpacing = 0.5.sp
+                        text = stringResource(R.string.about_sync_last_updated) + " " +
+                            if (lastSyncTime == 0L) stringResource(R.string.about_sync_never)
+                            else formatLastSyncTime(lastSyncTime),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextMuted,
+                        modifier = Modifier.padding(top = 2.dp)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
-            
-            // Last Updated Info Row
-            Surface(
-                color = SpaceBlack.copy(alpha = 0.3f),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.History,
-                        contentDescription = null,
-                        tint = TextMuted,
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(R.string.about_sync_last_updated),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = if (lastSyncTime == 0L) stringResource(R.string.about_sync_never) else formatLastSyncTime(lastSyncTime),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = StarWhite,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             when (status) {
                 is SyncStatus.Idle, is SyncStatus.Success, is SyncStatus.Error -> {
@@ -304,7 +345,7 @@ fun SyncControl(
                         ),
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth(),
-                        contentPadding = PaddingValues(16.dp),
+                        contentPadding = PaddingValues(12.dp),
                         enabled = status !is SyncStatus.Progress
                     ) {
                         Icon(Icons.Default.Sync, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -315,7 +356,7 @@ fun SyncControl(
                             letterSpacing = 1.sp
                         )
                     }
-                    
+
                     if (status is SyncStatus.Success) {
                         SyncMessage(
                             message = stringResource(R.string.about_sync_success),
@@ -389,104 +430,16 @@ private fun SyncMessage(message: String, color: Color, icon: ImageVector) {
 }
 
 @Composable
-fun AboutSection(
-    icon: ImageVector,
-    iconColor: Color,
-    title: String,
-    description: String
-) {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-        shape = RoundedCornerShape(20.dp),
+internal fun AttributionLine() {
+    Text(
+        text = stringResource(R.string.about_acknowledgement_attribution),
+        style = MaterialTheme.typography.labelSmall,
+        color = TextMuted,
+        fontWeight = FontWeight.Bold,
+        letterSpacing = 2.sp,
+        textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.padding(20.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(iconColor.copy(alpha = 0.1f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = iconColor,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextSecondary,
-                    lineHeight = 22.sp
-                )
-            }
-        }
-    }
-}
-
-@Composable
-internal fun AboutFooter() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(SurfaceCard.copy(alpha = 0.5f))
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(R.string.about_acknowledgement_label),
-            style = MaterialTheme.typography.labelSmall,
-            color = CosmicCyan,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            text = stringResource(R.string.about_acknowledgement_text),
-            style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
-            textAlign = TextAlign.Center,
-            lineHeight = 18.sp
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            text = stringResource(R.string.about_acknowledgement_citation),
-            style = MaterialTheme.typography.labelSmall,
-            color = TextMuted,
-            textAlign = TextAlign.Center,
-            fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
-            lineHeight = 16.sp
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = stringResource(R.string.about_acknowledgement_attribution),
-            style = MaterialTheme.typography.labelSmall,
-            color = TextMuted,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 2.sp
-        )
-    }
+    )
 }
 
 
@@ -496,19 +449,28 @@ private fun AboutHeaderPreview() = PreviewSurface { AboutHeader(planetCount = 52
 
 @Preview
 @Composable
-private fun SectionHeaderPreview() = PreviewSurface { SectionHeader("Scientific Framework") }
+private fun SectionHeaderPreview() = PreviewSurface { SectionHeader("Preferences") }
 
 @Preview
 @Composable
-private fun AboutSectionPreview() = PreviewSurface {
-    AboutSection(
+private fun SettingsToggleRowPreview() = PreviewSurface {
+    SettingsToggleRow(
+        icon = Icons.Default.Notifications,
+        iconColor = StarGold,
+        title = "Space fact notifications",
+        subtitle = "A new fact every 2 days",
+        checked = true,
+        onCheckedChange = {}
+    )
+}
+
+@Preview
+@Composable
+private fun ExpandableInfoRowPreview() = PreviewSurface {
+    ExpandableInfoRow(
         icon = Icons.Default.Dataset,
         iconColor = CosmicCyan,
         title = "NASA Exoplanet Archive",
         description = "The global standard for confirmed exoplanet data.",
     )
 }
-
-@Preview
-@Composable
-private fun AboutFooterPreview() = PreviewSurface { AboutFooter() }

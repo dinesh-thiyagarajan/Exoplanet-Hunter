@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -247,54 +246,53 @@ internal fun SettingsActionRow(
     }
 }
 
-/** A collapsed info row that expands to show its description when tapped. */
-@Composable
-internal fun ExpandableInfoRow(
-    icon: ImageVector,
-    iconColor: Color,
-    title: String,
-    description: String
-) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    val chevronRotation by animateFloatAsState(
-        targetValue = if (expanded) 180f else 0f,
-        label = "chevron_rotation"
-    )
+/** One entry of the About list: icon, title and always-visible description. */
+internal data class InfoItem(
+    val icon: ImageVector,
+    val iconColor: Color,
+    val title: String,
+    val description: String
+)
 
+/** A single card presenting the About entries as a plain divided list. */
+@Composable
+internal fun InfoListCard(items: List<InfoItem>) {
     Card(
-        onClick = { expanded = !expanded },
         colors = CardDefaults.cardColors(containerColor = SurfaceDark),
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconBadge(icon, iconColor)
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
-                )
-                Icon(
-                    imageVector = Icons.Default.ExpandMore,
-                    contentDescription = null,
-                    tint = TextMuted,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .rotate(chevronRotation)
-                )
-            }
-            AnimatedVisibility(visible = expanded) {
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextSecondary,
-                    lineHeight = 22.sp,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
+        Column(modifier = Modifier.padding(vertical = 4.dp)) {
+            items.forEachIndexed { index, item ->
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    IconBadge(item.icon, item.iconColor)
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = item.title,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = item.description,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextSecondary,
+                            lineHeight = 18.sp,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                }
+                if (index != items.lastIndex) {
+                    Divider(
+                        color = SurfaceCardLight,
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
             }
         }
     }
@@ -466,11 +464,21 @@ private fun SettingsToggleRowPreview() = PreviewSurface {
 
 @Preview
 @Composable
-private fun ExpandableInfoRowPreview() = PreviewSurface {
-    ExpandableInfoRow(
-        icon = Icons.Default.Dataset,
-        iconColor = CosmicCyan,
-        title = "NASA Exoplanet Archive",
-        description = "The global standard for confirmed exoplanet data.",
+private fun InfoListCardPreview() = PreviewSurface {
+    InfoListCard(
+        items = listOf(
+            InfoItem(
+                icon = Icons.Default.Dataset,
+                iconColor = CosmicCyan,
+                title = "NASA Exoplanet Archive",
+                description = "The global standard for confirmed exoplanet data."
+            ),
+            InfoItem(
+                icon = Icons.Default.AutoAwesome,
+                iconColor = StarGold,
+                title = "Data Verification",
+                description = "Every planet has undergone a rigorous peer-review process."
+            )
+        )
     )
 }

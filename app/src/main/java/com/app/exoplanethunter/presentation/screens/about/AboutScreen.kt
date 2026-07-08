@@ -98,38 +98,40 @@ fun AboutScreen(
 
             Spacer(modifier = Modifier.height(28.dp))
 
-            // About — collapsed rows; tap to read
+            // About — plain list, all content visible
             AnimatedSection(delay = 300) {
                 Column {
                     SectionHeader(stringResource(R.string.settings_section_about))
 
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        ExpandableInfoRow(
-                            icon = Icons.Default.Dataset,
-                            iconColor = CosmicCyan,
-                            title = stringResource(R.string.about_data_source_title),
-                            description = stringResource(R.string.about_data_source_description)
+                    InfoListCard(
+                        items = listOf(
+                            InfoItem(
+                                icon = Icons.Default.Dataset,
+                                iconColor = CosmicCyan,
+                                title = stringResource(R.string.about_data_source_title),
+                                description = stringResource(R.string.about_data_source_description)
+                            ),
+                            InfoItem(
+                                icon = Icons.Default.AutoAwesome,
+                                iconColor = StarGold,
+                                title = stringResource(R.string.about_verification_title),
+                                description = stringResource(R.string.about_verification_description)
+                            ),
+                            InfoItem(
+                                icon = Icons.Default.Psychology,
+                                iconColor = NebulaPink,
+                                title = stringResource(R.string.about_ml_title),
+                                description = stringResource(R.string.about_ml_description)
+                            ),
+                            InfoItem(
+                                icon = Icons.Default.WorkspacePremium,
+                                iconColor = HabitableGreen,
+                                title = stringResource(R.string.about_acknowledgement_row_title),
+                                description = stringResource(R.string.about_acknowledgement_text) + "\n\n" +
+                                    stringResource(R.string.about_acknowledgement_citation)
+                            )
                         )
-                        ExpandableInfoRow(
-                            icon = Icons.Default.AutoAwesome,
-                            iconColor = StarGold,
-                            title = stringResource(R.string.about_verification_title),
-                            description = stringResource(R.string.about_verification_description)
-                        )
-                        ExpandableInfoRow(
-                            icon = Icons.Default.Psychology,
-                            iconColor = NebulaPink,
-                            title = stringResource(R.string.about_ml_title),
-                            description = stringResource(R.string.about_ml_description)
-                        )
-                        ExpandableInfoRow(
-                            icon = Icons.Default.WorkspacePremium,
-                            iconColor = HabitableGreen,
-                            title = stringResource(R.string.about_acknowledgement_row_title),
-                            description = stringResource(R.string.about_acknowledgement_text) + "\n\n" +
-                                stringResource(R.string.about_acknowledgement_citation)
-                        )
-                    }
+                    )
                 }
             }
 

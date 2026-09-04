@@ -84,7 +84,7 @@ val viewModelModule = module {
     viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
     viewModel { GalaxyMapViewModel(get(), get()) }
-    viewModel { SplashViewModel(get(), get()) }
+    viewModel { SplashViewModel(get()) }
     viewModel { AboutViewModel(get(), get(), get(), androidContext()) }
     viewModel { CompareViewModel(get(), get(), get()) }
     viewModel { SpaceFactDetailViewModel(get(), get()) }

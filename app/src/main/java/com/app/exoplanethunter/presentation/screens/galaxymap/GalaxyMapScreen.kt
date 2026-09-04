@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -62,6 +63,8 @@ import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.domain.model.StarPosition
 import com.app.exoplanethunter.presentation.components.graticule
+import com.app.exoplanethunter.presentation.components.screenContentInsets
+import com.app.exoplanethunter.presentation.components.topBarInsets
 import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
 import com.app.exoplanethunter.presentation.theme.InkText
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
@@ -114,7 +117,8 @@ fun GalaxyMapScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 44.dp, bottom = 8.dp, start = 8.dp, end = 16.dp),
+                .topBarInsets()
+                .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBack) {
@@ -292,7 +296,8 @@ private fun GalaxyMapContent(
             color = TextMuted,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 96.dp)
+                .statusBarsPadding()
+                .padding(top = 60.dp)
         )
 
         // Selected star info card
@@ -300,7 +305,9 @@ private fun GalaxyMapContent(
             visible = selectedStar != null,
             enter = slideInVertically { it } + fadeIn(),
             exit = slideOutVertically { it } + fadeOut(),
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .screenContentInsets()
         ) {
             selectedStar?.let { star ->
                 StarInfoCard(star = star, onView = { onSystemClick(star.id) })

@@ -1,5 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.planetdetail
 import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.components.screenContentInsets
+import com.app.exoplanethunter.presentation.components.topBarInsets
 import com.app.exoplanethunter.presentation.preview.PreviewData
 import com.app.exoplanethunter.presentation.preview.PreviewSurface
 
@@ -124,7 +126,8 @@ fun PlanetDetailContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(SpaceBlack.copy(alpha = 0.85f))
-                        .padding(top = 44.dp, bottom = 8.dp, start = 8.dp, end = 16.dp),
+                        .topBarInsets()
+                        .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(onClick = onBack) {
@@ -166,6 +169,7 @@ fun PlanetDetailContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
+                        .screenContentInsets()
                         .verticalScroll(rememberScrollState()),
                 ) {
                     val tidallyLocked = remember(planet) { isLikelyTidallyLocked(planet) }

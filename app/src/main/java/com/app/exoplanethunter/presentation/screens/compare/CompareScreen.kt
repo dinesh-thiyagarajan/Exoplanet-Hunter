@@ -1,5 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.compare
 import androidx.compose.ui.tooling.preview.Preview
+import com.app.exoplanethunter.presentation.components.screenContentInsets
+import com.app.exoplanethunter.presentation.components.topBarInsets
 import com.app.exoplanethunter.presentation.preview.PreviewSurface
 import com.app.exoplanethunter.presentation.preview.PreviewData
 
@@ -100,7 +102,8 @@ fun CompareScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(SpaceBlack.copy(alpha = 0.85f))
-                    .padding(top = 44.dp, bottom = 8.dp, start = 8.dp, end = 16.dp),
+                    .topBarInsets()
+                    .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
@@ -133,6 +136,7 @@ fun CompareScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .screenContentInsets()
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {

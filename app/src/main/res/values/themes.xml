@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.ExoplanetHunter" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Drawn edge to edge from Compose; the dark window background keeps the launch
+         frame from flashing white before the first composition. -->
+    <style name="Theme.ExoplanetHunter" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/space_black</item>
+    </style>
 </resources>

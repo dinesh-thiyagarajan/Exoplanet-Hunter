@@ -7,6 +7,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -40,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.app.exoplanethunter.R
+import com.app.exoplanethunter.presentation.components.SafeAreaInsets
 import com.app.exoplanethunter.presentation.screens.about.AboutScreen
 import com.app.exoplanethunter.presentation.screens.favorites.FavoritesScreen
 import com.app.exoplanethunter.presentation.screens.galaxymap.GalaxyMapScreen
@@ -258,11 +261,17 @@ private fun MainScreen(
 
     Scaffold(
         containerColor = SpaceBlack,
+        // Status bar, navigation bar and any display cutout: the tab screens draw their own
+        // headers, so the Scaffold pads them out of the system bars for all of them at once.
+        contentWindowInsets = SafeAreaInsets,
         bottomBar = {
             NavigationBar(
                 containerColor = InkRaised,
                 contentColor = InkText,
-                tonalElevation = 0.dp
+                tonalElevation = 0.dp,
+                windowInsets = SafeAreaInsets.only(
+                    WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
+                )
             ) {
                 BottomNavTab.entries.forEach { tab ->
                     val isSelected = selectedTab == tab.name

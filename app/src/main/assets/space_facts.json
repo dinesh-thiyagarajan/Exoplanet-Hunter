@@ -348,5 +348,1055 @@
     "shortDescription": "Earth as a single pixel seen from billions of miles away.",
     "detail": "In 1990, as the Voyager 1 spacecraft sped beyond the outer planets, it turned its camera back toward home at the urging of Carl Sagan and captured Earth as a single, almost invisible point of light suspended in a sunbeam, the Pale Blue Dot. From about six billion kilometers away, our entire world was less than a single pixel. Sagan's reflection on the image became famous: everyone who ever lived, every triumph and tragedy of human history, took place on that tiny mote of dust. The photograph endures as a humbling reminder of our smallness and our shared responsibility for this fragile planet.",
     "sourceUrl": "https://en.wikipedia.org/wiki/Pale_Blue_Dot"
+  },
+  {
+    "id": 51,
+    "title": "Olympus Mons",
+    "shortDescription": "The tallest volcano in the Solar System, on Mars.",
+    "detail": "Olympus Mons on Mars is the largest volcano and one of the tallest mountains known, rising about 22 kilometers, roughly two and a half times the height of Mount Everest. It is a shield volcano, built by runny lava over billions of years, and spans an area the size of a large country. Mars lacks moving tectonic plates, so a volcano could sit over a hot spot and keep growing in place rather than forming a chain like Hawaii. Its sheer scale is a reminder of how different geology can be on other worlds.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Olympus_Mons"
+  },
+  {
+    "id": 52,
+    "title": "Valles Marineris",
+    "shortDescription": "A canyon system that would stretch across a continent.",
+    "detail": "Valles Marineris is a vast network of canyons on Mars, over 4,000 kilometers long and up to 7 kilometers deep in places. It dwarfs Earth's Grand Canyon and would stretch across the entire United States. Rather than being carved mainly by water, it is thought to have opened as the Martian crust stretched and cracked near the Tharsis volcanic bulge, later widened by landslides and erosion. Studying it helps geologists read Mars's violent early history, when the planet was far more active than the cold, quiet desert we see today.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Valles_Marineris"
+  },
+  {
+    "id": 53,
+    "title": "Jupiter's Great Red Spot",
+    "shortDescription": "A storm larger than Earth that has raged for centuries.",
+    "detail": "The Great Red Spot is a colossal anticyclonic storm on Jupiter, wide enough to swallow the entire Earth. Astronomers have tracked it for well over a century, and possibly since the 1600s, making it one of the longest-lived storms known. Winds around its edge scream at hundreds of kilometers per hour. In recent decades it has been shrinking and becoming more circular, though why it has persisted so long, and what gives it its reddish color, are still not fully understood. It is the most famous feature of the Solar System's largest planet.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Great_Red_Spot"
+  },
+  {
+    "id": 54,
+    "title": "Titan",
+    "shortDescription": "A moon with rain, rivers, and seas, but made of methane.",
+    "detail": "Saturn's moon Titan is the only moon in the Solar System with a thick atmosphere, and the only world besides Earth known to have stable liquid on its surface. But instead of water, Titan's lakes and rivers are filled with liquid methane and ethane, flowing under a hazy orange sky at temperatures near minus 180 degrees Celsius. Beneath its icy crust may lie a water ocean. With its rich organic chemistry, Titan is a prime target for astrobiology, and NASA's Dragonfly mission will send a rotorcraft to explore its exotic, Earth-like yet utterly alien landscape.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Titan_(moon)"
+  },
+  {
+    "id": 55,
+    "title": "Europa's Hidden Ocean",
+    "shortDescription": "A moon that may hold twice Earth's water beneath its ice.",
+    "detail": "Jupiter's moon Europa hides a vast saltwater ocean beneath a crust of ice, likely holding more than twice as much liquid water as all of Earth's oceans combined. The ocean stays liquid thanks to tidal heating, as Jupiter's gravity flexes the moon. Europa's smooth, cracked surface hints at material welling up from below, and plumes of water vapor may occasionally erupt into space. Because liquid water, energy, and chemistry may all be present, Europa is one of the most promising places to search for life, and NASA's Europa Clipper is now on its way to investigate.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Europa_(moon)"
+  },
+  {
+    "id": 56,
+    "title": "Enceladus's Geysers",
+    "shortDescription": "A tiny moon spraying its ocean into space.",
+    "detail": "Enceladus, a small icy moon of Saturn only about 500 kilometers across, stunned scientists when the Cassini spacecraft discovered towering geysers erupting from cracks near its south pole. These plumes spray water vapor and ice grains from a global subsurface ocean directly into space, feeding one of Saturn's rings. Cassini flew through the plumes and detected salts and organic molecules, and even hints of hydrothermal activity on the ocean floor. That makes Enceladus, despite its small size, one of the most exciting places in the Solar System in the search for life beyond Earth.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Enceladus"
+  },
+  {
+    "id": 57,
+    "title": "Io, the Volcanic Moon",
+    "shortDescription": "The most volcanically active world in the Solar System.",
+    "detail": "Jupiter's moon Io is the most volcanically active body known, dotted with hundreds of volcanoes that erupt plumes hundreds of kilometers high and paint its surface in sulfurous yellows, oranges, and reds. The heat comes not from radioactive decay but from tidal flexing: Jupiter's immense gravity, tugged by the neighboring moons, kneads Io's interior and keeps it molten. Its surface is constantly repaved by lava, erasing impact craters. Io shows how gravity alone can power dramatic geology on a world far from the Sun, the same tidal heating that may warm oceans on icy moons.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Io_(moon)"
+  },
+  {
+    "id": 58,
+    "title": "Saturn's Rings",
+    "shortDescription": "Dazzling rings made almost entirely of ice, and perhaps young.",
+    "detail": "Saturn's rings are among the most beautiful sights in the Solar System, spanning up to 280,000 kilometers yet often only tens of meters thick. They are made mostly of countless chunks of water ice, ranging from dust grains to house-sized boulders, all orbiting in a flattened disk. Their origin is debated: they may be the shredded remains of a moon or comet torn apart by Saturn's gravity. Intriguingly, evidence suggests the rings are surprisingly young, perhaps only 100 million years old, meaning dinosaurs may have lived before Saturn had its iconic rings.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Rings_of_Saturn"
+  },
+  {
+    "id": 59,
+    "title": "The Asteroid Belt",
+    "shortDescription": "A ring of rocky debris, far emptier than movies suggest.",
+    "detail": "The asteroid belt is a region between the orbits of Mars and Jupiter where millions of rocky bodies orbit the Sun. Despite its reputation, it is mostly empty space: if you stood on one asteroid, the next would usually be too far to see. Its total mass is less than that of the Moon. The belt is thought to be material that never coalesced into a planet, kept stirred up by Jupiter's powerful gravity. These leftover building blocks preserve a record of the early Solar System, and some, rich in metals or water, are targets for future exploration and mining.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Asteroid_belt"
+  },
+  {
+    "id": 60,
+    "title": "The Kuiper Belt",
+    "shortDescription": "A frozen frontier of icy worlds beyond Neptune.",
+    "detail": "The Kuiper Belt is a vast ring of icy bodies beyond the orbit of Neptune, stretching far out into the cold outer Solar System. It is home to Pluto and other dwarf planets like Eris, Makemake, and Haumea, along with countless smaller frozen objects left over from the Solar System's formation. Many short-period comets originate here. Because these worlds have remained deep-frozen for billions of years, they are pristine relics of the early Solar System. NASA's New Horizons spacecraft gave humanity its first close-up look at this distant realm when it flew past Pluto and beyond.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kuiper_belt"
+  },
+  {
+    "id": 61,
+    "title": "The Oort Cloud",
+    "shortDescription": "A vast shell of comets at the edge of the Sun's realm.",
+    "detail": "The Oort Cloud is a hypothesized giant shell of icy bodies surrounding the Solar System at enormous distances, possibly stretching a good fraction of the way to the nearest star. It is thought to be the source of long-period comets, which occasionally fall inward when nudged by passing stars or the galaxy's tides. No one has ever directly observed the Oort Cloud; its existence is inferred from the orbits of these comets. If real, it marks the true outer boundary of the Sun's gravitational domain, a faint, frozen swarm far beyond the planets.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Oort_cloud"
+  },
+  {
+    "id": 62,
+    "title": "Pluto Up Close",
+    "shortDescription": "A dwarf planet with mountains, glaciers, and a frozen heart.",
+    "detail": "For decades Pluto was just a fuzzy dot, until NASA's New Horizons spacecraft flew past it in 2015 and revealed a stunningly complex world. Its famous heart-shaped plain, Tombaugh Regio, is a vast glacier of nitrogen ice, flowing and churning like a frozen sea. Pluto has towering mountains of water ice, a thin nitrogen atmosphere, and possibly a subsurface ocean. Reclassified as a dwarf planet in 2006, Pluto proved that even small, distant worlds can be geologically active and endlessly surprising, overturning the idea that the outer Solar System is merely dead and static.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Pluto"
+  },
+  {
+    "id": 63,
+    "title": "Ceres",
+    "shortDescription": "The largest asteroid, promoted to dwarf planet.",
+    "detail": "Ceres is the largest object in the asteroid belt and the only dwarf planet in the inner Solar System, about 940 kilometers across. NASA's Dawn spacecraft orbited it and revealed mysterious bright spots on its surface, later identified as salt deposits left behind by briny water rising from below and evaporating. Ceres may hold a significant amount of water ice, and possibly pockets of liquid brine, making it a small but intriguing target for astrobiology. Straddling the line between asteroid and world, Ceres offers clues about how water was distributed in the early Solar System.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Ceres_(dwarf_planet)"
+  },
+  {
+    "id": 64,
+    "title": "Venus's Runaway Greenhouse",
+    "shortDescription": "How Earth's twin became the hottest planet.",
+    "detail": "Venus is nearly Earth's twin in size, yet its surface is hot enough to melt lead, around 465 degrees Celsius, hotter even than Mercury despite being farther from the Sun. The cause is a runaway greenhouse effect: a dense atmosphere of carbon dioxide traps heat relentlessly, under crushing pressure ninety times Earth's. Venus may once have had oceans that boiled away as the Sun brightened, leaving a scorched world wrapped in clouds of sulfuric acid. It stands as a stark warning of how a planet in the habitable zone can still become utterly hostile to life.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Atmosphere_of_Venus"
+  },
+  {
+    "id": 65,
+    "title": "Mercury's Extremes",
+    "shortDescription": "A scorched, frozen world of brutal contrasts.",
+    "detail": "Mercury, the smallest planet and closest to the Sun, is a world of extremes. With almost no atmosphere to trap or spread heat, its dayside can reach about 430 degrees Celsius while its night side plunges below minus 170. Strangely, despite the searing heat, permanently shadowed craters near its poles are cold enough to hold water ice, likely delivered by comets. Mercury also has an oversized iron core making up most of its volume, and a weak magnetic field. Its long day and short year create a bizarre dance where, from some spots, the Sun appears to move backward.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Mercury_(planet)"
+  },
+  {
+    "id": 66,
+    "title": "Triton",
+    "shortDescription": "A captured moon orbiting Neptune backward.",
+    "detail": "Neptune's largest moon Triton is one of the strangest in the Solar System. It orbits backward, opposite to Neptune's spin, a strong sign that it did not form there but was captured from the Kuiper Belt, making it a cousin of Pluto. Triton is intensely cold, near minus 235 degrees Celsius, yet geologically active: NASA's Voyager 2 saw nitrogen geysers erupting from its icy surface. It may harbor a subsurface ocean. Slowly spiraling inward, Triton is doomed to eventually be torn apart by Neptune's gravity, perhaps forming a spectacular ring in the distant future.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Triton_(moon)"
+  },
+  {
+    "id": 67,
+    "title": "Uranus Tipped on Its Side",
+    "shortDescription": "An ice giant that orbits lying down.",
+    "detail": "Uranus is unique among the planets: its axis is tilted almost 98 degrees, so it essentially orbits the Sun on its side. This means its poles, not its equator, take turns facing the Sun, giving each pole roughly 42 years of continuous sunlight followed by 42 years of darkness. The extreme tilt was probably caused by one or more giant collisions early in its history. Uranus is an ice giant, made largely of water, ammonia, and methane, the last of which gives it a pale blue-green hue. Visited only once, by Voyager 2, it remains a mysterious, understudied world.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Uranus"
+  },
+  {
+    "id": 68,
+    "title": "Halley's Comet",
+    "shortDescription": "The famous comet that returns within a human lifetime.",
+    "detail": "Halley's Comet is the most famous comet of all, the first proven to return periodically. Edmond Halley used Newton's new laws of gravity to predict its comeback, and though he died before being proven right, the comet now bears his name. It swings through the inner Solar System roughly every 76 years, meaning most people can see it once in their lives. Records of its appearances stretch back over 2,000 years, and it was studied up close by spacecraft in 1986. Its next return is expected in 2061, when a new generation will look up to greet it.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Halley%27s_Comet"
+  },
+  {
+    "id": 69,
+    "title": "The Voyager Golden Record",
+    "shortDescription": "A message to the stars aboard humanity's farthest probes.",
+    "detail": "Attached to each of NASA's Voyager spacecraft is a Golden Record, a gold-plated phonograph disk carrying a message from humanity to any intelligence that might one day find it. Curated by a team led by Carl Sagan, it holds sounds and images of Earth: greetings in 55 languages, music from Bach to Chuck Berry, birdsong, a heartbeat, and photographs of life and landscapes. The records are built to last hundreds of millions of years in the vacuum of space. As the Voyagers drift among the stars, they carry a fragile, hopeful postcard of who we were.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Voyager_Golden_Record"
+  },
+  {
+    "id": 70,
+    "title": "Voyager 1 in Interstellar Space",
+    "shortDescription": "The most distant human-made object ever.",
+    "detail": "Launched in 1977, NASA's Voyager 1 is the farthest human-made object from Earth, now traveling through interstellar space beyond the heliosphere, the bubble of particles blown by the Sun. It crossed that boundary in 2012, and its radio signals, though incredibly faint and taking many hours to arrive, still reach Earth decades after launch. Powered by slowly decaying plutonium, its instruments are gradually shutting down. Voyager 1 and its twin, Voyager 2, are humanity's first emissaries to the space between the stars, and they will keep drifting silently among them long after they fall silent.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Voyager_1"
+  },
+  {
+    "id": 71,
+    "title": "Why Comet Tails Point Away From the Sun",
+    "shortDescription": "A comet's tail never trails behind it.",
+    "detail": "Comets are icy bodies that grow spectacular tails as they near the Sun. Heat vaporizes their ice, releasing gas and dust that form a glowing coma and streaming tails. Counterintuitively, a comet's tail does not trail behind its motion like a car's exhaust; it always points away from the Sun, blown outward by sunlight and the solar wind. Comets often have two tails, a bluish gas tail and a curved dust tail. Because they preserve ancient, unchanged material from the Solar System's birth, comets are treasured time capsules studied by missions like Rosetta.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Comet"
+  },
+  {
+    "id": 72,
+    "title": "Meteor Showers",
+    "shortDescription": "Shooting stars from the crumbs of comets.",
+    "detail": "A meteor shower happens when Earth plows through a trail of debris left behind by a comet, or occasionally an asteroid. The tiny grains, often no bigger than sand, slam into the atmosphere at tens of kilometers per second and burn up in brilliant streaks of light. Because Earth crosses the same debris trails at the same time each year, showers like the Perseids in August and the Geminids in December are reliably annual. The meteors appear to radiate from one point in the sky, which gives each shower its name, tracing back to a specific constellation.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Meteor_shower"
+  },
+  {
+    "id": 73,
+    "title": "The Late Heavy Bombardment",
+    "shortDescription": "A possible storm of impacts early in the Solar System.",
+    "detail": "The Late Heavy Bombardment is a proposed episode, around 4 billion years ago, when the inner planets and Moon were pummeled by an intense spike of asteroid and comet impacts. Evidence came largely from the ages of Moon rocks returned by Apollo, which seemed to cluster around that time. It may have been triggered by the migration of the giant planets scattering debris inward. However, the idea is debated, and some scientists argue the impact record reflects a steadier decline rather than a sudden spike. Either way, this violent era shaped the battered surfaces we still see today.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Late_Heavy_Bombardment"
+  },
+  {
+    "id": 74,
+    "title": "The Giant-Impact Origin of the Moon",
+    "shortDescription": "Our Moon was likely born in a colossal collision.",
+    "detail": "The leading theory for the Moon's origin is that, about 4.5 billion years ago, a Mars-sized body sometimes called Theia slammed into the young Earth. The catastrophic collision flung a huge amount of molten debris into orbit, which coalesced into the Moon. This idea neatly explains why the Moon is relatively small in metal, since the impactor's core merged with Earth's, and why Earth and Moon share so many chemical similarities. The Moon has since profoundly shaped our world, stabilizing Earth's tilt and driving the tides, making that ancient smash-up a lucky break for life.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Giant-impact_hypothesis"
+  },
+  {
+    "id": 75,
+    "title": "Earth's Protective Magnetic Field",
+    "shortDescription": "An invisible shield generated deep in our planet.",
+    "detail": "Earth is wrapped in a magnetic field generated by the churning of molten iron in its outer core, a natural dynamo. This magnetosphere deflects much of the solar wind and cosmic radiation that would otherwise strip our atmosphere and bombard the surface. It funnels some particles toward the poles, creating the auroras. A strong magnetic field may be an important ingredient for long-term habitability, and its apparent absence on Mars likely contributed to that planet losing its atmosphere. For exoplanets, whether a world can generate and sustain such a shield is a key question for life.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Earth%27s_magnetic_field"
+  },
+  {
+    "id": 76,
+    "title": "Anatomy of the Sun",
+    "shortDescription": "Layers of fire from a fusion core to a wispy crown.",
+    "detail": "The Sun is a giant ball of plasma with distinct layers. Its core, where temperatures reach about 15 million degrees Celsius, fuses hydrogen into helium, releasing the energy that powers the Solar System. That energy takes tens of thousands of years to escape the dense radiative zone, then rises through the churning convective zone to the visible surface, the photosphere. Above lies the thin chromosphere and the corona, the Sun's faint outer atmosphere, which is mysteriously millions of degrees hotter than the surface below. Understanding the Sun helps us understand the countless other stars that host exoplanets.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Sun"
+  },
+  {
+    "id": 77,
+    "title": "Solar Flares and Coronal Mass Ejections",
+    "shortDescription": "Explosions on the Sun that can reach across space.",
+    "detail": "The Sun frequently erupts with solar flares, sudden flashes of radiation, and coronal mass ejections, enormous clouds of magnetized plasma hurled into space. When these blasts strike Earth, they can spark brilliant auroras but also disrupt satellites, radio communications, and power grids. They are driven by the tangling and snapping of the Sun's powerful magnetic field. Studying this space weather is increasingly important for our technology-dependent civilization. Around other stars, especially active red dwarfs, far more violent flares may bombard nearby planets, posing a serious challenge to their potential habitability.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Coronal_mass_ejection"
+  },
+  {
+    "id": 78,
+    "title": "Sunspots and the Solar Cycle",
+    "shortDescription": "The Sun's activity rises and falls every 11 years.",
+    "detail": "Sunspots are dark, cooler patches on the Sun's surface where intense magnetic fields suppress the flow of heat. Their number waxes and wanes over an approximately 11-year solar cycle, from a quiet solar minimum to a stormy solar maximum with frequent flares and eruptions. The cycle is driven by the Sun's magnetic field periodically tangling and reversing. Records of sunspots stretch back centuries and even reveal past lulls, like the Maunder Minimum, linked to cold spells on Earth. Similar magnetic cycles on other stars affect the radiation environment of their orbiting planets.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Solar_cycle"
+  },
+  {
+    "id": 79,
+    "title": "The Heliosphere",
+    "shortDescription": "The bubble the Sun blows around the Solar System.",
+    "detail": "The heliosphere is a vast bubble carved out of interstellar space by the solar wind, the constant stream of charged particles flowing from the Sun. It surrounds all the planets and extends far beyond them, shielding the Solar System from much of the galaxy's cosmic radiation. Its outer boundary, the heliopause, is where the solar wind finally gives way to the interstellar medium; NASA's Voyager probes crossed it and are now measuring conditions beyond. The heliosphere's shape and size shift with the Sun's activity, and understanding it reveals how stars interact with the space around them.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Heliosphere"
+  },
+  {
+    "id": 80,
+    "title": "Parker Solar Probe",
+    "shortDescription": "The spacecraft that flew into the Sun's atmosphere.",
+    "detail": "NASA's Parker Solar Probe, launched in 2018, is the fastest spacecraft ever built and the first to fly through the Sun's corona, its outer atmosphere. Protected by a special heat shield, it swoops closer to the Sun than any mission before, enduring searing heat and radiation to sample the solar wind at its source. Its goals include solving long-standing mysteries, like why the corona is far hotter than the surface and how the solar wind is accelerated. By 'touching' the Sun, Parker is transforming our understanding of the star that makes life on Earth possible.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Parker_Solar_Probe"
+  },
+  {
+    "id": 81,
+    "title": "Kepler-186f",
+    "shortDescription": "The first Earth-sized planet found in a habitable zone.",
+    "detail": "Announced in 2014, Kepler-186f was the first Earth-sized planet discovered orbiting within the habitable zone of its star, where liquid water could exist. Only about 10% larger than Earth, it circles a red dwarf some 500 light-years away, receiving roughly a third of the sunlight Earth gets, so any midday there would resemble our early evening. Its size strongly suggests a rocky composition. While its exact conditions remain unknown, Kepler-186f was a milestone: proof that Earth-sized worlds exist in the temperate zones of other stars, encouraging the search for a true Earth twin.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler-186f"
+  },
+  {
+    "id": 82,
+    "title": "Kepler-90: A Rival Solar System",
+    "shortDescription": "A star with eight known planets, tying our own.",
+    "detail": "Kepler-90 is a Sun-like star about 2,500 light-years away that hosts eight known planets, tying our Solar System for the most planets found around a single star. The eighth, Kepler-90i, was uncovered in 2017 by a machine-learning algorithm sifting through Kepler data, one of the first exoplanets found with the help of artificial intelligence. Like our system, Kepler-90 has smaller planets closer in and larger ones farther out, but the whole family is packed tightly, all orbiting closer than Earth does to the Sun. It shows that rich, crowded planetary systems are not unique to us.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler-90"
+  },
+  {
+    "id": 83,
+    "title": "Kepler-22b",
+    "shortDescription": "Kepler's first confirmed habitable-zone planet.",
+    "detail": "Kepler-22b, confirmed in 2011, was the first planet the Kepler mission found squarely within its star's habitable zone. About 2.4 times Earth's radius, it orbits a Sun-like star roughly 600 light-years away with a year of about 290 days. Its size places it between Earth and Neptune, so it could be a large rocky world, an ocean world, or a small gas-rich planet; its true nature remains uncertain. As an early landmark discovery, Kepler-22b helped demonstrate that Kepler could find temperate worlds and fueled excitement that potentially habitable planets might be common.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler-22b"
+  },
+  {
+    "id": 84,
+    "title": "Kepler-442b",
+    "shortDescription": "One of the most promising potentially habitable worlds.",
+    "detail": "Kepler-442b is a super-Earth about 1,200 light-years away that ranks among the most promising potentially habitable planets found by Kepler. Roughly a third larger than Earth and likely rocky, it orbits a cooler orange dwarf star within the habitable zone, receiving about two-thirds of the light Earth gets. Studies of its illumination suggest it could, in principle, receive enough energy to support a large biosphere. Like most such worlds it is far too distant to study in detail, but its favorable size and location keep it high on lists of Earth-like candidates.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler-442b"
+  },
+  {
+    "id": 85,
+    "title": "Kepler-1649c",
+    "shortDescription": "An Earth-sized world hidden in old Kepler data.",
+    "detail": "Kepler-1649c is an Earth-sized exoplanet discovered in 2020, not by fresh observations but by re-examining old Kepler data that an automated program had initially misclassified. Almost exactly Earth's size and orbiting within the habitable zone of a red dwarf about 300 light-years away, it receives roughly three-quarters of the light Earth gets from the Sun. That makes it one of the most similar to Earth in both size and temperature found by Kepler. Its discovery is a reminder that troves of archived telescope data may still hold undiscovered worlds waiting to be recognized.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler-1649c"
+  },
+  {
+    "id": 86,
+    "title": "TOI-700 d",
+    "shortDescription": "TESS's first Earth-sized habitable-zone planet.",
+    "detail": "TOI-700 d was the first Earth-sized planet in the habitable zone discovered by NASA's TESS mission, announced in 2020. It orbits a small, relatively quiet red dwarf about 100 light-years away, close enough for meaningful follow-up study. Roughly the size of Earth, it completes an orbit in about 37 days and likely receives a comparable amount of energy to our planet. Because its star is calmer than many red dwarfs, TOI-700 d is considered a favorable candidate for retaining an atmosphere, and the system was later found to host an additional promising planet, TOI-700 e.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/TOI-700d"
+  },
+  {
+    "id": 87,
+    "title": "HD 209458 b (Osiris)",
+    "shortDescription": "The first exoplanet caught with an atmosphere.",
+    "detail": "HD 209458 b, nicknamed Osiris, is a hot Jupiter about 150 light-years away and a pioneer of exoplanet science. It was the first planet seen to transit its star, the first with a detected atmosphere, and the first observed to be evaporating, its atmosphere streaming away into space under the star's intense heat. Astronomers have detected hydrogen, oxygen, carbon, and water vapor around it. As a bright, well-placed target, Osiris became a testing ground for the techniques now used to probe distant atmospheres, helping launch the whole field of exoplanet atmospheric characterization.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/HD_209458_b"
+  },
+  {
+    "id": 88,
+    "title": "HD 189733 b: Where It Rains Glass",
+    "shortDescription": "A deep-blue world with sideways storms of glass.",
+    "detail": "HD 189733 b is a hot Jupiter about 64 light-years away and one of the best-studied exoplanets. From a distance it would glow a deep cobalt blue, but the color is deceptive: rather than oceans, its atmosphere is thought to be laced with silicate particles that scatter blue light, essentially clouds of glass. With temperatures over 900 degrees Celsius and howling winds thousands of kilometers per hour, models suggest it could rain molten glass sideways. Its brightness and frequent transits have let astronomers map its weather and chemistry in remarkable detail for a world so far away.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/HD_189733_b"
+  },
+  {
+    "id": 89,
+    "title": "WASP-76b: Where It Rains Iron",
+    "shortDescription": "An ultra-hot world where iron falls as rain.",
+    "detail": "WASP-76b is an ultra-hot Jupiter roughly 640 light-years away, where conditions are so extreme that iron rains from the sky. Its dayside, permanently facing the star, reaches around 2,400 degrees Celsius, hot enough to vaporize metals. Fierce winds carry that iron vapor to the cooler night side, where it condenses and falls as molten iron rain. Astronomers detected this by spotting iron in the atmosphere on the evening side but not the morning side. WASP-76b is a striking example of how bizarre and hostile many exoplanets are compared with anything in our Solar System.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/WASP-76b"
+  },
+  {
+    "id": 90,
+    "title": "WASP-12b: A Planet Being Devoured",
+    "shortDescription": "A doomed world slowly consumed by its star.",
+    "detail": "WASP-12b is a hot Jupiter orbiting so close to its star that it is being slowly torn apart and consumed. The star's gravity has stretched the planet into an egg shape and is pulling its atmosphere away in a stream of gas. WASP-12b is also one of the darkest known planets, absorbing almost all the light that hits it, and its dayside glows over 2,500 degrees Celsius. Its orbit is decaying, meaning it will spiral into its star in a few million years, a cosmic blink. It offers a rare look at a planet's dramatic final chapter.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/WASP-12b"
+  },
+  {
+    "id": 91,
+    "title": "KELT-9b: The Hottest Planet",
+    "shortDescription": "A world hotter than many stars.",
+    "detail": "KELT-9b is the hottest known exoplanet, with a dayside temperature around 4,300 degrees Celsius, hotter than the surfaces of many stars. It orbits a large, blazing blue-white star that scorches it with ultraviolet radiation, so intensely that molecules in its atmosphere are torn apart into their constituent atoms. Astronomers have detected vaporized metals like iron and titanium in its air. So much energy pours in that the planet is slowly evaporating. KELT-9b marks the extreme frontier of planetary conditions, blurring the line between what we think of as a planet and a star.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/KELT-9b"
+  },
+  {
+    "id": 92,
+    "title": "TrES-2b: The Darkest Planet",
+    "shortDescription": "A world blacker than coal.",
+    "detail": "TrES-2b is one of the darkest known exoplanets, reflecting less than 1% of the light that falls on it, making it blacker than coal or the darkest paint. This gas giant orbits its star closely and is heated to around 1,000 degrees Celsius, glowing a faint, ember-like red from its own heat. Its extreme darkness may come from light-absorbing chemicals in its atmosphere, like vaporized sodium and potassium, combined with a lack of reflective clouds. Studying such worlds helps astronomers understand the wide range of atmospheres and appearances that gas giants can have.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/TrES-2b"
+  },
+  {
+    "id": 93,
+    "title": "GJ 1214 b: A Water World Candidate",
+    "shortDescription": "A steamy sub-Neptune unlike anything nearby.",
+    "detail": "GJ 1214 b is a well-studied sub-Neptune about 48 light-years away, larger than Earth but smaller than Neptune, a size absent from our own Solar System. Its low density suggests it is rich in water or shrouded in a thick, hazy atmosphere, and it has been called a candidate water world or steam world. For years its high, featureless clouds frustrated efforts to read its atmosphere, but JWST has begun to pierce the haze. As one of the closest and most accessible sub-Neptunes, it is a key laboratory for understanding this abundant but mysterious class of planet.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/GJ_1214_b"
+  },
+  {
+    "id": 94,
+    "title": "HR 8799: A Directly Imaged System",
+    "shortDescription": "Four giant planets caught on camera at once.",
+    "detail": "HR 8799 is a young star about 130 light-years away that hosts the first multi-planet system ever directly imaged. Beginning in 2008, astronomers captured actual pictures of four massive gas-giant planets orbiting it, glowing with the heat of their recent formation. Because the planets are large, hot, and far from their star, their faint light could be separated from the star's glare. Time-lapse observations have even shown them slowly moving along their orbits. HR 8799 remains a showcase for direct imaging and a natural laboratory for studying how giant planets form and what their atmospheres are like.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/HR_8799"
+  },
+  {
+    "id": 95,
+    "title": "Beta Pictoris b",
+    "shortDescription": "A young giant planet still carving its birth disk.",
+    "detail": "Beta Pictoris b is a young gas giant orbiting the bright, nearby star Beta Pictoris, about 63 light-years away, which is encircled by a vast disk of dust and debris. Directly imaged, the planet is only around 20 million years old and still hot from formation. Its orbit is aligned with the debris disk, and it helps shape that disk, offering astronomers a live view of a planetary system in its youth. Beta Pictoris is one of the best places to watch the early stages of planet formation and the leftover material from which planets are built.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Beta_Pictoris_b"
+  },
+  {
+    "id": 96,
+    "title": "PDS 70: A Planet Caught Forming",
+    "shortDescription": "The first newborn planet seen in its birth disk.",
+    "detail": "PDS 70 is a young star about 370 light-years away surrounded by a protoplanetary disk, and it made history as the site of the first confirmed image of a planet still being born. In 2018, astronomers directly imaged PDS 70b, a giant planet embedded in a gap it had cleared in the disk, actively gathering gas. A second forming planet, PDS 70c, was found nearby, complete with its own disk of material that could form moons. PDS 70 offers an unprecedented real-time view of planet formation, testing theories that were previously based only on models and mature systems.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/PDS_70"
+  },
+  {
+    "id": 97,
+    "title": "Kepler-444: An Ancient System",
+    "shortDescription": "Five small planets nearly as old as the galaxy.",
+    "detail": "Kepler-444 is a star about 120 light-years away that hosts five small, rocky planets, and it is remarkably ancient: roughly 11 billion years old, more than twice the age of our Solar System and dating to when the Milky Way was young. Its planets, all smaller than Earth, formed when the universe was only a few billion years old. Kepler-444 shows that rocky planets have been forming for almost the entire history of the galaxy, meaning worlds, and potentially life, could have arisen long before Earth even existed. It deepens the sense of how old the cosmos of planets truly is.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler-444"
+  },
+  {
+    "id": 98,
+    "title": "Barnard's Star b",
+    "shortDescription": "A planet at the second-closest star system.",
+    "detail": "Barnard's Star is a red dwarf just under 6 light-years away, the closest single star to the Sun and second only to the Alpha Centauri system. After a long search, astronomers confirmed a small planet, Barnard b, orbiting it, along with evidence for additional low-mass companions. These worlds are only a fraction of Earth's mass and orbit very close to the cool star, making them too hot for liquid water despite the star's dimness. Their detection required extraordinarily precise measurements, and their nearness makes Barnard's Star a compelling target for the ongoing hunt for planets in our cosmic neighborhood.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Barnard%27s_Star"
+  },
+  {
+    "id": 99,
+    "title": "Ross 128 b",
+    "shortDescription": "A temperate world around a calm red dwarf.",
+    "detail": "Ross 128 b is a roughly Earth-mass planet about 11 light-years away, one of the nearest temperate exoplanets known. What makes it especially interesting is its host: Ross 128 is an unusually quiet, well-behaved red dwarf that produces far fewer violent flares than most, improving the odds that a planet could retain an atmosphere. The planet orbits close in but, because the star is dim, may have moderate temperatures. Though we cannot yet tell whether it is truly habitable, its combination of nearness, modest size, and a gentle star makes Ross 128 b a valuable target for future study.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Ross_128_b"
+  },
+  {
+    "id": 100,
+    "title": "Gliese 667 Cc",
+    "shortDescription": "A super-Earth basking in the light of three suns.",
+    "detail": "Gliese 667 Cc is a super-Earth about 23 light-years away, orbiting the faint red dwarf Gliese 667 C, which itself belongs to a triple-star system. From the planet, the two other suns would appear as brilliant stars in the sky. At least a few times Earth's mass, it lies within its dim star's habitable zone and receives roughly comparable energy to Earth, making it an early example of a potentially habitable super-Earth. Its multi-star setting is a vivid reminder that planets exist in far more varied and dramatic environments than our lone-sun Solar System.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Gliese_667_Cc"
+  },
+  {
+    "id": 101,
+    "title": "Betelgeuse",
+    "shortDescription": "A red supergiant destined to explode.",
+    "detail": "Betelgeuse is a red supergiant marking the shoulder of the constellation Orion, one of the largest and most luminous stars visible to the naked eye. If placed at the center of our Solar System, it would engulf the orbit of Mars or beyond. Nearing the end of its life, it will one day explode as a supernova, briefly shining as bright as the Moon in our sky. In 2019 it dramatically dimmed, sparking speculation the blast was imminent, but this turned out to be a giant dust cloud. When it does explode, it will pose no danger to Earth.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Betelgeuse"
+  },
+  {
+    "id": 102,
+    "title": "Sirius, the Dog Star",
+    "shortDescription": "The brightest star in the night sky, with a hidden companion.",
+    "detail": "Sirius is the brightest star in Earth's night sky, blazing in the constellation Canis Major, partly because it is intrinsically luminous and partly because it is close, just 8.6 light-years away. What looks like a single star is actually a pair: the brilliant Sirius A and a faint white dwarf companion, Sirius B, the burnt-out core of a once-larger star. Sirius has guided sailors and inspired myths for millennia; ancient Egyptians timed the Nile's flooding by its return to the dawn sky. Its twinkling brilliance makes it a favorite landmark for stargazers everywhere.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Sirius"
+  },
+  {
+    "id": 103,
+    "title": "VY Canis Majoris",
+    "shortDescription": "One of the largest stars ever discovered.",
+    "detail": "VY Canis Majoris is a red hypergiant and one of the largest known stars, with a radius perhaps 1,400 times that of the Sun. If it replaced the Sun, its surface would extend past the orbit of Jupiter. Despite its enormous size, it is so diffuse that its average density is far less than air. The star is unstable and shedding huge amounts of material, wrapping itself in complex clouds of dust and gas as it approaches a violent end. VY Canis Majoris shows the extreme upper limits of how large and luminous a star can become before it destroys itself.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/VY_Canis_Majoris"
+  },
+  {
+    "id": 104,
+    "title": "Neutron Stars",
+    "shortDescription": "A teaspoon of one would weigh billions of tons.",
+    "detail": "A neutron star is the collapsed core left behind when a massive star explodes as a supernova. It crams more mass than the Sun into a sphere only about 20 kilometers across, making it almost unimaginably dense: a single teaspoon of its material would weigh billions of tons on Earth. Neutron stars spin rapidly, sometimes hundreds of times per second, and possess magnetic fields trillions of times stronger than Earth's. Their gravity is so intense that they warp space around them. These exotic objects are natural laboratories for physics under conditions impossible to recreate anywhere on Earth.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Neutron_star"
+  },
+  {
+    "id": 105,
+    "title": "Magnetars",
+    "shortDescription": "Neutron stars with the strongest magnets in the universe.",
+    "detail": "A magnetar is a type of neutron star with an almost inconceivably powerful magnetic field, the strongest known in the universe, trillions of times stronger than Earth's. This field is so intense it would be lethal from thousands of kilometers away and could distort the very atoms in your body. Magnetars occasionally unleash colossal bursts of X-rays and gamma rays as their crusts fracture in starquakes; one such flare in 2004 briefly affected Earth's atmosphere from thousands of light-years away. These rare, violent objects push our understanding of matter and magnetism to the absolute extreme.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Magnetar"
+  },
+  {
+    "id": 106,
+    "title": "White Dwarfs",
+    "shortDescription": "The glowing ember fate of stars like our Sun.",
+    "detail": "A white dwarf is the dense, dying remnant of a star like the Sun, left behind after it exhausts its fuel, swells into a red giant, and sheds its outer layers. About the size of Earth but with a mass comparable to the Sun, a white dwarf is incredibly dense. It no longer fuses elements and simply radiates away its leftover heat, slowly cooling and fading over billions of years. Eventually it will become a cold, dark cinder. Roughly 97% of stars, including our Sun, will end their lives this way, making white dwarfs the galaxy's most common stellar tombstones.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/White_dwarf"
+  },
+  {
+    "id": 107,
+    "title": "Supernovae",
+    "shortDescription": "Stellar explosions that outshine entire galaxies.",
+    "detail": "A supernova is the cataclysmic explosion of a star, briefly outshining an entire galaxy of billions of stars. They occur either when a massive star's core collapses at the end of its life, or when a white dwarf in a binary system gains too much mass and detonates. Supernovae forge and scatter heavy elements across space, seeding future stars and planets, the very atoms that make up worlds and living things. They also leave behind neutron stars or black holes. A nearby supernova would be a spectacular sight, and these explosions are among the most energetic events in the cosmos.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Supernova"
+  },
+  {
+    "id": 108,
+    "title": "Type Ia Supernovae",
+    "shortDescription": "Cosmic mile-markers that measure the universe.",
+    "detail": "Type Ia supernovae occur when a white dwarf in a binary system accumulates enough matter to trigger a runaway thermonuclear explosion. Because they detonate at a consistent mass, they blaze with a remarkably predictable peak brightness, making them 'standard candles.' By comparing how bright they truly are to how bright they appear, astronomers measure vast cosmic distances with precision. It was these supernovae that, in the 1990s, revealed the universe's expansion is accelerating, leading to the discovery of dark energy. They remain one of cosmology's most powerful tools for mapping the scale and history of the universe.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Type_Ia_supernova"
+  },
+  {
+    "id": 109,
+    "title": "Kilonovae",
+    "shortDescription": "Colliding neutron stars that forge gold.",
+    "detail": "A kilonova is the brilliant flash produced when two neutron stars spiral together and merge. These rare collisions are cosmic forges, creating and flinging out enormous quantities of the heaviest elements, including gold, platinum, and uranium. In 2017, astronomers observed a kilonova in a landmark event: gravitational waves from the merger were detected alongside light across the spectrum, confirming that such collisions produce heavy elements. Much of the gold in your jewelry was likely made in an ancient neutron-star collision. Kilonovae opened the era of multi-messenger astronomy, in which the same event is studied through both light and ripples in spacetime.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kilonova"
+  },
+  {
+    "id": 110,
+    "title": "Red Giants",
+    "shortDescription": "The swollen future of our own Sun.",
+    "detail": "A red giant is a dying star that has exhausted the hydrogen in its core and swelled enormously, its outer layers cooling to a reddish glow. In about five billion years, our Sun will become one, expanding perhaps beyond the orbit of Venus and scorching or engulfing the inner planets, including possibly Earth. Red giants fuse heavier elements in their cores and shed their outer layers into space, enriching the galaxy. Eventually the Sun will cast off its outer shell as a glowing planetary nebula and leave behind a white dwarf. Red giants mark the dramatic old age of Sun-like stars.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Red_giant"
+  },
+  {
+    "id": 111,
+    "title": "Cepheid Variables",
+    "shortDescription": "Pulsing stars that unlocked the size of the cosmos.",
+    "detail": "Cepheid variables are stars that pulse in brightness with clockwork regularity, brightening and dimming over days or weeks. In the early 1900s, astronomer Henrietta Swan Leavitt discovered that a Cepheid's pulsation period is tightly linked to its true luminosity. This meant that by timing a Cepheid's beat, astronomers could calculate how far away it is. These stars became the first rung of the cosmic distance ladder, allowing Edwin Hubble to prove that other galaxies lie far beyond the Milky Way and that the universe is expanding. Cepheids remain vital tools for measuring distances across the cosmos.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Cepheid_variable"
+  },
+  {
+    "id": 112,
+    "title": "The Chandrasekhar Limit",
+    "shortDescription": "The mass ceiling that decides a star's fate.",
+    "detail": "The Chandrasekhar limit is the maximum mass a white dwarf can have, about 1.4 times the mass of the Sun. Below it, the pressure of tightly packed electrons can hold the star up against gravity forever. Above it, that pressure fails, and the star collapses further, triggering a supernova or forming a neutron star. Calculated by the young physicist Subrahmanyan Chandrasekhar in 1930, the limit was initially met with skepticism but later earned him a Nobel Prize. It is a beautiful example of how a single number, born from physics, governs the ultimate destiny of stars.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Chandrasekhar_limit"
+  },
+  {
+    "id": 113,
+    "title": "Black Holes",
+    "shortDescription": "Regions where gravity lets nothing escape, not even light.",
+    "detail": "A black hole is a region of space where gravity is so overwhelming that nothing, not even light, can escape once it crosses the boundary called the event horizon. Most form when a very massive star collapses at the end of its life. Despite their fearsome reputation, black holes do not roam the galaxy devouring everything; from a safe distance, their gravity behaves like any other object's. They range from a few times the Sun's mass to the supermassive giants at galaxy centers. Predicted by Einstein's relativity, black holes are now confirmed by starlight, gravitational waves, and direct images.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Black_hole"
+  },
+  {
+    "id": 114,
+    "title": "Sagittarius A*",
+    "shortDescription": "The supermassive black hole at the Milky Way's heart.",
+    "detail": "At the center of our galaxy lurks Sagittarius A*, a supermassive black hole about four million times the mass of the Sun. Astronomers proved its existence by tracking stars whipping around an invisible, incredibly massive point, work that earned a Nobel Prize. In 2022, the Event Horizon Telescope released the first direct image of it, showing a glowing ring of superheated gas around a dark central shadow. Despite its enormous mass, it is relatively quiet compared with the ravenous black holes in some other galaxies. Nearly every large galaxy is thought to host a supermassive black hole at its core.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Sagittarius_A*"
+  },
+  {
+    "id": 115,
+    "title": "The First Image of a Black Hole",
+    "shortDescription": "How we photographed a shadow 55 million light-years away.",
+    "detail": "In 2019, the Event Horizon Telescope revealed the first-ever image of a black hole, the supermassive giant at the center of galaxy M87, some 55 million light-years away and billions of times the Sun's mass. The picture showed a bright ring of glowing gas encircling a dark shadow, exactly as Einstein's theory predicted. Capturing it required linking radio telescopes across the globe into a virtual instrument the size of Earth. The achievement transformed black holes from mathematical abstractions and indirect inferences into something humanity has genuinely seen, one of the great scientific images of our age.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Messier_87"
+  },
+  {
+    "id": 116,
+    "title": "The Event Horizon",
+    "shortDescription": "A one-way boundary at the edge of no return.",
+    "detail": "The event horizon is the boundary surrounding a black hole beyond which nothing can return. It is not a physical surface but a point of no escape: cross it, and reaching the outside would require traveling faster than light, which is impossible. To a distant observer, an object falling in appears to slow and freeze at the horizon, reddening and fading, because of the extreme warping of time by gravity. The horizon's size depends on the black hole's mass. Everything about a black hole that the outside universe can ever know is, in a sense, encoded at this strange frontier.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Event_horizon"
+  },
+  {
+    "id": 117,
+    "title": "Hawking Radiation",
+    "shortDescription": "Why black holes may slowly evaporate.",
+    "detail": "In 1974, Stephen Hawking made a startling prediction: black holes are not entirely black but slowly emit faint radiation due to quantum effects near the event horizon. This Hawking radiation causes a black hole to gradually lose mass and, over immense timescales, evaporate completely. The smaller the black hole, the faster it radiates and the hotter it is; enormous ones evaporate incredibly slowly, far longer than the current age of the universe. The idea bridges gravity and quantum mechanics and raises deep puzzles, like what happens to information that falls in. It remains one of theoretical physics's most profound insights.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Hawking_radiation"
+  },
+  {
+    "id": 118,
+    "title": "Gravitational Waves",
+    "shortDescription": "Ripples in spacetime from cosmic collisions.",
+    "detail": "Gravitational waves are ripples in the fabric of spacetime, produced when massive objects accelerate violently, such as two black holes spiraling together. Predicted by Einstein in 1916, they were finally detected in 2015 by the LIGO observatories, which measured a distortion far smaller than the width of a proton as a wave from a distant black-hole merger passed through Earth. The discovery earned a Nobel Prize and opened an entirely new way to observe the universe, one based on gravity rather than light. Gravitational-wave astronomy now regularly detects collisions of black holes and neutron stars across the cosmos.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Gravitational_wave"
+  },
+  {
+    "id": 119,
+    "title": "Quasars",
+    "shortDescription": "The blazing hearts of the most distant galaxies.",
+    "detail": "A quasar is an extraordinarily luminous object powered by a supermassive black hole devouring matter at the center of a distant galaxy. As gas spirals inward, it heats to enormous temperatures and blazes brighter than all the stars of its host galaxy combined, so bright that quasars can be seen across almost the entire observable universe. Because their light has traveled for billions of years, quasars are windows into the early cosmos. Once mysterious 'quasi-stellar' points of light, they are now understood as the extreme, active phase of galaxies with feeding black holes at their cores.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Quasar"
+  },
+  {
+    "id": 120,
+    "title": "Relativistic Jets",
+    "shortDescription": "Beams of matter fired across thousands of light-years.",
+    "detail": "Some black holes and neutron stars launch relativistic jets, narrow beams of plasma blasted outward at nearly the speed of light. Powered by matter swirling in an accretion disk and channeled by intense magnetic fields, these jets can stretch for thousands or even millions of light-years, far beyond their host galaxies. When such a jet happens to point almost directly at Earth, the object appears especially bright and is called a blazar. Relativistic jets are among the most powerful phenomena in the universe, and how they form and stay so tightly focused is still an active area of research.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Astrophysical_jet"
+  },
+  {
+    "id": 121,
+    "title": "The Milky Way",
+    "shortDescription": "Our home galaxy of hundreds of billions of stars.",
+    "detail": "The Milky Way is the galaxy we call home, a barred spiral roughly 100,000 light-years across containing somewhere between 100 and 400 billion stars, along with vast clouds of gas and dust and a supermassive black hole at its center. Our Solar System sits about halfway out in one of its spiral arms, taking roughly 230 million years to complete a single orbit around the galactic center. The faint band of light we see arching across a dark night sky is our edge-on view into the galaxy's crowded disk. It is just one of countless galaxies in the universe.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Milky_Way"
+  },
+  {
+    "id": 122,
+    "title": "The Andromeda Collision",
+    "shortDescription": "Our galaxy is on a collision course with Andromeda.",
+    "detail": "The Andromeda Galaxy, our nearest large galactic neighbor about 2.5 million light-years away, is racing toward the Milky Way and is expected to collide and merge with it in roughly 4 to 5 billion years. Despite the drama, individual stars are so far apart that almost none will actually crash; instead the two galaxies will gravitationally dance, distort, and eventually blend into a single larger galaxy sometimes nicknamed Milkomeda. The night sky of any surviving world would be transformed. It is a reminder that even galaxies are in motion, and the cosmos is far from static.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Andromeda%E2%80%93Milky_Way_collision"
+  },
+  {
+    "id": 123,
+    "title": "The Local Group",
+    "shortDescription": "Our galaxy's neighborhood of dozens of galaxies.",
+    "detail": "The Local Group is the cluster of galaxies to which the Milky Way belongs, spanning about 10 million light-years and containing more than 80 known members. It is dominated by two large spiral galaxies, the Milky Way and Andromeda, each surrounded by a retinue of smaller dwarf galaxies. Bound together by gravity, these galaxies move and interact over cosmic time. The Local Group is itself a small part of much larger structures, the Virgo Supercluster and the immense Laniakea Supercluster. Mapping our galactic neighborhood helps astronomers understand how galaxies form, cluster, and evolve across the universe.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Local_Group"
+  },
+  {
+    "id": 124,
+    "title": "Types of Galaxies",
+    "shortDescription": "Spirals, ellipticals, and irregulars across the cosmos.",
+    "detail": "Galaxies come in several main shapes. Spiral galaxies, like the Milky Way, have flat, rotating disks with graceful arms rich in gas where new stars form. Elliptical galaxies are rounder, smoother collections of mostly older stars with little new star formation, and include some of the largest galaxies known. Irregular galaxies lack a clear shape, often distorted by gravitational encounters. Edwin Hubble first organized galaxies into this classification, sometimes called the tuning-fork diagram. Studying galaxy shapes reveals their histories, since collisions and mergers can transform a spiral into an elliptical over billions of years.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Galaxy_morphological_classification"
+  },
+  {
+    "id": 125,
+    "title": "Globular Clusters",
+    "shortDescription": "Ancient swarms of hundreds of thousands of stars.",
+    "detail": "Globular clusters are dense, spherical swarms of tens of thousands to millions of stars, bound tightly by gravity and orbiting the outskirts of galaxies. They are among the oldest structures in the universe, with many stars nearly as old as the cosmos itself, making them living fossils of the early galaxy. The Milky Way hosts around 150 of them. Inside, stars are packed so closely that the night sky of a planet there would blaze with thousands of brilliant points. Their great age and dense populations make globular clusters valuable laboratories for studying stellar evolution.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Globular_cluster"
+  },
+  {
+    "id": 126,
+    "title": "Nebulae",
+    "shortDescription": "Cosmic clouds where stars are born and die.",
+    "detail": "A nebula is a vast cloud of gas and dust in space, often spanning many light-years. Some are stellar nurseries, where gravity pulls the material together to ignite new stars. Others are the glowing wreckage of dying stars: planetary nebulae are the shed outer layers of Sun-like stars, while supernova remnants are the expanding debris of exploded ones. Nebulae shine by reflecting starlight, glowing as their gas is energized, or appearing as dark silhouettes against brighter backgrounds. Famous examples like the Orion Nebula are among the most beautiful objects in the sky and central to the cycle of stellar life and death.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Nebula"
+  },
+  {
+    "id": 127,
+    "title": "The Pillars of Creation",
+    "shortDescription": "Towering columns of gas birthing new stars.",
+    "detail": "The Pillars of Creation are colossal columns of gas and dust in the Eagle Nebula, about 6,500 light-years away, made famous by an iconic 1995 Hubble Space Telescope image and later captured in stunning infrared detail by JWST. Light-years tall, these pillars are dense regions of a stellar nursery where new stars are actively forming inside. They are being slowly sculpted and eroded by radiation from nearby young stars. The image became one of the most celebrated in astronomy, a breathtaking symbol of cosmic creation and a vivid illustration of where and how stars are born.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Pillars_of_Creation"
+  },
+  {
+    "id": 128,
+    "title": "The Laniakea Supercluster",
+    "shortDescription": "The immense cosmic structure we call home.",
+    "detail": "In 2014, astronomers mapped the flows of galaxies around us and defined Laniakea, an enormous supercluster containing the Milky Way and roughly 100,000 other galaxies, spanning about 520 million light-years. Its name means 'immeasurable heaven' in Hawaiian. Within Laniakea, galaxies stream toward a gravitational focal region called the Great Attractor. This vast structure is part of the cosmic web, the largest-scale pattern of matter in the universe, where galaxies gather along immense filaments separated by nearly empty voids. Laniakea gives us an address in the cosmos far grander than our galaxy or Local Group alone.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Laniakea_Supercluster"
+  },
+  {
+    "id": 129,
+    "title": "The Observable Universe",
+    "shortDescription": "A sphere 93 billion light-years across, and growing.",
+    "detail": "The observable universe is the portion of the cosmos we can, in principle, see: the region from which light has had time to reach us since the Big Bang. Although the universe is about 13.8 billion years old, the observable universe is roughly 93 billion light-years across, because space itself has expanded while that light traveled. It contains an estimated two trillion galaxies. Beyond its edge, more universe almost certainly exists, but its light has not yet arrived and, due to accelerating expansion, some never will. We sit at the center of our own observable bubble, as does every observer.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Observable_universe"
+  },
+  {
+    "id": 130,
+    "title": "Hubble's Law",
+    "shortDescription": "The discovery that the universe is expanding.",
+    "detail": "In 1929, Edwin Hubble found that distant galaxies are almost all moving away from us, and the farther a galaxy is, the faster it recedes. This relationship, now called Hubble's law, was the first strong evidence that the universe is expanding, a cornerstone of modern cosmology. The recession is measured through redshift, the stretching of light to longer wavelengths as space expands. Importantly, galaxies are not flying through space away from a center; rather, space itself is stretching between them. Hubble's discovery reshaped humanity's view of the cosmos and pointed back toward a hot, dense beginning.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Hubble%27s_law"
+  },
+  {
+    "id": 131,
+    "title": "The Big Bang",
+    "shortDescription": "The hot, dense beginning of everything, 13.8 billion years ago.",
+    "detail": "The Big Bang is the leading scientific theory for the origin of the universe, describing how it began about 13.8 billion years ago from an extremely hot, dense state and has been expanding and cooling ever since. It is not an explosion in space but an expansion of space itself. The theory is supported by strong evidence: the expansion of galaxies, the cosmic microwave background afterglow, and the observed abundances of light elements forged in the first minutes. The Big Bang does not describe what, if anything, came before; it marks the beginning of the cosmos we can observe and study.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Big_Bang"
+  },
+  {
+    "id": 132,
+    "title": "Cosmic Inflation",
+    "shortDescription": "A fraction of a second that shaped the whole universe.",
+    "detail": "Cosmic inflation is a theory that, in the first tiny fraction of a second after the Big Bang, the universe underwent a brief burst of staggeringly fast expansion, ballooning by an enormous factor almost instantly. This elegant idea solves several puzzles: why the universe looks so uniform on large scales, why space appears geometrically flat, and how tiny quantum fluctuations were stretched to cosmic size to seed the galaxies we see today. While not yet directly confirmed, inflation is widely accepted because it explains so much. It suggests the observable universe grew from an unimaginably small patch of space.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Inflation_(cosmology)"
+  },
+  {
+    "id": 133,
+    "title": "The First Stars",
+    "shortDescription": "The pristine giants that ended the cosmic dark ages.",
+    "detail": "The first stars, known as Population III, formed a few hundred million years after the Big Bang from the only ingredients then available: hydrogen and helium. Lacking heavier elements, they are thought to have grown enormously massive and blazingly bright, living fast and dying young in powerful supernovae. Those explosions forged the first heavier elements and seeded the universe for later generations of stars and planets. No Population III star has been directly observed yet, as they lie at the very edge of the visible universe, but JWST is now searching for signs of these pristine cosmic pioneers.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Stellar_population"
+  },
+  {
+    "id": 134,
+    "title": "The Cosmic Web",
+    "shortDescription": "The universe's largest structure, a web of galaxies.",
+    "detail": "On the grandest scales, matter in the universe is not scattered randomly but arranged in a vast cosmic web. Galaxies gather along immense filaments and sheets of gas and dark matter, stretching for hundreds of millions of light-years, surrounded by enormous nearly empty regions called voids. Where filaments intersect, great clusters of galaxies form. This structure grew from tiny density variations in the early universe, amplified by gravity over billions of years. Enormous computer simulations reproduce the cosmic web strikingly well, giving astronomers confidence in our understanding of how cosmic structure assembled from the Big Bang to today.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Galaxy_filament"
+  },
+  {
+    "id": 135,
+    "title": "Olbers's Paradox",
+    "shortDescription": "Why is the night sky dark?",
+    "detail": "Olbers's paradox asks a deceptively simple question: if the universe were infinite, eternal, and filled with stars, then every line of sight should eventually land on a star, and the whole night sky should blaze as bright as the Sun. Yet the night is dark. The resolution lies in the nature of the cosmos: the universe has a finite age, so light from the most distant stars has not had time to reach us, and cosmic expansion stretches and dims distant light. The darkness of the night sky is thus quiet but profound evidence that the universe had a beginning.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Olbers%27s_paradox"
+  },
+  {
+    "id": 136,
+    "title": "The Local Bubble",
+    "shortDescription": "The Sun drifts through a cavity carved by supernovae.",
+    "detail": "Our Solar System currently sits inside the Local Bubble, a relatively empty cavity in the interstellar gas of the Milky Way, roughly 1,000 light-years across. It was likely carved out by a series of supernova explosions over the past several million years, which swept the gas outward into a shell where new stars are now forming. The Sun is merely passing through this region on its long orbit around the galaxy. The Local Bubble influences the flow of cosmic rays and interstellar material reaching us, and it reminds us that even the space between the stars has structure and history.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Local_Bubble"
+  },
+  {
+    "id": 137,
+    "title": "The Gaia Star Map",
+    "shortDescription": "A spacecraft charting nearly two billion stars.",
+    "detail": "The European Space Agency's Gaia spacecraft has created the most precise and comprehensive map of our galaxy ever made, measuring the positions, distances, motions, and properties of nearly two billion stars. By repeatedly measuring tiny shifts in stellar positions, Gaia pins down distances through parallax with extraordinary accuracy. Its data have revolutionized astronomy, revealing the Milky Way's structure and history, uncovering ancient galactic mergers, and providing essential distance measurements for exoplanet host stars. Gaia effectively gives astronomers a three-dimensional, moving model of our galaxy, an indispensable reference that underpins countless other discoveries across modern astrophysics.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Gaia_(spacecraft)"
+  },
+  {
+    "id": 138,
+    "title": "The Hubble Space Telescope",
+    "shortDescription": "The orbiting observatory that redefined the universe.",
+    "detail": "Launched in 1990, the Hubble Space Telescope orbits above Earth's distorting atmosphere, delivering breathtakingly sharp views of the cosmos for over three decades. Despite a famously flawed mirror at launch, later corrected by spacewalking astronauts, Hubble went on to transform astronomy: it helped measure the universe's expansion, imaged the birth and death of stars, peered into deep fields revealing thousands of distant galaxies, and captured many of the most iconic images in science. For exoplanets, it made pioneering atmospheric measurements. Hubble made the universe visible to the public and remains one of history's most productive scientific instruments.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Hubble_Space_Telescope"
+  },
+  {
+    "id": 139,
+    "title": "Cassini at Saturn",
+    "shortDescription": "Thirteen years exploring Saturn and its moons.",
+    "detail": "The Cassini spacecraft, a joint NASA-ESA mission, orbited Saturn from 2004 to 2017, revolutionizing our understanding of the ringed planet and its moons. It dropped the Huygens probe onto Titan, the first landing in the outer Solar System, and discovered the water-vapor geysers of Enceladus, revealing a subsurface ocean. Cassini studied Saturn's rings, storms, and dozens of moons in unprecedented detail. It ended its mission with a deliberate 'Grand Finale,' plunging into Saturn's atmosphere to avoid ever contaminating a potentially habitable moon. Cassini stands as one of the most successful planetary exploration missions ever flown.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Cassini%E2%80%93Huygens"
+  },
+  {
+    "id": 140,
+    "title": "New Horizons and Arrokoth",
+    "shortDescription": "The farthest object ever explored up close.",
+    "detail": "After its historic 2015 flyby of Pluto, NASA's New Horizons spacecraft journeyed deeper into the Kuiper Belt and, on New Year's Day 2019, flew past a small, distant object named Arrokoth. Over four billion miles from Earth, it became the most distant object ever explored up close. Arrokoth turned out to be a pristine contact binary, two lobes gently joined like a cosmic snowman, frozen and unchanged since the Solar System's birth. Studying such an ancient relic offers a direct glimpse into how the earliest building blocks of planets came together in the outer Solar System.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Arrokoth"
+  },
+  {
+    "id": 141,
+    "title": "Perseverance and the Search for Past Life",
+    "shortDescription": "A rover hunting for ancient life on Mars.",
+    "detail": "NASA's Perseverance rover landed in 2021 in Jezero Crater, the site of an ancient river delta where a lake once existed billions of years ago, an ideal place to search for signs of past microbial life. It studies rocks, analyzes chemistry, and, crucially, collects and seals samples in tubes to be returned to Earth by a future mission for detailed laboratory study. Perseverance also carried Ingenuity, the first helicopter to fly on another world. By caching Martian rocks for eventual return, it is laying the groundwork for potentially answering whether Mars ever hosted life.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Perseverance_(rover)"
+  },
+  {
+    "id": 142,
+    "title": "Ingenuity, the Mars Helicopter",
+    "shortDescription": "The first aircraft to fly on another planet.",
+    "detail": "Ingenuity was a small, experimental helicopter that traveled to Mars with the Perseverance rover and, in 2021, made the first powered, controlled flight of an aircraft on another planet. Flying in Mars's thin atmosphere, less than 1% as dense as Earth's, required ultralight construction and rotors spinning far faster than any helicopter on Earth. Intended for just a handful of test flights, Ingenuity vastly exceeded expectations, completing dozens of flights over nearly three years and scouting terrain for the rover. It proved that aerial exploration of other worlds is possible, opening a new dimension for future missions.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Ingenuity_(helicopter)"
+  },
+  {
+    "id": 143,
+    "title": "The Extremely Large Telescope",
+    "shortDescription": "A giant eye that could image Earth-like worlds.",
+    "detail": "The Extremely Large Telescope, under construction in the Chilean desert, will be the largest optical telescope ever built, with a segmented main mirror about 39 meters across. Its enormous light-gathering power and advanced adaptive optics, which cancel out atmospheric blurring, will give it sharper vision than any telescope before it. Among its goals is the direct imaging and study of exoplanets, potentially including rocky worlds in the habitable zones of nearby stars, and analyzing their atmospheres for signs of life. When it begins operations, it promises to open a dramatic new chapter in the search for another Earth.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Extremely_Large_Telescope"
+  },
+  {
+    "id": 144,
+    "title": "Extremophiles",
+    "shortDescription": "Earth life that thrives where nothing should.",
+    "detail": "Extremophiles are organisms that thrive in conditions once thought impossible for life: boiling hot springs, acid pools, the crushing pressures and darkness of the deep sea, frozen Antarctic ice, and even inside rocks kilometers underground. Some survive intense radiation or complete desiccation. Their existence dramatically expands where we think life could exist, both on Earth and beyond. If microbes flourish in Earth's harshest niches, then the frozen oceans of Europa, the methane lakes of Titan, or the subsurface of Mars suddenly seem less hostile. Extremophiles are a cornerstone of astrobiology and the search for life elsewhere.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Extremophile"
+  },
+  {
+    "id": 145,
+    "title": "Tardigrades",
+    "shortDescription": "Microscopic animals that can survive space.",
+    "detail": "Tardigrades, also called water bears, are tiny animals under a millimeter long that are among the toughest creatures known. By entering a dried-out, dormant state, they can survive extremes that would kill almost anything else: temperatures near absolute zero and above boiling, immense pressure, dehydration, intense radiation, and even the vacuum of space, as experiments in orbit have shown. When conditions improve, they revive and carry on. Their extraordinary resilience makes tardigrades a favorite example in astrobiology, hinting that hardy life could potentially endure interplanetary journeys or survive in harsh environments on other worlds.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Tardigrade"
+  },
+  {
+    "id": 146,
+    "title": "The Miller-Urey Experiment",
+    "shortDescription": "Making life's building blocks from a spark.",
+    "detail": "In 1952, chemists Stanley Miller and Harold Urey ran a landmark experiment to test whether life's building blocks could arise naturally. They sealed water and simple gases thought to resemble the early Earth's atmosphere in glassware and passed electric sparks through it to simulate lightning. Within days, the mixture produced amino acids, the molecular building blocks of proteins. The experiment showed that the raw ingredients of life can form from simple chemistry and energy, without any living thing involved. While the early atmosphere's exact makeup is now debated, Miller-Urey remains a foundational demonstration in the study of life's origins.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Miller%E2%80%93Urey_experiment"
+  },
+  {
+    "id": 147,
+    "title": "The Great Oxidation Event",
+    "shortDescription": "When life first filled the air with oxygen.",
+    "detail": "About 2.4 billion years ago, Earth's atmosphere underwent a profound transformation called the Great Oxidation Event. Tiny photosynthesizing microbes, cyanobacteria, had been releasing oxygen as a waste product, and over vast stretches of time it accumulated, permanently changing the air. For many existing organisms, this oxygen was toxic, likely causing one of the largest extinctions in history, yet it paved the way for complex, energy-hungry life. It also created the ozone layer that shields the surface from radiation. This event shows how life itself can reshape a planet, a key idea when searching for oxygen as a biosignature elsewhere.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Great_Oxidation_Event"
+  },
+  {
+    "id": 148,
+    "title": "Phosphine on Venus",
+    "shortDescription": "A contested hint of chemistry in Venus's clouds.",
+    "detail": "In 2020, astronomers announced the possible detection of phosphine, a gas that on Earth is associated with life, in the clouds of Venus. The claim caused a sensation, since Venus's temperate cloud layers are one of the few places in the inner Solar System where microbial life has been speculated to survive. However, the result proved highly controversial: other teams questioned whether the signal was real, and non-biological explanations are possible. The debate remains unresolved and is a vivid case study in how difficult and contested the search for biosignatures can be. Future missions to Venus aim to investigate further.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Life_on_Venus"
+  },
+  {
+    "id": 149,
+    "title": "Technosignatures",
+    "shortDescription": "Searching for the fingerprints of alien technology.",
+    "detail": "A technosignature is any measurable sign of technology that would reveal the presence of an advanced civilization. The classic example is an artificial radio or laser signal, the target of traditional SETI, but the concept is broader. It includes the waste heat of a Dyson sphere glowing in infrared, industrial pollutants in a planet's atmosphere, city lights on a night side, or giant structures blocking starlight. As telescopes grow more powerful and capable of studying exoplanet atmospheres, the search for technosignatures is becoming a more serious scientific pursuit, complementing the hunt for biosignatures from simple life.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Technosignature"
+  },
+  {
+    "id": 150,
+    "title": "The Overview Effect",
+    "shortDescription": "How seeing Earth from space changes astronauts.",
+    "detail": "The overview effect is a profound shift in perspective reported by many astronauts who have seen Earth from space. Viewing our planet as a small, fragile, borderless sphere suspended in the black void often evokes a powerful sense of awe, unity, and responsibility for protecting it. National boundaries vanish, and the thin blue line of the atmosphere looks strikingly delicate. Coined by writer Frank White, the term captures a recurring, deeply emotional experience described by space travelers across nations and decades. It connects space exploration back to Earth, underscoring how studying other worlds can transform how we see our own.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Overview_effect"
+  },
+  {
+    "id": 151,
+    "title": "Light-Years and Parsecs",
+    "shortDescription": "The vast units astronomers use to measure space.",
+    "detail": "Space is so enormous that everyday units like kilometers become useless, so astronomers measure distance in light-years and parsecs. A light-year is the distance light travels in one year, about 9.5 trillion kilometers. A parsec, favored by professionals, is about 3.26 light-years and is based on the tiny angle a star appears to shift as Earth orbits the Sun. The nearest star is over four light-years away, and our galaxy spans 100,000. These units also mean we see space as a time machine: light from distant objects left them long ago, so we view them as they were in the past.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Light-year"
+  },
+  {
+    "id": 152,
+    "title": "The Cosmic Speed Limit",
+    "shortDescription": "Nothing can travel faster than light.",
+    "detail": "The speed of light in a vacuum, about 300,000 kilometers per second, is the ultimate speed limit of the universe. According to Einstein's relativity, nothing carrying information or matter can exceed it. This has profound consequences: because light takes time to travel, we always see distant objects as they were in the past, and communication across interstellar distances would take years or millennia. It also means the observable universe has an edge, set by how far light has traveled since the Big Bang. The finite speed of light both limits us and lets us peer back through cosmic history.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Speed_of_light"
+  },
+  {
+    "id": 153,
+    "title": "Lagrange Points",
+    "shortDescription": "Gravitational parking spots in space.",
+    "detail": "Lagrange points are special locations in a two-body system, such as the Sun and Earth, where the gravitational pulls and orbital motion balance so that a small object can hold a stable position relative to the two larger bodies. There are five such points. They are prime real estate for spacecraft: the James Webb Space Telescope orbits the Sun-Earth L2 point, staying in line with Earth as it circles the Sun, which keeps its sunshield oriented and its instruments cold. Lagrange points let missions maintain useful, fuel-efficient positions, and in nature they can trap asteroids and dust.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Lagrange_point"
+  },
+  {
+    "id": 154,
+    "title": "Orbital Resonance",
+    "shortDescription": "When orbits sync up in musical ratios.",
+    "detail": "Orbital resonance occurs when orbiting bodies periodically tug on each other because their orbital periods form a simple ratio, like 2:1 or 3:2. These gravitational rhythms can either stabilize a system or destabilize it. Jupiter's moons Io, Europa, and Ganymede are locked in a resonance that keeps their orbits and tidal heating in step. The seven planets of TRAPPIST-1 form a remarkable resonant chain. Resonances also carve gaps in asteroid belts and planetary rings. Like notes in a chord, resonant orbits reveal the hidden gravitational harmonies that shape planetary systems over vast spans of time.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Orbital_resonance"
+  },
+  {
+    "id": 155,
+    "title": "The Roche Limit",
+    "shortDescription": "How close a moon can get before it shatters.",
+    "detail": "The Roche limit is the distance within which a large body's tidal forces will tear apart a smaller one held together only by its own gravity. If a moon or comet strays inside this limit, the difference in gravitational pull across it exceeds its self-gravity, and it breaks into fragments. This is thought to be how planetary rings form, from a shattered moon or a captured object that ventured too close. Saturn's spectacular rings likely originated this way. The Roche limit explains why large moons keep a respectful distance and why debris disks encircle some planets instead.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Roche_limit"
+  },
+  {
+    "id": 156,
+    "title": "Gravity Assists",
+    "shortDescription": "Stealing a planet's motion to fling spacecraft onward.",
+    "detail": "A gravity assist, or slingshot maneuver, lets a spacecraft gain speed and change direction by swinging close past a planet, effectively borrowing a tiny fraction of the planet's orbital energy. This clever trick has made possible missions that would otherwise be impossible with the fuel a rocket can carry. The Voyager probes used a rare planetary alignment to slingshot from world to world across the outer Solar System. Missions to the outer planets and even inward toward the Sun rely on carefully choreographed flybys. Gravity assists turn the motion of planets themselves into free propulsion for exploration.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Gravity_assist"
+  },
+  {
+    "id": 157,
+    "title": "Solar Sails",
+    "shortDescription": "Sailing through space on sunlight.",
+    "detail": "A solar sail is a spacecraft propulsion method that uses the gentle but relentless pressure of sunlight itself. Photons carry momentum, and when they strike a large, ultra-thin reflective sail, they impart a tiny push. Though the force is minuscule, it is continuous and requires no fuel, so over time a sail can build up tremendous speed. Missions like Japan's IKAROS and The Planetary Society's LightSail have demonstrated the concept in space. Solar sails could enable long-duration missions, and powerful lasers pushing tiny sails are the basis of proposals to reach other stars, such as Breakthrough Starshot.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Solar_sail"
+  },
+  {
+    "id": 158,
+    "title": "Escape Velocity",
+    "shortDescription": "The speed needed to break free of a world's gravity.",
+    "detail": "Escape velocity is the speed an object must reach to break free from a body's gravity without further propulsion. On Earth it is about 11.2 kilometers per second, which is why launching to space requires such powerful rockets. Escape velocity depends on a body's mass and size: it is far lower on the Moon and enormous on giant planets or the Sun. Taken to its extreme, a black hole is an object whose escape velocity exceeds the speed of light, so not even light can escape. The concept governs everything from rocket launches to whether a planet can hold onto its atmosphere.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Escape_velocity"
+  },
+  {
+    "id": 159,
+    "title": "Tidal Heating",
+    "shortDescription": "Gravity's flexing that warms distant moons.",
+    "detail": "Tidal heating is the generation of heat inside a body as it is repeatedly flexed and squeezed by the changing gravitational pull of a larger neighbor. As a moon moves along its orbit, the varying tug distorts its shape, and the internal friction from this constant kneading produces heat. This is what powers the volcanoes of Jupiter's moon Io and keeps subsurface oceans liquid on Europa and Enceladus, far from the Sun's warmth. For exoplanets and their moons, tidal heating could sustain conditions for liquid water in places that would otherwise be frozen solid, widening the possible homes for life.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Tidal_heating"
+  },
+  {
+    "id": 160,
+    "title": "Snowball Earth",
+    "shortDescription": "When our planet may have frozen over completely.",
+    "detail": "Snowball Earth is the hypothesis that, on several occasions hundreds of millions of years ago, our planet's surface froze almost entirely, with ice reaching from the poles nearly to the equator. Such deep freezes may have been triggered by runaway feedback, as growing ice reflected more sunlight and cooled the planet further. Volcanic carbon dioxide building up over millions of years eventually warmed the world again, sometimes abruptly. Remarkably, life survived and may even have been spurred toward greater complexity afterward. Snowball Earth shows how dramatically a habitable planet's climate can swing, a sobering lesson for assessing other worlds.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Snowball_Earth"
+  },
+  {
+    "id": 161,
+    "title": "Auroras",
+    "shortDescription": "Glowing curtains painted by the solar wind.",
+    "detail": "Auroras, the northern and southern lights, are shimmering displays of colored light in the sky near a planet's magnetic poles. On Earth they occur when charged particles from the Sun are funneled by the magnetic field into the upper atmosphere, where they collide with gases and make them glow, oxygen producing greens and reds, nitrogen blues and purples. Auroras are not unique to Earth; Jupiter and Saturn have powerful auroras of their own, and they have even been detected around a brown dwarf. They are a beautiful, visible sign of the constant interaction between a world and its star.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Aurora"
+  },
+  {
+    "id": 162,
+    "title": "Cosmic Rays",
+    "shortDescription": "High-energy particles raining from space.",
+    "detail": "Cosmic rays are extremely energetic particles, mostly atomic nuclei, that zip through space at nearly the speed of light and constantly rain down on Earth. They come from the Sun, from exploding stars and other violent events in our galaxy, and even from distant galaxies. Earth's magnetic field and atmosphere shield us from most of them, but some create showers of secondary particles when they strike the air. The most energetic cosmic rays carry astonishing energy in a single particle. For astronauts and for life on planets with weak magnetic shielding, cosmic radiation is a serious hazard to consider.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Cosmic_ray"
+  },
+  {
+    "id": 163,
+    "title": "The Faint Young Sun Paradox",
+    "shortDescription": "Why wasn't the early Earth frozen solid?",
+    "detail": "Stars like the Sun brighten as they age, and models show the young Sun shone perhaps 30% dimmer than today. That raises a puzzle: with so little warmth, the early Earth should have been frozen, yet geological evidence shows liquid water and life existed billions of years ago. This is the faint young Sun paradox. The leading resolution is that the early atmosphere held far more greenhouse gases, like carbon dioxide and methane, trapping enough heat to keep the surface warm. The paradox is a key consideration when judging whether ancient or distant planets could have supported liquid water.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Faint_young_Sun_paradox"
+  },
+  {
+    "id": 164,
+    "title": "Planet Nine",
+    "shortDescription": "A hypothetical giant lurking in the outer dark.",
+    "detail": "Planet Nine is a hypothesized large planet proposed to orbit far beyond Neptune, in the distant reaches of the Solar System. The idea arose because several remote icy bodies have oddly clustered, tilted orbits, as if shepherded by the gravity of an unseen world several times Earth's mass. If it exists, Planet Nine would orbit so far away that it takes thousands of years to circle the Sun and is extremely faint, which is why searches have not yet found it. Some astronomers argue the clustering could have other explanations. The hunt for Planet Nine continues with powerful survey telescopes.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Planet_Nine"
+  },
+  {
+    "id": 165,
+    "title": "The Titius-Bode Law",
+    "shortDescription": "A curious pattern in planetary spacing.",
+    "detail": "The Titius-Bode law is an old observation that the planets of our Solar System are spaced at distances following a simple numerical pattern. It successfully anticipated the orbital distance of Uranus and even predicted a gap where the asteroid belt was later found. However, it breaks down for Neptune and has no accepted physical explanation, so many scientists regard it as a coincidence or a rough consequence of how orbits arrange themselves stably. Whether similar spacing patterns appear in exoplanet systems is an intriguing question, and studying planetary architectures may reveal whether the pattern reflects something real about how systems form.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Titius%E2%80%93Bode_law"
+  },
+  {
+    "id": 166,
+    "title": "WASP-17b: A Backward World",
+    "shortDescription": "A giant planet orbiting against its star's spin.",
+    "detail": "WASP-17b is a giant, extraordinarily puffy exoplanet notable for orbiting its star backward, in the opposite direction to the star's rotation, a so-called retrograde orbit. This was the first planet found to do so, and it overturned the assumption that planets always orbit in the same direction they and their star were born rotating. Such a strange orbit likely resulted from a violent gravitational encounter with another body that flipped its path. WASP-17b is also one of the least dense planets known, larger than Jupiter but a fraction of its mass. It showcases just how chaotic planetary histories can be.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/WASP-17b"
+  },
+  {
+    "id": 167,
+    "title": "Carbon Planets",
+    "shortDescription": "Hypothetical worlds with diamond interiors.",
+    "detail": "Carbon planets are a hypothesized class of world that could form in environments rich in carbon relative to oxygen, unlike Earth, which is silicate-rich. In theory, such planets might have interiors layered with graphite and diamond and surfaces coated in tar-like carbon compounds. For a time, the super-Earth 55 Cancri e was suggested to be a carbon-rich 'diamond planet,' though later measurements cast serious doubt on that idea. No carbon planet has been confirmed, and their existence remains speculative. Still, they illustrate how a planet's basic chemistry, set by the cloud it forms from, could produce worlds profoundly unlike our own.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Carbon_planet"
+  },
+  {
+    "id": 168,
+    "title": "The Radius Valley",
+    "shortDescription": "A curious gap in the sizes of small planets.",
+    "detail": "As astronomers cataloged thousands of small exoplanets, they noticed something odd: planets tend to be either super-Earths, up to about 1.5 times Earth's radius, or sub-Neptunes, around 2 to 3 times, with relatively few in between. This scarcity is called the radius valley or radius gap. The leading explanation is that intense radiation from the host star can strip the puffy hydrogen atmospheres off some sub-Neptunes, shrinking them into bare rocky cores and leaving a gap in sizes. The pattern offers valuable clues about how small planets form, evolve, and lose their atmospheres over time.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Sub-Neptune"
+  },
+  {
+    "id": 169,
+    "title": "Chthonian Planets",
+    "shortDescription": "The stripped-bare cores of dead gas giants.",
+    "detail": "A chthonian planet is a proposed type of world that was once a gas giant but has had its thick gaseous atmosphere stripped away, leaving only its dense rocky or metallic core exposed. This could happen to a hot Jupiter orbiting extremely close to its star, whose intense heat and radiation gradually boil off its outer layers over billions of years. The result would be a hot, dense remnant unlike a normally formed rocky planet. Some observed close-in planets may be caught in this process. Chthonian planets illustrate how a world's very identity can be transformed by its star.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Chthonian_planet"
+  },
+  {
+    "id": 170,
+    "title": "Super-Puff Planets",
+    "shortDescription": "Worlds with the density of cotton candy.",
+    "detail": "Super-puffs are a remarkable class of exoplanet with extraordinarily low density, sometimes compared to cotton candy. They can be as large as Jupiter yet hold only a few times Earth's mass, giving them enormous, extremely bloated atmospheres. How they stay so puffed up is not fully understood; their light gases may be held aloft by heat or their youth. Their very low density makes their atmospheres relatively easy to study by starlight, so despite being strange outliers, super-puffs are valuable natural laboratories. They stretch our definition of what a planet can be and challenge models of planetary formation.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Super-puff"
+  },
+  {
+    "id": 171,
+    "title": "The Frost Line",
+    "shortDescription": "The boundary that shapes every planetary system.",
+    "detail": "The frost line, or snow line, is the distance from a young star beyond which it is cold enough for volatile compounds like water to freeze into ice. This boundary profoundly shapes planet formation. Inside it, only rock and metal can condense, tending to form smaller rocky planets like Earth. Beyond it, abundant ice adds to the available solid material, allowing planets to grow large quickly and gather thick gas envelopes, forming giants like Jupiter. The location of the frost line, and how planets later migrate across it, helps explain the layout of our Solar System and the diversity of others.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Frost_line_(astrophysics)"
+  },
+  {
+    "id": 172,
+    "title": "Planetesimals",
+    "shortDescription": "The city-sized building blocks of planets.",
+    "detail": "Planetesimals are small bodies, ranging from roughly a kilometer to hundreds of kilometers across, that form in the disk of gas and dust around a young star and serve as the building blocks of planets. Dust grains stick together into pebbles, which clump into ever-larger bodies until planetesimals form. Their mutual gravity then draws them together, colliding and merging into planetary embryos and eventually full planets. Leftover planetesimals that never grew into planets survive today as asteroids and comets. Studying these primitive bodies, some visited by spacecraft, reveals how planets assembled from tiny grains into worlds.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Planetesimal"
+  },
+  {
+    "id": 173,
+    "title": "The Nice Model",
+    "shortDescription": "How the giant planets rearranged the Solar System.",
+    "detail": "The Nice model, named after the French city where it was developed, is an influential theory describing how the giant planets of our Solar System migrated to their current orbits. It proposes that Jupiter, Saturn, Uranus, and Neptune formed in a more compact arrangement and later shifted as they interacted gravitationally with a disk of leftover icy bodies. This migration scattered small bodies throughout the Solar System, helping shape the Kuiper Belt and possibly triggering a spike of impacts. The model successfully explains many features of the outer Solar System and illustrates that planetary systems can be dynamic and rearrange over time.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Nice_model"
+  },
+  {
+    "id": 174,
+    "title": "How Exoplanets Are Named",
+    "shortDescription": "The b, c, d system behind planet names.",
+    "detail": "Exoplanet names usually follow a simple scientific convention: the name of the host star or its catalog designation, followed by a lowercase letter. The first planet discovered around a star is labeled 'b,' the next 'c,' and so on in order of discovery, not distance, which is why there is no planet 'a'; that letter is reserved for the star itself. So Kepler-22b is the first planet found around the star Kepler-22. In addition, the International Astronomical Union occasionally runs public campaigns to give some planets and stars proper, more evocative names alongside their technical designations.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Naming_of_exoplanets"
+  },
+  {
+    "id": 175,
+    "title": "2M1207b: The First Imaged Exoplanet",
+    "shortDescription": "The first planet ever directly photographed.",
+    "detail": "2M1207b holds the distinction of being the first exoplanet ever directly imaged, captured in 2004. It is a giant planet several times the mass of Jupiter, orbiting not a normal star but a brown dwarf, a failed star, about 170 light-years away. Because the planet is young, massive, hot, and far from its dim companion, its faint infrared glow could be separated from the object it orbits. The image marked a milestone, moving exoplanets from indirect detection to actual pictures. It paved the way for later direct-imaging triumphs like the multi-planet system HR 8799.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/2M1207b"
+  },
+  {
+    "id": 176,
+    "title": "CoRoT",
+    "shortDescription": "The first space telescope built to hunt transits.",
+    "detail": "CoRoT, a mission led by the French space agency with European partners and launched in 2006, was the first space telescope designed specifically to detect exoplanets by the transit method. Operating above the blurring atmosphere, it achieved the precision needed to spot the tiny dips in starlight caused by passing planets. Among its discoveries was CoRoT-7b, one of the first known rocky super-Earths, a scorched world orbiting extremely close to its star. CoRoT demonstrated that space-based transit hunting worked, blazing the trail for the far more prolific Kepler and TESS missions that followed.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/CoRoT"
+  },
+  {
+    "id": 177,
+    "title": "CHEOPS",
+    "shortDescription": "A telescope that measures known planets precisely.",
+    "detail": "CHEOPS, the CHaracterising ExOPlanet Satellite, is a European Space Agency mission launched in 2019 with a focused goal: rather than discovering new planets, it precisely measures the sizes of already-known exoplanets by observing their transits with high accuracy. Combined with a planet's mass from other methods, an accurate size reveals its density, which hints at whether it is rocky, gaseous, or watery. CHEOPS targets bright, nearby stars known to host planets, refining our knowledge of individual worlds. It represents a shift in exoplanet science from simply finding planets to carefully characterizing what they are actually like.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/CHEOPS"
+  },
+  {
+    "id": 178,
+    "title": "PLATO",
+    "shortDescription": "A future mission hunting Earth twins.",
+    "detail": "PLATO, standing for PLAnetary Transits and Oscillations of stars, is a European Space Agency mission planned for launch in the coming years to search for and characterize rocky planets in the habitable zones of Sun-like stars. Using many small cameras working together to watch a huge number of bright stars, it aims to find planets similar to Earth and precisely determine their sizes, orbits, and ages. It will also study the host stars themselves through their subtle vibrations. PLATO is designed to help answer one of exoplanet science's biggest questions: how common are true Earth twins?",
+    "sourceUrl": "https://en.wikipedia.org/wiki/PLATO_(spacecraft)"
+  },
+  {
+    "id": 179,
+    "title": "Ariel",
+    "shortDescription": "A mission to survey a thousand exoplanet atmospheres.",
+    "detail": "Ariel, the Atmospheric Remote-sensing Infrared Exoplanet Large-survey, is a European Space Agency mission planned for launch later this decade with an ambitious goal: to study the atmospheres of around a thousand known exoplanets. Rather than focusing on a few worlds in depth, Ariel will conduct a broad chemical survey, measuring the composition, temperature, and cloud properties of a diverse population of planets, mostly warm and hot gas giants. By examining so many atmospheres, it aims to reveal how planets form and evolve and why they are so varied. Ariel represents the maturing of exoplanet science into a statistical, comparative field.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/ARIEL"
+  },
+  {
+    "id": 180,
+    "title": "The Search for Radio Beacons",
+    "shortDescription": "Scanning millions of stars for a deliberate signal.",
+    "detail": "Much of the modern search for extraterrestrial intelligence focuses on listening for radio signals that nature is unlikely to produce, such as narrow-band transmissions concentrated at a single frequency. Ambitious programs like Breakthrough Listen use some of the world's largest radio telescopes to survey millions of nearby stars and the plane of the Milky Way. Researchers sift enormous volumes of data, filtering out human-made interference, in hopes of catching a genuinely artificial signal. Decades of searching have so far found only silence and unexplained one-off events. Yet the effort continues, driven by the profound significance a single confirmed detection would carry.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Breakthrough_Listen"
+  },
+  {
+    "id": 181,
+    "title": "FAST, the Giant Radio Dish",
+    "shortDescription": "The world's largest single-dish radio telescope.",
+    "detail": "FAST, the Five-hundred-meter Aperture Spherical Telescope, is the world's largest single-dish radio telescope, nestled in a natural bowl-shaped valley in southwestern China. With a reflecting surface 500 meters across, it can detect extraordinarily faint radio signals from across the cosmos. FAST studies pulsars, cosmic gas, and fast radio bursts, and it also contributes to the search for extraterrestrial intelligence by scanning for artificial signals. Its immense collecting area gives it unmatched sensitivity for a single dish. Instruments like FAST expand our ability to listen to the radio universe, revealing objects and phenomena too faint for smaller telescopes.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Five-hundred-meter_Aperture_Spherical_Telescope"
+  },
+  {
+    "id": 182,
+    "title": "The Pioneer Plaque",
+    "shortDescription": "Humanity's first message aboard a spacecraft.",
+    "detail": "The Pioneer plaques are a pair of gold-anodized metal plates attached to the Pioneer 10 and 11 spacecraft, launched in the early 1970s, the first probes destined to leave the Solar System. Designed by Carl Sagan and Frank Drake, each plaque carries a pictorial message: a drawing of a man and a woman, the spacecraft for scale, our Solar System with the probe's path, and a map pinpointing the Sun using pulsars as cosmic landmarks. Meant for any intelligence that might one day intercept the probes, the plaques were humanity's first deliberate message launched into interstellar space.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Pioneer_plaque"
+  },
+  {
+    "id": 183,
+    "title": "The Transit of Venus",
+    "shortDescription": "A rare alignment that once measured the Solar System.",
+    "detail": "A transit of Venus occurs when Venus passes directly between Earth and the Sun, appearing as a small black dot creeping across the solar disk. These events are extremely rare, coming in pairs eight years apart, then not again for over a century. Historically they were enormously important: by timing the transit from different locations on Earth, 18th-century astronomers made the first good measurements of the distance from Earth to the Sun. The most recent transits were in 2004 and 2012, and the next will not occur until 2117. They are a vivid reminder of the clockwork of the heavens.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Transit_of_Venus"
+  },
+  {
+    "id": 184,
+    "title": "Stellar Parallax",
+    "shortDescription": "Measuring star distances by Earth's own orbit.",
+    "detail": "Stellar parallax is the tiny apparent shift in a nearby star's position against the distant background as Earth moves from one side of its orbit to the other over six months. By measuring this minuscule angle and knowing the size of Earth's orbit, astronomers can calculate the star's distance through simple geometry, with no assumptions about its brightness. Parallax is the most direct and reliable way to measure cosmic distances and forms the foundation of the entire distance ladder. The Gaia spacecraft has used parallax to map the distances to nearly two billion stars with extraordinary precision.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Stellar_parallax"
+  },
+  {
+    "id": 185,
+    "title": "Proper Motion",
+    "shortDescription": "Stars are moving, just very slowly across our sky.",
+    "detail": "The stars appear fixed in their constellations, but they are actually moving through space at high speeds. Proper motion is the slow drift of a star's position across our sky over years and centuries, caused by its real motion relative to the Sun. It is usually imperceptibly small because the stars are so distant. Barnard's Star, one of our nearest neighbors, has the largest known proper motion, creeping across the sky fast enough to notice over a human lifetime. Over tens of thousands of years, proper motion slowly reshapes the constellations, so the night sky of the far future will look different.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Proper_motion"
+  },
+  {
+    "id": 186,
+    "title": "The Local Interstellar Cloud",
+    "shortDescription": "The wisp of gas our Solar System is passing through.",
+    "detail": "The Local Interstellar Cloud is a wispy region of slightly denser gas, about 30 light-years across, that our Solar System is currently drifting through on its journey around the galaxy. Sometimes called the Local Fluff, it sits within the larger, emptier Local Bubble. The Sun's heliosphere, its bubble of solar wind, holds this interstellar gas at bay, but as the Solar System moves, the balance shifts over time. The Sun is expected to exit this cloud in the coming tens of thousands of years. It reminds us that even the seemingly empty space between the stars has texture and structure.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Local_Interstellar_Cloud"
+  },
+  {
+    "id": 187,
+    "title": "Oumuamua",
+    "shortDescription": "The first known visitor from another star system.",
+    "detail": "In 2017, astronomers spotted Oumuamua, the first confirmed interstellar object ever detected passing through our Solar System, a body that originated around another star. Already speeding away when found, it displayed puzzling traits: an extreme elongated or flattened shape, a reddish color, and a slight unexplained acceleration not clearly caused by comet-like outgassing. These oddities fueled intense debate and even speculation about artificial origins, though most scientists favor natural explanations. Oumuamua confirmed that material regularly travels between star systems and offered a fleeting first glimpse of a fragment from another planetary system, tumbling silently through our own.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Oumuamua"
+  },
+  {
+    "id": 188,
+    "title": "Comet 2I/Borisov",
+    "shortDescription": "The first known interstellar comet.",
+    "detail": "Discovered in 2019 by amateur astronomer Gennadiy Borisov, 2I/Borisov was the second confirmed interstellar object and the first that was unmistakably a comet, complete with a glowing coma and tail. Unlike the enigmatic Oumuamua, Borisov looked and behaved much like the comets native to our own Solar System, suggesting that comets form in other planetary systems in broadly similar ways. Its chemistry showed some differences, including a high abundance of carbon monoxide. As only the second interstellar visitor ever seen, 2I/Borisov gave astronomers a precious chance to study material from another star up close.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/2I/Borisov"
+  },
+  {
+    "id": 189,
+    "title": "The Carrington Event",
+    "shortDescription": "The most intense solar storm in recorded history.",
+    "detail": "In September 1859, a massive solar storm now called the Carrington Event struck Earth, the most powerful on record. A huge coronal mass ejection slammed into the planet's magnetic field, producing auroras so bright they were seen near the equator and reportedly let people read at night. Telegraph systems, the era's cutting-edge technology, sparked and failed, some operators receiving shocks. If a storm of that magnitude struck today's world of satellites, power grids, and electronics, the damage could be catastrophic and costly. The Carrington Event is a stark reminder of our vulnerability to the Sun's occasional fury.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Carrington_Event"
+  },
+  {
+    "id": 190,
+    "title": "The Galactic Habitable Zone",
+    "shortDescription": "The region of a galaxy where life may be favored.",
+    "detail": "Just as a star has a habitable zone, some scientists propose that a galaxy may have one too: a region where conditions are most favorable for complex life to arise. Too close to the crowded, radiation-soaked galactic center, frequent supernovae and disruptions might sterilize planets or destabilize their orbits. Too far out in the sparse outskirts, there may be too few of the heavy elements needed to build rocky planets. The galactic habitable zone would be a middle band, like the one our Sun occupies. The concept is debated and uncertain, but it broadens the question of habitability to galactic scales.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Galactic_habitable_zone"
+  },
+  {
+    "id": 191,
+    "title": "Milankovitch Cycles",
+    "shortDescription": "Wobbles in Earth's orbit that drive the ice ages.",
+    "detail": "Milankovitch cycles are slow, regular variations in Earth's orbit and tilt that alter how sunlight is distributed across the planet over tens of thousands of years. The shape of Earth's orbit, the angle of its axis, and the direction that axis points all change cyclically. These subtle shifts are the primary pacemaker of the ice ages, nudging the climate between glacial and warm periods. The concept shows how a planet's long-term climate depends not just on its star but on the fine details of its orbit and rotation, factors that could likewise shape the climates and habitability of exoplanets.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Milankovitch_cycles"
+  },
+  {
+    "id": 192,
+    "title": "The Moon's Stabilizing Role",
+    "shortDescription": "Our large Moon may help keep Earth's climate steady.",
+    "detail": "Earth's Moon is unusually large compared with its planet, and this may be more than a cosmic coincidence. The Moon's gravity helps stabilize the tilt of Earth's axis, keeping it from wobbling wildly over long timescales. A steady tilt means relatively stable seasons and climate, which may have been important for the development of complex life. Without such a large Moon, Earth's axis could swing chaotically, causing dramatic climate shifts. This idea suggests that a big stabilizing moon might be a helpful ingredient for long-term habitability, adding yet another factor to consider when assessing distant worlds.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Axial_tilt"
+  },
+  {
+    "id": 193,
+    "title": "The Anthropic Principle",
+    "shortDescription": "Why the universe seems fine-tuned for observers.",
+    "detail": "The anthropic principle is the observation that the universe's fundamental constants appear remarkably suited to allow life to exist, and that this may be partly because we could only find ourselves in a universe capable of producing observers. If gravity, the strength of nuclear forces, or other constants were even slightly different, stars, chemistry, and life as we know it might be impossible. Some interpret this fine-tuning as pointing toward a vast multiverse, in which only rare, life-friendly universes are ever observed. The principle is more a lens for reasoning about our cosmic situation than a testable theory, and it remains hotly debated.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Anthropic_principle"
+  },
+  {
+    "id": 194,
+    "title": "The Zodiacal Light",
+    "shortDescription": "A faint glow from dust in the Solar System.",
+    "detail": "The zodiacal light is a faint, cone-shaped glow sometimes visible in a very dark sky just after dusk or before dawn, stretching up from the horizon along the path of the planets. It is sunlight scattered by countless tiny dust particles spread throughout the inner Solar System, debris shed by comets and asteroid collisions. Because this dust lies in the flat plane where the planets orbit, the glow follows the zodiac. Similar disks of dust, called exozodiacal light, surround other stars and can complicate efforts to directly image their planets, making the study of this humble dust surprisingly relevant.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Zodiacal_light"
+  },
+  {
+    "id": 195,
+    "title": "The Habitable Worlds Observatory",
+    "shortDescription": "A future flagship to image and study Earth-like planets.",
+    "detail": "The Habitable Worlds Observatory is a future NASA flagship space telescope, currently in early planning, with a bold central goal: to directly image potentially habitable, Earth-sized planets around nearby Sun-like stars and search their atmospheres for signs of life. Doing so requires blocking the overwhelming glare of a host star to reveal a faint planet beside it, then analyzing that planet's light for biosignature gases. Combining large size with advanced starlight-suppression technology, it is envisioned as the successor that could finally answer whether we are alone. It represents the long-term ambition guiding much of modern exoplanet science.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Habitable_Worlds_Observatory"
+  },
+  {
+    "id": 196,
+    "title": "Gliese 486 b",
+    "shortDescription": "A nearby rocky world ideal for atmospheric study.",
+    "detail": "Gliese 486 b is a rocky super-Earth about 26 light-years away, considered one of the best rocky exoplanets for atmospheric investigation. It transits a nearby, relatively quiet red dwarf and is hot, with a surface likely scorching, possibly resembling a hotter version of Venus. Its favorable properties, close distance, a small bright star, and a well-measured mass and size, make it a prime target for telescopes like JWST to attempt to detect and study its atmosphere, if it has one. Worlds like Gliese 486 b are testing grounds for the techniques needed to eventually probe truly habitable planets.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Gliese_486_b"
+  },
+  {
+    "id": 197,
+    "title": "LHS 475 b",
+    "shortDescription": "The first exoplanet confirmed by JWST.",
+    "detail": "LHS 475 b holds a special place as the first exoplanet whose existence was confirmed by the James Webb Space Telescope, announced in 2023. Almost exactly the size of Earth, it orbits a small red dwarf about 41 light-years away, completing a lap in just two days, so it is far too hot to be habitable. JWST's exquisite precision cleanly detected the tiny dip in starlight as the planet crossed its star. The observation demonstrated Webb's power to study small rocky worlds and marked an early milestone in its exploration of terrestrial exoplanets and their possible atmospheres.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/LHS_475_b"
+  },
+  {
+    "id": 198,
+    "title": "The Kepler-62 System",
+    "shortDescription": "Two possible water worlds in one star's warm zone.",
+    "detail": "Kepler-62 is a star about 1,200 light-years away that hosts five known planets, two of which, Kepler-62e and Kepler-62f, orbit within the habitable zone. Both are super-Earths, larger than our planet, and some models suggest they could be ocean-covered water worlds. Their discovery, announced in 2013, was an early example of finding not just one but two potentially habitable-zone planets in a single system, hinting that temperate worlds might sometimes come in bunches. Too distant to study in detail, the Kepler-62 planets remain intriguing examples of the varied worlds that populate the galaxy's habitable zones.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler-62"
+  },
+  {
+    "id": 199,
+    "title": "Kepler-10b",
+    "shortDescription": "The first rocky exoplanet Kepler confirmed.",
+    "detail": "Kepler-10b, announced in 2011, was the first unambiguously rocky planet confirmed by the Kepler mission, an important milestone in proving that small, terrestrial worlds exist beyond our Solar System. Slightly larger than Earth but far denser, it orbits its Sun-like star extraordinarily close, whipping around in less than a day. That proximity makes it a scorched lava world, with a dayside hot enough to melt rock. Although utterly inhospitable, Kepler-10b was a landmark: firm evidence that Kepler could detect genuine rocky planets, a crucial step toward the ultimate goal of finding rocky worlds in cooler, habitable orbits.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Kepler-10b"
+  },
+  {
+    "id": 200,
+    "title": "The Future of the Sun",
+    "shortDescription": "How our star will live, swell, and die.",
+    "detail": "Our Sun is currently a stable, middle-aged star, but its future is written in the physics of stars. Over the next few billion years it will gradually brighten, eventually making Earth too hot for liquid water. In roughly five billion years it will exhaust the hydrogen in its core and swell into a red giant, likely engulfing the inner planets. It will then shed its outer layers into a glowing planetary nebula and leave behind a slowly cooling white dwarf, the size of Earth. Understanding stellar evolution lets astronomers read the past and future of the Sun and every star.",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Stellar_evolution"
   }
 ]

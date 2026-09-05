@@ -124,6 +124,12 @@ fun AboutScreen(
                                 description = stringResource(R.string.about_ml_description)
                             ),
                             InfoItem(
+                                icon = Icons.Default.Info,
+                                iconColor = CosmicCyan,
+                                title = stringResource(R.string.about_affiliation_title),
+                                description = stringResource(R.string.about_affiliation_description)
+                            ),
+                            InfoItem(
                                 icon = Icons.Default.WorkspacePremium,
                                 iconColor = HabitableGreen,
                                 title = stringResource(R.string.about_acknowledgement_row_title),

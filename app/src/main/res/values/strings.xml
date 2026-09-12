@@ -159,6 +159,22 @@
     <!-- Space facts -->
     <string name="space_fact_channel_name">Space Facts</string>
     <string name="space_fact_channel_description">Periodic facts and theories about space and exoplanets.</string>
+
+    <!-- Space fact library -->
+    <string name="space_fact_library_title">Space Facts</string>
+    <string name="space_fact_library_count">%1$d facts and theories</string>
+    <string name="space_fact_library_search_hint">Search facts…</string>
+    <string name="space_fact_library_empty">No facts match your search.</string>
+    <string name="settings_fact_library_title">Space facts library</string>
+    <string name="settings_fact_library_subtitle">Browse every fact in the app</string>
+
+    <!-- New-discovery notifications -->
+    <string name="discovery_channel_name">New Discoveries</string>
+    <string name="discovery_channel_description">Alerts when new exoplanets are added to the NASA Exoplanet Archive.</string>
+    <string name="discovery_title_single">A new world has been confirmed</string>
+    <string name="discovery_title_multiple">%1$d new worlds confirmed</string>
+    <string name="discovery_title_bulk">%1$d new worlds added to your catalog</string>
+    <string name="discovery_body_more">%1$s and %2$d more</string>
     <string name="space_fact_title">Space Fact</string>
     <string name="space_fact_not_found">This fact could not be found.</string>
     <string name="space_fact_read_more">Read the full article</string>
@@ -291,6 +307,8 @@
     <string name="settings_section_data">Data</string>
     <string name="settings_section_about">About</string>
     <string name="settings_notifications_title">Space fact notifications</string>
+    <string name="settings_discovery_title">New discovery alerts</string>
+    <string name="settings_discovery_subtitle">Tell me when new worlds are confirmed</string>
     <string name="settings_notifications_every_day">A new fact every day</string>
     <string name="settings_notifications_every_days">A new fact every %1$d days</string>
     <string name="settings_notifications_every_hours">A new fact every %1$d hours</string>

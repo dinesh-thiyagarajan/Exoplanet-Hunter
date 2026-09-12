@@ -32,6 +32,7 @@ import com.app.exoplanethunter.presentation.screens.galaxymap.GalaxyMapViewModel
 import com.app.exoplanethunter.presentation.screens.planetdetail.PlanetDetailViewModel
 import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListViewModel
 import com.app.exoplanethunter.presentation.screens.spacefact.SpaceFactDetailViewModel
+import com.app.exoplanethunter.presentation.screens.spacefact.SpaceFactLibraryViewModel
 import com.app.exoplanethunter.presentation.screens.splash.SplashViewModel
 import com.app.exoplanethunter.presentation.screens.statistics.StatisticsViewModel
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemDetailViewModel
@@ -88,6 +89,7 @@ val viewModelModule = module {
     viewModel { AboutViewModel(get(), get(), get(), androidContext()) }
     viewModel { CompareViewModel(get(), get(), get()) }
     viewModel { SpaceFactDetailViewModel(get(), get()) }
+    viewModel { SpaceFactLibraryViewModel(get(), get()) }
 }
 
 val appModules = listOf(

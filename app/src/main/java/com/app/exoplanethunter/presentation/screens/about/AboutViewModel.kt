@@ -8,6 +8,8 @@ import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
 import com.app.exoplanethunter.exoplanet.domain.repository.SyncStatus
 import com.app.exoplanethunter.exoplanet.domain.usecase.SyncExoplanetsUseCase
+import com.app.exoplanethunter.discovery.DiscoveryPreferences
+import com.app.exoplanethunter.discovery.DiscoveryScheduler
 import com.app.exoplanethunter.spacefacts.SpaceFactPreferences
 import com.app.exoplanethunter.spacefacts.SpaceFactScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +39,18 @@ class AboutViewModel(
         _notificationsEnabled.value = enabled
         // schedule() enqueues or cancels the periodic worker based on the effective state.
         SpaceFactScheduler.schedule(appContext)
+    }
+
+    private val discoveryPrefs = DiscoveryPreferences(appContext)
+
+    /** The user's in-app toggle for "new worlds confirmed" alerts. */
+    private val _discoveryEnabled = MutableStateFlow(discoveryPrefs.userDiscoveryEnabled)
+    val discoveryEnabled = _discoveryEnabled.asStateFlow()
+
+    fun setDiscoveryEnabled(enabled: Boolean) {
+        discoveryPrefs.userDiscoveryEnabled = enabled
+        _discoveryEnabled.value = enabled
+        DiscoveryScheduler.schedule(appContext)
     }
 
     val planetCount = repository.getPlanetCount()

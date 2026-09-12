@@ -4,6 +4,7 @@ import android.app.Application
 import com.app.exoplanethunter.ads.AdManager
 import com.app.exoplanethunter.config.RemoteConfigManager
 import com.app.exoplanethunter.di.appModules
+import com.app.exoplanethunter.discovery.DiscoveryNotifier
 import com.app.exoplanethunter.spacefacts.SpaceFactNotifier
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -27,8 +28,10 @@ class ExoplanetApp : Application() {
             modules(appModules)
         }
 
-        // Periodic space-fact notifications — interval & on/off driven by Remote Config.
+        // Periodic space-fact and new-discovery notifications — interval & on/off driven by
+        // Remote Config, which also schedules both workers.
         SpaceFactNotifier.ensureChannel(this)
+        DiscoveryNotifier.ensureChannel(this)
         RemoteConfigManager.initializeAndApply(this)
     }
 }

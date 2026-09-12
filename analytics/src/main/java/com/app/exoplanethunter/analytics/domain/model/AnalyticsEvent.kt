@@ -98,6 +98,8 @@ sealed class AnalyticsEvent {
         val title: String
     ) : AnalyticsEvent()
 
+    object SpaceFactLibraryViewed : AnalyticsEvent()
+
     data class SpaceFactSourceOpened(
         val factId: Int,
         val title: String

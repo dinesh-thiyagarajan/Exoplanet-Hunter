@@ -3,6 +3,8 @@ package com.app.exoplanethunter.config
 import android.content.Context
 import com.app.exoplanethunter.BuildConfig
 import com.app.exoplanethunter.ads.AdManager
+import com.app.exoplanethunter.discovery.DiscoveryPreferences
+import com.app.exoplanethunter.discovery.DiscoveryScheduler
 import com.app.exoplanethunter.spacefacts.SpaceFactPreferences
 import com.app.exoplanethunter.spacefacts.SpaceFactScheduler
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -25,6 +27,8 @@ object RemoteConfigManager {
 
     const val KEY_NOTIFICATIONS_ENABLED = "space_fact_notifications_enabled"
     const val KEY_INTERVAL_HOURS = "space_fact_interval_hours"
+    const val KEY_DISCOVERY_ENABLED = "new_discovery_notifications_enabled"
+    const val KEY_DISCOVERY_INTERVAL_HOURS = "new_discovery_interval_hours"
     const val KEY_COMPARE_ENABLED = "compare_feature_enabled"
     const val KEY_REVIEW_ENABLED = "in_app_review_enabled"
     const val KEY_REVIEW_MIN_DAYS = "in_app_review_min_days"
@@ -45,6 +49,8 @@ object RemoteConfigManager {
             mapOf(
                 KEY_NOTIFICATIONS_ENABLED to true,
                 KEY_INTERVAL_HOURS to SpaceFactPreferences.DEFAULT_INTERVAL_HOURS,
+                KEY_DISCOVERY_ENABLED to true,
+                KEY_DISCOVERY_INTERVAL_HOURS to DiscoveryPreferences.DEFAULT_INTERVAL_HOURS,
                 KEY_COMPARE_ENABLED to true,
                 KEY_REVIEW_ENABLED to true,
                 KEY_REVIEW_MIN_DAYS to 3L,
@@ -68,6 +74,13 @@ object RemoteConfigManager {
         prefs.intervalHours = remoteConfig.getLong(KEY_INTERVAL_HOURS)
             .coerceAtLeast(MIN_INTERVAL_HOURS)
         SpaceFactScheduler.schedule(context)
+
+        // Background "new worlds confirmed" check — same kill-switch pattern as the facts.
+        val discoveryPrefs = DiscoveryPreferences(context)
+        discoveryPrefs.remoteDiscoveryEnabled = remoteConfig.getBoolean(KEY_DISCOVERY_ENABLED)
+        discoveryPrefs.intervalHours = remoteConfig.getLong(KEY_DISCOVERY_INTERVAL_HOURS)
+            .coerceAtLeast(MIN_INTERVAL_HOURS)
+        DiscoveryScheduler.schedule(context)
 
         FeatureFlags.setCompareEnabled(remoteConfig.getBoolean(KEY_COMPARE_ENABLED))
         FeatureFlags.reviewEnabled = remoteConfig.getBoolean(KEY_REVIEW_ENABLED)

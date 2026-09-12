@@ -16,6 +16,10 @@ object SpaceFactScheduler {
      * Ensure the periodic worker is scheduled at the user's configured interval. Safe to call
      * on every app start: [ExistingPeriodicWorkPolicy.UPDATE] keeps the existing schedule but
      * picks up any interval change without resetting the timer unnecessarily.
+     *
+     * The initial delay matters: a periodic worker otherwise first runs only after a whole
+     * interval has elapsed, so a fresh install would wait a full day for its first fact. Since
+     * UPDATE preserves an already-running schedule, this delay applies to new installs only.
      */
     fun schedule(context: Context) {
         val prefs = SpaceFactPreferences(context)
@@ -26,7 +30,9 @@ object SpaceFactScheduler {
 
         val request = PeriodicWorkRequestBuilder<SpaceFactWorker>(
             prefs.intervalHours, TimeUnit.HOURS
-        ).build()
+        )
+            .setInitialDelay(SpaceFactPreferences.FIRST_RUN_DELAY_HOURS, TimeUnit.HOURS)
+            .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             WORK_NAME,

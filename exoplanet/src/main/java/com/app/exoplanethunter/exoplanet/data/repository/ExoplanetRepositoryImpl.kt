@@ -135,9 +135,8 @@ class ExoplanetRepositoryImpl(
         }
     }
 
-    override suspend fun toggleFavorite(planetName: String) {
+    override suspend fun toggleFavorite(planetName: String): Boolean =
         favoritesPreferences.toggle(planetName)
-    }
 
     override suspend fun syncExoplanets(): Flow<SyncStatus> {
         val syncRequest = OneTimeWorkRequestBuilder<DataSyncWorker>()

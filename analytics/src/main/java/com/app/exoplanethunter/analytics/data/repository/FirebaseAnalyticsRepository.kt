@@ -156,6 +156,9 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
             }
         }
 
+        is AnalyticsEvent.SpaceFactLibraryViewed ->
+            Keys.SPACE_FACT_LIBRARY_VIEWED to null
+
         is AnalyticsEvent.SpaceFactSourceOpened -> {
             val event = this
             Keys.SPACE_FACT_SOURCE_OPENED to Bundle().apply {

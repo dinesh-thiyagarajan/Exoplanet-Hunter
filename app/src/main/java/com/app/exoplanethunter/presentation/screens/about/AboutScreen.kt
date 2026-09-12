@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.app.exoplanethunter.BuildConfig
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.presentation.theme.*
+import com.app.exoplanethunter.discovery.DiscoveryScheduler
 import com.app.exoplanethunter.spacefacts.SpaceFactScheduler
 import com.app.exoplanethunter.widget.WidgetPinHelper
 import org.koin.androidx.compose.koinViewModel
@@ -25,6 +26,7 @@ import java.util.*
 
 @Composable
 fun AboutScreen(
+    onOpenFactLibrary: () -> Unit = {},
     viewModel: AboutViewModel = koinViewModel()
 ) {
     val syncStatus by viewModel.syncStatus.collectAsState()
@@ -32,6 +34,7 @@ fun AboutScreen(
     val systemCount by viewModel.systemCount.collectAsState()
     val lastSyncTime by viewModel.lastSyncTime.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
+    val discoveryEnabled by viewModel.discoveryEnabled.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -66,6 +69,27 @@ fun AboutScreen(
                         subtitle = notificationIntervalLabel(viewModel.notificationIntervalHours),
                         checked = notificationsEnabled,
                         onCheckedChange = viewModel::setNotificationsEnabled
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    SettingsToggleRow(
+                        icon = Icons.Default.NewReleases,
+                        iconColor = HabitableGreen,
+                        title = stringResource(R.string.settings_discovery_title),
+                        subtitle = stringResource(R.string.settings_discovery_subtitle),
+                        checked = discoveryEnabled,
+                        onCheckedChange = viewModel::setDiscoveryEnabled
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    SettingsActionRow(
+                        icon = Icons.Default.AutoStories,
+                        iconColor = NebulaPink,
+                        title = stringResource(R.string.settings_fact_library_title),
+                        subtitle = stringResource(R.string.settings_fact_library_subtitle),
+                        onClick = onOpenFactLibrary
                     )
 
                     val widgetContext = LocalContext.current
@@ -159,6 +183,22 @@ fun AboutScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("DEBUG: Show space-fact notification")
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedButton(
+                    onClick = {
+                        DiscoveryScheduler.triggerNow(context)
+                        Toast.makeText(
+                            context,
+                            "Checking archive for new worlds…",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("DEBUG: Run new-discovery check")
                 }
 
                 Spacer(modifier = Modifier.height(28.dp))

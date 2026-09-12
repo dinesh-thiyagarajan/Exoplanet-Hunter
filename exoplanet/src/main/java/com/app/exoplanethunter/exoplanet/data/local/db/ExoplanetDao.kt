@@ -50,6 +50,10 @@ interface ExoplanetDao {
     @Query("SELECT COUNT(*) FROM exoplanets WHERE isDefault = 1")
     suspend fun getPlanetCountOnce(): Int
 
+    /** Every catalogued planet name — used to diff the catalog across syncs and spot new worlds. */
+    @Query("SELECT planetName FROM exoplanets WHERE isDefault = 1")
+    suspend fun getAllPlanetNames(): List<String>
+
     @Query("SELECT * FROM exoplanets WHERE isDefault = 1 ORDER BY planetName ASC LIMIT 1 OFFSET :offset")
     suspend fun getPlanetAtOffset(offset: Int): ExoplanetEntity?
 

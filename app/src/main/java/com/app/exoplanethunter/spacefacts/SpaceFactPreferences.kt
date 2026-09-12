@@ -66,7 +66,16 @@ class SpaceFactPreferences(context: Context) {
         private const val KEY_SHOWN_IDS = "shown_fact_ids"
         private const val KEY_LAST_SHOWN_ID = "last_shown_id"
 
-        /** Default cadence: every two days. */
-        const val DEFAULT_INTERVAL_HOURS = 48L
+        /** Default cadence: once a day. With 200 facts that is ~200 days before the cycle repeats. */
+        const val DEFAULT_INTERVAL_HOURS = 24L
+
+        /**
+         * Delay before the *first* fact notification of a fresh install.
+         *
+         * A periodic worker otherwise fires only at the end of its first full interval, so the
+         * first fact would arrive a day (previously two) after install — by which point most
+         * users have already churned. A few hours lands it while the app is still memorable.
+         */
+        const val FIRST_RUN_DELAY_HOURS = 3L
     }
 }

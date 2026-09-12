@@ -29,11 +29,20 @@ class FavoritesPreferences(private val context: Context) {
             preferences[FAVORITE_PLANET_NAMES] ?: emptySet()
         }
 
-    suspend fun toggle(planetName: String) {
-        context.favoritesDataStore.edit { preferences ->
+    /**
+     * Flip the favorite state of [planetName].
+     *
+     * @return true when the planet is a favorite *after* the toggle. The read-modify-write happens
+     *   inside DataStore's transaction, so this result is authoritative even when taps arrive
+     *   faster than the [favoriteNames] flow can emit — callers must not infer the outcome from a
+     *   separately-observed copy of the set.
+     */
+    suspend fun toggle(planetName: String): Boolean {
+        val updated = context.favoritesDataStore.edit { preferences ->
             val current = preferences[FAVORITE_PLANET_NAMES] ?: emptySet()
             preferences[FAVORITE_PLANET_NAMES] =
                 if (planetName in current) current - planetName else current + planetName
         }
+        return planetName in (updated[FAVORITE_PLANET_NAMES] ?: emptySet())
     }
 }

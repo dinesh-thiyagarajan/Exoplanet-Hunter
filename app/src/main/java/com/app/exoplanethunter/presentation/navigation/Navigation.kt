@@ -51,6 +51,7 @@ import com.app.exoplanethunter.presentation.screens.planetlist.PlanetListScreen
 import com.app.exoplanethunter.presentation.screens.splash.SplashScreen
 import com.app.exoplanethunter.presentation.screens.compare.CompareScreen
 import com.app.exoplanethunter.presentation.screens.spacefact.SpaceFactDetailScreen
+import com.app.exoplanethunter.presentation.screens.spacefact.SpaceFactLibraryScreen
 import com.app.exoplanethunter.presentation.screens.statistics.StatisticsScreen
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemDetailScreen
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemListScreen
@@ -81,6 +82,7 @@ sealed class Screen(val route: String) {
     data object SpaceFact : Screen(NavRoutes.SPACE_FACT) {
         fun createRoute(factId: Int) = "space_fact/$factId"
     }
+    data object SpaceFactLibrary : Screen(NavRoutes.SPACE_FACT_LIBRARY)
     data object GalaxyMap : Screen(NavRoutes.GALAXY_MAP)
 }
 
@@ -170,7 +172,19 @@ fun ExoplanetNavigation(
                 },
                 onOpenGalaxyMap = {
                     navController.navigate(Screen.GalaxyMap.route)
+                },
+                onOpenFactLibrary = {
+                    navController.navigate(Screen.SpaceFactLibrary.route)
                 }
+            )
+        }
+
+        composable(Screen.SpaceFactLibrary.route) {
+            SpaceFactLibraryScreen(
+                onFactClick = { factId ->
+                    navController.navigate(Screen.SpaceFact.createRoute(factId))
+                },
+                onBack = { navController.popBackStack() }
             )
         }
 
@@ -255,7 +269,8 @@ private fun MainScreen(
     onPlanetClick: (Long) -> Unit,
     onSystemClick: (Long) -> Unit,
     onCompare: (Long, Long) -> Unit,
-    onOpenGalaxyMap: () -> Unit
+    onOpenGalaxyMap: () -> Unit,
+    onOpenFactLibrary: () -> Unit
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(BottomNavTab.Planets.name) }
 
@@ -320,7 +335,7 @@ private fun MainScreen(
                     onPlanetClick = onPlanetClick
                 )
                 BottomNavTab.Statistics -> StatisticsScreen()
-                BottomNavTab.About -> AboutScreen()
+                BottomNavTab.About -> AboutScreen(onOpenFactLibrary = onOpenFactLibrary)
             }
         }
     }

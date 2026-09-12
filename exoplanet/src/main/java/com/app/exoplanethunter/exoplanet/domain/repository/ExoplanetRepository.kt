@@ -45,5 +45,6 @@ interface ExoplanetRepository {
     // Favorites — keyed by planetName so they survive catalog syncs (which reassign ids)
     fun getFavoriteNames(): Flow<Set<String>>
     fun getFavoritePlanets(): Flow<List<Exoplanet>>
-    suspend fun toggleFavorite(planetName: String)
+    /** Flip the planet's favorite state; returns true when it is a favorite afterwards. */
+    suspend fun toggleFavorite(planetName: String): Boolean
 }

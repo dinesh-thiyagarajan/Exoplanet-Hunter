@@ -67,13 +67,14 @@ class PlanetDetailViewModel(
 
     fun toggleFavorite() {
         val current = planet ?: return
-        val wasFavorite = current.planetName in favoriteNames
-        trackEvent(
-            if (wasFavorite) AnalyticsEvent.PlanetUnfavorited(current.id, current.planetName)
-            else AnalyticsEvent.PlanetFavorited(current.id, current.planetName)
-        )
         viewModelScope.launch {
-            toggleFavoriteUseCase(current.planetName)
+            // Log the outcome the toggle actually produced — see PlanetListViewModel for why the
+            // observed favorites set can't be trusted for this.
+            val isNowFavorite = toggleFavoriteUseCase(current.planetName)
+            trackEvent(
+                if (isNowFavorite) AnalyticsEvent.PlanetFavorited(current.id, current.planetName)
+                else AnalyticsEvent.PlanetUnfavorited(current.id, current.planetName)
+            )
         }
     }
 

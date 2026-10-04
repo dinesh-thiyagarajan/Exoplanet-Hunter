@@ -154,13 +154,18 @@
 
     <!-- Compare screen -->
     <string name="compare_title">Compare</string>
-    <string name="compare_metric_radius">Radius (R⊕)</string>
-    <string name="compare_metric_mass">Mass (M⊕)</string>
-    <string name="compare_metric_orbital_period">Orbital period (days)</string>
-    <string name="compare_metric_eq_temp">Eq. temperature (K)</string>
-    <string name="compare_metric_distance">Distance (parsecs)</string>
-    <string name="compare_metric_discovery_year">Discovery year</string>
-    <string name="compare_metric_insolation">Insolation (S⊕)</string>
+    <string name="compare_metric_radius">Radius</string>
+    <string name="compare_metric_mass">Mass</string>
+    <string name="compare_metric_orbital_period">Year</string>
+    <string name="compare_metric_eq_temp">Temperature</string>
+    <string name="compare_metric_distance">Distance</string>
+    <string name="compare_metric_discovery_year">Discovered</string>
+    <string name="compare_metric_insolation">Starlight received</string>
+    <string name="compare_metric_density">Density</string>
+    <string name="compare_metric_gravity">Gravity</string>
+    <string name="compare_metric_star">Host star</string>
+    <string name="compare_estimated_footnote">≈ Estimated from the star and orbit — no measured value.</string>
+    <string name="compare_ai_type">AI: %s</string>
     <string name="compare_no_data">—</string>
     <string name="compare_section_ml">AI Habitability Estimate</string>
     <string name="compare_section_properties">Physical Properties</string>
@@ -178,9 +183,6 @@
     <string name="compare_verdict_hotter">%1$s is the hotter world</string>
 
     <!-- Compare: size-to-scale -->
-    <string name="compare_size_title">Size to scale</string>
-    <string name="compare_earth_label">Earth</string>
-    <string name="compare_radius_value">%s R⊕</string>
     <string name="compare_ratio">%s×</string>
 
     <!-- Space facts -->

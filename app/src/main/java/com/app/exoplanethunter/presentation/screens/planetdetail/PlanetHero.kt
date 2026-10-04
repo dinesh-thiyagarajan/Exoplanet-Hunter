@@ -31,17 +31,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
-import com.app.exoplanethunter.presentation.components.JUPITER_RADIUS_EARTH
-import com.app.exoplanethunter.presentation.components.NEPTUNE_RADIUS_EARTH
 import com.app.exoplanethunter.presentation.components.RealisticPlanet
 import com.app.exoplanethunter.presentation.components.bulkDensity
 import com.app.exoplanethunter.presentation.components.composition
 import com.app.exoplanethunter.presentation.components.estimatedTempK
+import com.app.exoplanethunter.presentation.components.formatOrbitalPeriod
 import com.app.exoplanethunter.presentation.components.graticule
 import com.app.exoplanethunter.presentation.components.starLightColor
 import com.app.exoplanethunter.presentation.components.surfaceGravity
-import com.app.exoplanethunter.presentation.components.surfaceKind
-import com.app.exoplanethunter.presentation.components.swatch
 import com.app.exoplanethunter.presentation.preview.PreviewData
 import com.app.exoplanethunter.presentation.preview.PreviewSurface
 import com.app.exoplanethunter.presentation.theme.AlmanacData
@@ -102,7 +99,7 @@ internal fun PlanetHero(planet: Exoplanet, tidallyLocked: Boolean, modifier: Mod
         )
         Readout(
             label = stringResource(R.string.hero_label_year),
-            value = planet.orbitalPeriodDays?.let { formatYear(it) },
+            value = planet.orbitalPeriodDays?.let { formatOrbitalPeriod(it) },
             detail = planet.orbitSemiMajorAxisAu?.let { "%.3f AU".format(it) },
             modifier = Modifier.align(Alignment.BottomStart),
         )
@@ -114,14 +111,6 @@ internal fun PlanetHero(planet: Exoplanet, tidallyLocked: Boolean, modifier: Mod
             modifier = Modifier.align(Alignment.BottomEnd),
         )
     }
-}
-
-/** "19.6 h", "32.9 days", "11.9 yr" — whichever unit reads most naturally. */
-private fun formatYear(days: Double): String = when {
-    days < 1.0 -> "%.1f h".format(days * 24)
-    days < 100.0 -> "%.1f days".format(days)
-    days < 730.0 -> "%.0f days".format(days)
-    else -> "%.1f yr".format(days / 365.25)
 }
 
 @Composable
@@ -165,88 +154,11 @@ internal fun CompositionLine(planet: Exoplanet, modifier: Modifier = Modifier) {
     }
 }
 
-/**
- * The planet drawn to scale beside Earth — and Neptune and Jupiter once it's big enough
- * for them to be the useful yardstick.
- */
-@Composable
-internal fun SizeToScaleCard(planet: Exoplanet, modifier: Modifier = Modifier) {
-    val radius = planet.planetRadiusEarth?.takeIf { it > 0.0 } ?: return
-    val swatch = remember(planet) { planet.surfaceKind().swatch() }
-    val bodies = buildList {
-        add(ScaleBody(stringResource(R.string.size_scale_earth), 1.0, Color(0xFF3F7FB5)))
-        if (radius > 2.5) add(ScaleBody(stringResource(R.string.size_scale_neptune), NEPTUNE_RADIUS_EARTH, Color(0xFF4A7FD0)))
-        if (radius > 6.0) add(ScaleBody(stringResource(R.string.size_scale_jupiter), JUPITER_RADIUS_EARTH, Color(0xFFD2B48C)))
-        add(ScaleBody(planet.planetName, radius, swatch, highlight = true))
-    }.sortedBy { it.radiusEarth }
-    val largest = bodies.maxOf { it.radiusEarth }
-    val maxDiameter = 84.dp
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .border(0.5.dp, Hairline, RoundedCornerShape(8.dp))
-            .padding(14.dp),
-    ) {
-        Row(verticalAlignment = Alignment.Bottom) {
-            Text(stringResource(R.string.size_scale_title), style = AlmanacSectionLabel, modifier = Modifier.weight(1f))
-            Text(
-                text = stringResource(R.string.size_scale_ratio, "%.2f".format(radius)),
-                style = AlmanacMeta.copy(color = Brass),
-            )
-        }
-        Spacer(modifier = Modifier.height(14.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Bottom,
-        ) {
-            bodies.forEach { body ->
-                val d: Dp = max(3f, (maxDiameter.value * body.radiusEarth / largest).toFloat()).dp
-                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
-                    Box(
-                        modifier = Modifier
-                            .size(d)
-                            .clip(CircleShape)
-                            .drawBehind {
-                                // Lit from the upper left, like the hero planet.
-                                drawCircle(
-                                    Brush.radialGradient(
-                                        listOf(body.color, body.color.copy(alpha = 0.45f)),
-                                        center = Offset(size.width * 0.3f, size.height * 0.3f),
-                                        radius = size.width * 1.1f,
-                                    )
-                                )
-                            }
-                            .then(if (body.highlight) Modifier.border(1.dp, Brass, CircleShape) else Modifier),
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = body.label,
-                        style = AlmanacMeta.copy(color = if (body.highlight) Brass else InkTextFaint),
-                        maxLines = 1,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-        }
-    }
-}
-
-private data class ScaleBody(
-    val label: String,
-    val radiusEarth: Double,
-    val color: Color,
-    val highlight: Boolean = false,
-)
-
 @Preview
 @Composable
 private fun PlanetHeroPreview() = PreviewSurface {
     Column {
         PlanetHero(planet = PreviewData.planet, tidallyLocked = false)
         CompositionLine(planet = PreviewData.planet, modifier = Modifier.fillMaxWidth())
-        SizeToScaleCard(planet = PreviewData.planet, modifier = Modifier.padding(20.dp))
     }
 }

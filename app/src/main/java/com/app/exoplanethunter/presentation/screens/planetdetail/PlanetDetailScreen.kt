@@ -60,6 +60,7 @@ import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
 import com.app.exoplanethunter.presentation.components.SkyChartCard
 import com.app.exoplanethunter.presentation.components.catalogueId
 import com.app.exoplanethunter.presentation.components.agreesWith
+import com.app.exoplanethunter.presentation.components.SizeToScaleCard
 import com.app.exoplanethunter.presentation.components.composition
 import com.app.exoplanethunter.presentation.components.isLikelyTidallyLocked
 import com.app.exoplanethunter.presentation.theme.AlmanacCaption
@@ -230,7 +231,7 @@ fun PlanetDetailContent(
                         // Verdict instrument: temperature verdict + Earth-similarity figure
                         VerdictInstrument(planet = planet, insight = insight)
 
-                        SizeToScaleCard(planet = planet)
+                        SizeToScaleCard(planets = listOf(planet))
 
                         // ML Habitability Insight
                         insight?.let { ins ->

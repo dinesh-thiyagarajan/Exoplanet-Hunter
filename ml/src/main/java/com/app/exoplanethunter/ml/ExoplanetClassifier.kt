@@ -2,6 +2,7 @@ package com.app.exoplanethunter.ml
 
 import android.content.Context
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
+import com.app.exoplanethunter.exoplanet.domain.model.estimatedEquilibriumTempK
 import com.app.exoplanethunter.exoplanet.domain.model.HabitabilityInsight
 import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
 import org.json.JSONObject
@@ -463,10 +464,11 @@ class ExoplanetClassifier(private val context: Context) {
 
     /**
      * Score based on equilibrium temperature proximity to the habitable zone
-     * (roughly 200 K - 350 K). Returns a value in [0, 1].
+     * (roughly 200 K - 350 K). Returns a value in [0, 1]. Falls back to an estimate from the
+     * star and orbit when the catalogue has no temperature, rather than scoring it 0.
      */
     private fun calculateTempScore(planet: Exoplanet): Double {
-        val eqTemp = planet.equilibriumTempK ?: return 0.0
+        val eqTemp = planet.estimatedEquilibriumTempK() ?: return 0.0
         if (eqTemp <= 0.0) return 0.0
 
         val idealCenter = 275.0 // midpoint of 200-350 K range
@@ -657,9 +659,17 @@ class ExoplanetClassifier(private val context: Context) {
         }
 
         // --- Temperature insights ---
-        val eqTemp = planet.equilibriumTempK
+        val eqTemp = planet.estimatedEquilibriumTempK()
         if (eqTemp != null && eqTemp > 0.0) {
-            val tempStr = "%.0f".format(eqTemp)
+            val measured = planet.equilibriumTempK != null
+            // "~249K" when estimated, so the sentences below never pass an estimate off as measured.
+            val tempStr = (if (measured) "" else "~") + "%.0f".format(eqTemp)
+            if (!measured) {
+                insights.add(
+                    "No measured temperature is catalogued; ${tempStr}K is estimated from the " +
+                            "star's temperature and size and the planet's orbit."
+                )
+            }
             when {
                 eqTemp in 200.0..350.0 -> insights.add(
                     "The equilibrium temperature of ${tempStr}K falls within the habitable " +

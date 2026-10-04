@@ -4,10 +4,10 @@ import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
+import com.app.exoplanethunter.exoplanet.domain.model.estimatedEquilibriumTempK
 import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
 import kotlin.math.ln
 import kotlin.math.pow
-import kotlin.math.sqrt
 
 // ===========================================================================
 // What a planet probably looks like, inferred from its catalogue numbers.
@@ -32,6 +32,14 @@ fun isLikelyTidallyLocked(planet: Exoplanet): Boolean {
     return period < 10.0
 }
 
+/** "19.6 h", "32.9 days", "11.9 yr" — whichever unit reads most naturally. */
+fun formatOrbitalPeriod(days: Double): String = when {
+    days < 1.0 -> "%.1f h".format(days * 24)
+    days < 100.0 -> "%.1f days".format(days)
+    days < 730.0 -> "%.0f days".format(days)
+    else -> "%.1f yr".format(days / 365.25)
+}
+
 /** Bulk density in g/cm³ from mass and radius, when both are known. */
 fun Exoplanet.bulkDensity(): Double? {
     val m = planetMassEarth ?: return null
@@ -46,25 +54,8 @@ fun Exoplanet.surfaceGravity(): Double? {
     return m / (r * r)
 }
 
-private const val AU_PER_SOLAR_RADIUS = 0.00465047
-
-/**
- * Equilibrium temperature, or an estimate when the catalogue leaves it blank:
- * from insolation (T ≈ 278 K · S^¼), else from the star and orbit
- * (T = T★ · √(R★ / 2a), zero albedo). The orbit's size comes from the catalogue, or
- * from the period and star mass by Kepler's third law.
- */
-fun Exoplanet.estimatedTempK(): Double? {
-    equilibriumTempK?.let { return it }
-    insolationFlux?.takeIf { it > 0.0 }?.let { return 278.0 * it.pow(0.25) }
-    val starTemp = stellarEffectiveTempK ?: return null
-    val starRadiusAu = (stellarRadiusSolar ?: return null) * AU_PER_SOLAR_RADIUS
-    val a = orbitSemiMajorAxisAu
-        ?: orbitalPeriodDays?.let { p -> stellarMassSolar?.let { m -> (m * (p / 365.25).pow(2)).pow(1.0 / 3.0) } }
-        ?: return null
-    if (a <= 0.0) return null
-    return starTemp * sqrt(starRadiusAu / (2 * a))
-}
+/** Equilibrium temperature, measured or estimated — see [estimatedEquilibriumTempK]. */
+fun Exoplanet.estimatedTempK(): Double? = estimatedEquilibriumTempK()
 
 /** Most plausible bulk composition, from density when available, else radius, else mass. */
 enum class Composition(@StringRes val labelRes: Int) {

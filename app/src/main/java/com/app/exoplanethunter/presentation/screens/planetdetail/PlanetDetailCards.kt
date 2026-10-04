@@ -53,6 +53,7 @@ import com.app.exoplanethunter.R
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.HabitabilityInsight
 import com.app.exoplanethunter.presentation.components.HabitabilityScoreBar
+import com.app.exoplanethunter.presentation.components.estimatedTempK
 import com.app.exoplanethunter.presentation.components.temperatureColor
 import com.app.exoplanethunter.presentation.components.temperatureLabel
 import com.app.exoplanethunter.presentation.theme.AlmanacData
@@ -569,8 +570,9 @@ internal fun VerdictInstrument(
     insight: HabitabilityInsight?,
     modifier: Modifier = Modifier,
 ) {
-    val sem = temperatureColor(planet.equilibriumTempK)
-    val word = temperatureLabel(planet.equilibriumTempK)
+    val temp = planet.estimatedTempK()
+    val sem = temperatureColor(temp)
+    val word = temperatureLabel(temp)
     val esi = earthSimilarity(planet)
     val confidence = if (insight?.habitabilityReliable == true)
         stringResource(R.string.planet_detail_confidence_high)

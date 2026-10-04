@@ -43,8 +43,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,12 +62,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.ads.AdBannerCard
+import com.app.exoplanethunter.ads.bannerAdsVisible
+import com.app.exoplanethunter.ads.rememberBannerAdPool
 import com.app.exoplanethunter.ads.InterstitialAdController
 import com.app.exoplanethunter.config.FeatureFlags
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.presentation.components.AlmanacChip
 import com.app.exoplanethunter.presentation.components.AlmanacOutlinedButton
+import com.app.exoplanethunter.presentation.components.BackToTopButton
 import com.app.exoplanethunter.presentation.components.CollapsingHeaderLayout
+import com.app.exoplanethunter.presentation.components.rememberCollapsingHeaderState
 import com.app.exoplanethunter.presentation.components.PlanetRowCard
 import com.app.exoplanethunter.presentation.theme.AlmanacData
 import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
@@ -91,6 +97,9 @@ fun PlanetListScreen(
     viewModel: PlanetListViewModel = koinViewModel()
 ) {
     val listState = rememberLazyListState()
+    val animatedPlanetIds = remember { mutableSetOf<Long>() }
+    val headerState = rememberCollapsingHeaderState()
+    val adPool = rememberBannerAdPool()
     var showSortSheet by remember { mutableStateOf(false) }
     val activity = LocalContext.current as? Activity
     val compareEnabled by FeatureFlags.compareEnabled.collectAsState()
@@ -99,8 +108,19 @@ fun PlanetListScreen(
         if (!compareEnabled && viewModel.compareMode) viewModel.exitCompareMode()
     }
 
+    // New filter / search / sort results start at the top, not at the old list's position.
+    var handledScrollReset by rememberSaveable { mutableIntStateOf(viewModel.scrollResetCount) }
+    LaunchedEffect(viewModel.scrollResetCount) {
+        if (viewModel.scrollResetCount != handledScrollReset) {
+            handledScrollReset = viewModel.scrollResetCount
+            listState.scrollToItem(0)
+            headerState.expand()
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize().background(Ink)) {
         CollapsingHeaderLayout(
+            state = headerState,
             header = {
                 // ---- Header (hides on scroll down, returns on scroll up) ----
                 Column(
@@ -119,11 +139,18 @@ fun PlanetListScreen(
                             )
                         }
                         Column(horizontalAlignment = Alignment.End) {
+                            val total = viewModel.totalPlanetCount
+                            val shown = viewModel.planets.size
+                            val isFiltered = total > 0 && shown != total
                             Text(
-                                text = "%,d".format(viewModel.planets.size),
+                                text = "%,d".format(if (isFiltered || total == 0) shown else total),
                                 style = AlmanacData.copy(fontSize = 22.sp)
                             )
-                            Text(stringResource(R.string.planet_list_confirmed), style = AlmanacMeta)
+                            Text(
+                                text = if (isFiltered) stringResource(R.string.planet_list_of_total, "%,d".format(total))
+                                else stringResource(R.string.planet_list_confirmed),
+                                style = AlmanacMeta
+                            )
                         }
                     }
 
@@ -239,6 +266,7 @@ fun PlanetListScreen(
                     )
                 }
             } else {
+                val showAds = bannerAdsVisible()
                 LazyColumn(
                     state = listState,
                     contentPadding = PaddingValues(
@@ -250,9 +278,13 @@ fun PlanetListScreen(
                     val planets = viewModel.planets
                     planets.forEachIndexed { index, planet ->
                         item(key = planet.id) {
+                            val animateIn = remember {
+                                index < ANIMATED_ROW_LIMIT && animatedPlanetIds.add(planet.id)
+                            }
                             AnimatedPlanetCard(
                                 planet = planet,
                                 index = index,
+                                animateIn = animateIn,
                                 isYearHighlighted = viewModel.showLatestOnly || viewModel.minDiscoveryYear != null,
                                 isFavorite = planet.planetName in viewModel.favoriteNames,
                                 isSelectedForCompare = viewModel.compareMode && viewModel.isSelectedForCompare(planet),
@@ -267,13 +299,21 @@ fun PlanetListScreen(
                                 }
                             )
                         }
-                        if ((index + 1) % 5 == 0 && index < planets.size - 1) {
-                            item(key = "ad_planet_$index") { AdBannerCard() }
+                        if (showAds && (index + 1) % 5 == 0 && index < planets.size - 1) {
+                            item(key = "ad_planet_$index") { AdBannerCard(pool = adPool, slot = index / 5) }
                         }
                     }
                 }
             }
         }
+
+        BackToTopButton(
+            listState = listState,
+            headerState = headerState,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = if (viewModel.compareMode) 96.dp else 16.dp)
+        )
 
         // ---- Compare action bar ----
         if (viewModel.compareMode) {
@@ -366,18 +406,25 @@ fun PlanetListScreen(
     }
 }
 
+/**
+ * Rows only animate the first time they appear near the top of a list (first load or a new
+ * filter/search result) — never when scrolled back into view, which made fast scrolls flicker.
+ */
+private const val ANIMATED_ROW_LIMIT = 12
+
 @Composable
 private fun AnimatedPlanetCard(
     planet: Exoplanet,
     index: Int,
+    animateIn: Boolean,
     isYearHighlighted: Boolean,
     isFavorite: Boolean,
     isSelectedForCompare: Boolean = false,
     onToggleFavorite: () -> Unit,
     onClick: () -> Unit
 ) {
-    val progress = remember { Animatable(0f) }
-    LaunchedEffect(Unit) {
+    val progress = remember { Animatable(if (animateIn) 0f else 1f) }
+    if (animateIn) LaunchedEffect(Unit) {
         delay(index.coerceAtMost(10) * 30L)
         progress.animateTo(1f, animationSpec = tween(250))
     }

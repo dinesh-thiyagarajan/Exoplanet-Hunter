@@ -1,6 +1,7 @@
 package com.app.exoplanethunter.presentation.screens.planetlist
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -16,6 +17,7 @@ import com.app.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.ToggleFavoriteUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -36,6 +38,19 @@ class PlanetListViewModel(
 
     var planets by mutableStateOf<List<Exoplanet>>(emptyList())
         private set
+
+    /** Size of the full catalogue, for the "1 of 6,107" count while filtered or searching. */
+    var totalPlanetCount by mutableIntStateOf(0)
+        private set
+
+    /**
+     * Bumped whenever a new filter, search or sort produces a fresh result list, so the screen
+     * can jump back to the top instead of keeping the old list's scroll position.
+     */
+    var scrollResetCount by mutableIntStateOf(0)
+        private set
+
+    private var resetScrollOnNextResult = false
 
     /** Unsorted list as delivered by the active filter/search, before [sortOption] is applied. */
     private var rawPlanets: List<Exoplanet> = emptyList()
@@ -73,11 +88,13 @@ class PlanetListViewModel(
     var minDiscoveryYear by mutableStateOf<Int?>(null)
         private set
 
-    private var searchJob: Job? = null
+    /** The one live result-list collector; replaced (not stacked) on every filter or search change. */
+    private var listJob: Job? = null
 
     init {
         trackEvent(AnalyticsEvent.PlanetListScreenViewed)
-        loadPlanets()
+        observeTotalCount()
+        applyCurrentFilter()
         loadFilters()
         observeFavorites()
     }
@@ -101,13 +118,9 @@ class PlanetListViewModel(
         }
     }
 
-    private fun loadPlanets() {
+    private fun observeTotalCount() {
         viewModelScope.launch {
-            isLoading = true
-            getAllPlanetsUseCase().collectLatest { list ->
-                updatePlanets(list)
-                isLoading = false
-            }
+            getAllPlanetsUseCase().collectLatest { totalPlanetCount = it.size }
         }
     }
 
@@ -119,16 +132,15 @@ class PlanetListViewModel(
 
     fun onSearchQueryChanged(query: String) {
         searchQuery = query
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
+        listJob?.cancel()
+        listJob = viewModelScope.launch {
             delay(300) // debounce
+            resetScrollOnNextResult = true
             if (query.isBlank()) {
-                applyCurrentFilter()
+                collectResults(currentFilterFlow())
             } else {
                 trackEvent(AnalyticsEvent.PlanetSearched(query))
-                searchPlanetsUseCase(query).collectLatest { list ->
-                    updatePlanets(list)
-                }
+                collectResults(searchPlanetsUseCase(query))
             }
         }
     }
@@ -151,6 +163,7 @@ class PlanetListViewModel(
                 filterValue = method ?: "all"
             )
         )
+        resetScrollOnNextResult = true
         applyCurrentFilter()
     }
 
@@ -164,6 +177,7 @@ class PlanetListViewModel(
                 filterValue = showHabitableOnly.toString()
             )
         )
+        resetScrollOnNextResult = true
         applyCurrentFilter()
     }
 
@@ -179,6 +193,7 @@ class PlanetListViewModel(
                 filterValue = showLatestOnly.toString()
             )
         )
+        resetScrollOnNextResult = true
         applyCurrentFilter()
     }
 
@@ -194,6 +209,7 @@ class PlanetListViewModel(
                 filterValue = year?.toString() ?: "all"
             )
         )
+        resetScrollOnNextResult = true
         applyCurrentFilter()
     }
 
@@ -202,40 +218,25 @@ class PlanetListViewModel(
     }
 
     private fun applyCurrentFilter() {
-        viewModelScope.launch {
+        listJob?.cancel()
+        listJob = viewModelScope.launch {
             isLoading = true
-            when {
-                showHabitableOnly -> {
-                    filterPlanetsUseCase.mostHabitable(50).collectLatest { list ->
-                        updatePlanets(list)
-                        isLoading = false
-                    }
-                }
-                showLatestOnly -> {
-                    filterPlanetsUseCase.latestDiscoveries().collectLatest { list ->
-                        updatePlanets(list)
-                        isLoading = false
-                    }
-                }
-                minDiscoveryYear != null -> {
-                    filterPlanetsUseCase.byMinDiscoveryYear(minDiscoveryYear!!).collectLatest { list ->
-                        updatePlanets(list)
-                        isLoading = false
-                    }
-                }
-                selectedFilter != null -> {
-                    filterPlanetsUseCase.byDiscoveryMethod(selectedFilter!!).collectLatest { list ->
-                        updatePlanets(list)
-                        isLoading = false
-                    }
-                }
-                else -> {
-                    getAllPlanetsUseCase().collectLatest { list ->
-                        updatePlanets(list)
-                        isLoading = false
-                    }
-                }
-            }
+            collectResults(currentFilterFlow())
+        }
+    }
+
+    private fun currentFilterFlow(): Flow<List<Exoplanet>> = when {
+        showHabitableOnly -> filterPlanetsUseCase.mostHabitable(50)
+        showLatestOnly -> filterPlanetsUseCase.latestDiscoveries()
+        minDiscoveryYear != null -> filterPlanetsUseCase.byMinDiscoveryYear(minDiscoveryYear!!)
+        selectedFilter != null -> filterPlanetsUseCase.byDiscoveryMethod(selectedFilter!!)
+        else -> getAllPlanetsUseCase()
+    }
+
+    private suspend fun collectResults(flow: Flow<List<Exoplanet>>) {
+        flow.collectLatest { list ->
+            updatePlanets(list)
+            isLoading = false
         }
     }
 
@@ -247,6 +248,10 @@ class PlanetListViewModel(
     private fun updatePlanets(list: List<Exoplanet>) {
         rawPlanets = list
         planets = sortPlanets(list, sortOption)
+        if (resetScrollOnNextResult) {
+            resetScrollOnNextResult = false
+            scrollResetCount++
+        }
     }
 
     fun onSortSelected(option: SortOption) {
@@ -254,6 +259,7 @@ class PlanetListViewModel(
         sortOption = option
         trackEvent(AnalyticsEvent.PlanetSortApplied(sortOption = option.name))
         planets = sortPlanets(rawPlanets, sortOption)
+        scrollResetCount++
     }
 
     private fun sortPlanets(list: List<Exoplanet>, option: SortOption): List<Exoplanet> =

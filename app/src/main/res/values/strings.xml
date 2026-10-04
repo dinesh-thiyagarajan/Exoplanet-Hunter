@@ -190,6 +190,7 @@
     <!-- Common / accessibility -->
     <string name="cd_back">Back</string>
     <string name="cd_clear">Clear</string>
+    <string name="cd_back_to_top">Back to top</string>
     <string name="favorite_add">Add to favorites</string>
     <string name="favorite_remove">Remove from favorites</string>
 
@@ -217,6 +218,7 @@
     <string name="planet_list_title">Planets</string>
     <string name="planet_list_eyebrow">FIELD CATALOGUE</string>
     <string name="planet_list_confirmed">CONFIRMED</string>
+    <string name="planet_list_of_total">OF %s</string>
     <string name="planet_list_sorted_by">SORTED · %1$s</string>
     <string name="planet_list_count">%d planets discovered</string>
     <string name="planet_list_search_hint">Search planets or stars…</string>
@@ -272,6 +274,7 @@
     <string name="star_system_detail_eyebrow">STAR SYSTEM</string>
     <string name="star_system_list_loading">Loading…</string>
     <string name="star_system_list_count">Explore %d star systems</string>
+    <string name="star_system_list_filtered_count">Showing %1$s of %2$s star systems</string>
     <string name="star_system_list_search_hint">Search star systems…</string>
     <string name="star_system_spectral_type">Spectral type %s</string>
     <string name="star_system_multiplicity_single">Single star</string>

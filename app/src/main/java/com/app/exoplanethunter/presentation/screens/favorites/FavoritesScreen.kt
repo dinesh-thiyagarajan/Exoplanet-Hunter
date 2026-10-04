@@ -30,6 +30,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import com.app.exoplanethunter.ads.AdBannerCard
+import com.app.exoplanethunter.ads.bannerAdsVisible
+import com.app.exoplanethunter.ads.rememberBannerAdPool
 import com.app.exoplanethunter.presentation.components.PlanetRowCard
 import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
 import com.app.exoplanethunter.presentation.theme.AlmanacMeta
@@ -103,6 +105,8 @@ fun FavoritesScreen(
                 }
 
                 else -> {
+                    val showAds = bannerAdsVisible()
+                    val adPool = rememberBannerAdPool()
                     LazyColumn(
                         contentPadding = PaddingValues(
                             start = 16.dp,
@@ -123,9 +127,9 @@ fun FavoritesScreen(
                                 )
                             }
                             // Interleave an ad after every 5th favorite (not at the end of the list).
-                            if ((index + 1) % 5 == 0 && index < planets.size - 1) {
+                            if (showAds && (index + 1) % 5 == 0 && index < planets.size - 1) {
                                 item(key = "ad_fav_$index") {
-                                    AdBannerCard()
+                                    AdBannerCard(pool = adPool, slot = index / 5)
                                 }
                             }
                         }

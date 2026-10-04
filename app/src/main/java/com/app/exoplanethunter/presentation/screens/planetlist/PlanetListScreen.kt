@@ -65,6 +65,7 @@ import com.app.exoplanethunter.config.FeatureFlags
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.presentation.components.AlmanacChip
 import com.app.exoplanethunter.presentation.components.AlmanacOutlinedButton
+import com.app.exoplanethunter.presentation.components.CollapsingHeaderLayout
 import com.app.exoplanethunter.presentation.components.PlanetRowCard
 import com.app.exoplanethunter.presentation.theme.AlmanacData
 import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
@@ -99,133 +100,136 @@ fun PlanetListScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize().background(Ink)) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // ---- Header ----
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
-            ) {
-                Row(verticalAlignment = Alignment.Top) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(stringResource(R.string.planet_list_eyebrow), style = AlmanacEyebrow)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(R.string.planet_list_title),
-                            style = MaterialTheme.typography.displayMedium
-                        )
+        CollapsingHeaderLayout(
+            header = {
+                // ---- Header (hides on scroll down, returns on scroll up) ----
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Ink)
+                        .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+                ) {
+                    Row(verticalAlignment = Alignment.Top) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(stringResource(R.string.planet_list_eyebrow), style = AlmanacEyebrow)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = stringResource(R.string.planet_list_title),
+                                style = MaterialTheme.typography.displayMedium
+                            )
+                        }
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text(
+                                text = "%,d".format(viewModel.planets.size),
+                                style = AlmanacData.copy(fontSize = 22.sp)
+                            )
+                            Text(stringResource(R.string.planet_list_confirmed), style = AlmanacMeta)
+                        }
                     }
-                    Column(horizontalAlignment = Alignment.End) {
-                        Text(
-                            text = "%,d".format(viewModel.planets.size),
-                            style = AlmanacData.copy(fontSize = 22.sp)
-                        )
-                        Text(stringResource(R.string.planet_list_confirmed), style = AlmanacMeta)
-                    }
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                // Underline-only search (no box)
-                TextField(
-                    value = viewModel.searchQuery,
-                    onValueChange = viewModel::onSearchQueryChanged,
-                    placeholder = {
-                        Text(stringResource(R.string.planet_list_search_hint), color = InkTextFaint)
-                    },
-                    leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = null, tint = InkTextFaint)
-                    },
-                    trailingIcon = {
-                        if (viewModel.searchQuery.isNotBlank()) {
-                            IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cd_clear), tint = InkTextFaint)
+                    // Underline-only search (no box)
+                    TextField(
+                        value = viewModel.searchQuery,
+                        onValueChange = viewModel::onSearchQueryChanged,
+                        placeholder = {
+                            Text(stringResource(R.string.planet_list_search_hint), color = InkTextFaint)
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Default.Search, contentDescription = null, tint = InkTextFaint)
+                        },
+                        trailingIcon = {
+                            if (viewModel.searchQuery.isNotBlank()) {
+                                IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
+                                    Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cd_clear), tint = InkTextFaint)
+                                }
+                            }
+                        },
+                        singleLine = true,
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            cursorColor = Brass,
+                            focusedIndicatorColor = Brass,
+                            unfocusedIndicatorColor = Hairline,
+                            focusedTextColor = InkText,
+                            unfocusedTextColor = InkText
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // ---- Filter chips ----
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(end = 16.dp)
+                    ) {
+                        item {
+                            val allSelected = viewModel.selectedFilter == null && !viewModel.showHabitableOnly &&
+                                !viewModel.showLatestOnly && viewModel.minDiscoveryYear == null
+                            AlmanacChip(stringResource(R.string.filter_all), allSelected) { viewModel.onFilterSelected(null) }
+                        }
+                        item {
+                            AlmanacChip(stringResource(R.string.filter_habitable), viewModel.showHabitableOnly) {
+                                viewModel.onToggleHabitable()
                             }
                         }
-                    },
-                    singleLine = true,
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        cursorColor = Brass,
-                        focusedIndicatorColor = Brass,
-                        unfocusedIndicatorColor = Hairline,
-                        focusedTextColor = InkText,
-                        unfocusedTextColor = InkText
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // ---- Filter chips ----
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(end = 16.dp)
-                ) {
-                    item {
-                        val allSelected = viewModel.selectedFilter == null && !viewModel.showHabitableOnly &&
-                            !viewModel.showLatestOnly && viewModel.minDiscoveryYear == null
-                        AlmanacChip(stringResource(R.string.filter_all), allSelected) { viewModel.onFilterSelected(null) }
-                    }
-                    item {
-                        AlmanacChip(stringResource(R.string.filter_habitable), viewModel.showHabitableOnly) {
-                            viewModel.onToggleHabitable()
+                        items(viewModel.discoveryMethods) { method ->
+                            AlmanacChip(method.take(20), viewModel.selectedFilter == method) {
+                                viewModel.onFilterSelected(method)
+                            }
+                        }
+                        item {
+                            val recentYear = Calendar.getInstance().get(Calendar.YEAR) - 3
+                            val isRecent = viewModel.minDiscoveryYear == recentYear
+                            AlmanacChip(stringResource(R.string.filter_recent_3y), isRecent) {
+                                viewModel.onMinYearChanged(if (isRecent) null else recentYear)
+                            }
+                        }
+                        item {
+                            AlmanacChip(stringResource(R.string.filter_latest), viewModel.showLatestOnly) {
+                                viewModel.onToggleLatest()
+                            }
                         }
                     }
-                    items(viewModel.discoveryMethods) { method ->
-                        AlmanacChip(method.take(20), viewModel.selectedFilter == method) {
-                            viewModel.onFilterSelected(method)
-                        }
-                    }
-                    item {
-                        val recentYear = Calendar.getInstance().get(Calendar.YEAR) - 3
-                        val isRecent = viewModel.minDiscoveryYear == recentYear
-                        AlmanacChip(stringResource(R.string.filter_recent_3y), isRecent) {
-                            viewModel.onMinYearChanged(if (isRecent) null else recentYear)
-                        }
-                    }
-                    item {
-                        AlmanacChip(stringResource(R.string.filter_latest), viewModel.showLatestOnly) {
-                            viewModel.onToggleLatest()
-                        }
-                    }
-                }
 
-                Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
 
-                // ---- Sort + compare row ----
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(
-                            R.string.planet_list_sorted_by,
-                            stringResource(viewModel.sortOption.labelRes).uppercase()
-                        ),
-                        style = AlmanacSectionLabel,
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable { showSortSheet = true }
-                    )
-                    if (compareEnabled) {
-                        AlmanacOutlinedButton(
-                            label = stringResource(R.string.compare_action).uppercase(),
-                            onClick = viewModel::toggleCompareMode,
-                            active = viewModel.compareMode
+                    // ---- Sort + compare row ----
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = stringResource(
+                                R.string.planet_list_sorted_by,
+                                stringResource(viewModel.sortOption.labelRes).uppercase()
+                            ),
+                            style = AlmanacSectionLabel,
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { showSortSheet = true }
                         )
+                        if (compareEnabled) {
+                            AlmanacOutlinedButton(
+                                label = stringResource(R.string.compare_action).uppercase(),
+                                onClick = viewModel::toggleCompareMode,
+                                active = viewModel.compareMode
+                            )
+                        }
                     }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(modifier = Modifier.fillMaxWidth().height(0.5.dp).background(Hairline))
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-                Box(modifier = Modifier.fillMaxWidth().height(0.5.dp).background(Hairline))
-            }
-
+            },
+        ) { headerHeight ->
             // ---- List ----
             if (viewModel.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier.fillMaxSize().padding(top = headerHeight), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = Brass)
                 }
             } else if (viewModel.planets.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier.fillMaxSize().padding(top = headerHeight), contentAlignment = Alignment.Center) {
                     Text(
                         text = stringResource(R.string.planet_list_empty),
                         style = MaterialTheme.typography.bodyLarge,
@@ -238,7 +242,7 @@ fun PlanetListScreen(
                 LazyColumn(
                     state = listState,
                     contentPadding = PaddingValues(
-                        start = 16.dp, end = 16.dp, top = 10.dp,
+                        start = 16.dp, end = 16.dp, top = headerHeight + 10.dp,
                         bottom = if (viewModel.compareMode) 96.dp else 16.dp
                     ),
                     verticalArrangement = Arrangement.spacedBy(8.dp)

@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.presentation.components.AlmanacChip
+import com.app.exoplanethunter.presentation.components.CollapsingHeaderLayout
 import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
 import com.app.exoplanethunter.presentation.theme.Brass
 import com.app.exoplanethunter.presentation.theme.Hairline
@@ -91,109 +92,112 @@ fun StarSystemListScreen(
             .fillMaxSize()
             .background(SpaceBlack),
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Header
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 10.dp),
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
+        CollapsingHeaderLayout(
+            header = {
+                // Header (hides on scroll down, returns on scroll up)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(SpaceBlack)
+                        .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 10.dp),
                 ) {
-                    Column {
-                        Text(stringResource(R.string.star_system_list_eyebrow), style = AlmanacEyebrow)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(R.string.star_system_list_title),
-                            style = MaterialTheme.typography.displayMedium,
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(SurfaceCard)
-                            .border(0.5.dp, Brass, RoundedCornerShape(8.dp))
-                            .clickable(onClick = onOpenGalaxyMap)
-                            .padding(10.dp),
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top,
                     ) {
-                        Icon(
-                            Icons.Default.Explore,
-                            contentDescription = stringResource(R.string.galaxy_map_title),
-                            tint = Brass,
-                        )
+                        Column {
+                            Text(stringResource(R.string.star_system_list_eyebrow), style = AlmanacEyebrow)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = stringResource(R.string.star_system_list_title),
+                                style = MaterialTheme.typography.displayMedium,
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(SurfaceCard)
+                                .border(0.5.dp, Brass, RoundedCornerShape(8.dp))
+                                .clickable(onClick = onOpenGalaxyMap)
+                                .padding(10.dp),
+                        ) {
+                            Icon(
+                                Icons.Default.Explore,
+                                contentDescription = stringResource(R.string.galaxy_map_title),
+                                tint = Brass,
+                            )
+                        }
                     }
-                }
 
-                Text(
-                    text = if (viewModel.isLoading) stringResource(R.string.star_system_list_loading)
-                    else stringResource(R.string.star_system_list_count, viewModel.starSystems.size),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextSecondary,
-                    modifier = Modifier.padding(top = 4.dp),
-                )
+                    Text(
+                        text = if (viewModel.isLoading) stringResource(R.string.star_system_list_loading)
+                        else stringResource(R.string.star_system_list_count, viewModel.starSystems.size),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TextSecondary,
+                        modifier = Modifier.padding(top = 4.dp),
+                    )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                // Search bar
-                TextField(
-                    value = viewModel.searchQuery,
-                    onValueChange = viewModel::onSearchQueryChanged,
-                    placeholder = {
-                        Text(stringResource(R.string.star_system_list_search_hint), color = TextMuted)
-                    },
-                    leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = null, tint = TextMuted)
-                    },
-                    trailingIcon = {
-                        if (viewModel.searchQuery.isNotBlank()) {
-                            IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                                Icon(
-                                    Icons.Default.Close,
-                                    contentDescription = stringResource(R.string.cd_clear),
-                                    tint = TextMuted,
-                                )
+                    // Search bar
+                    TextField(
+                        value = viewModel.searchQuery,
+                        onValueChange = viewModel::onSearchQueryChanged,
+                        placeholder = {
+                            Text(stringResource(R.string.star_system_list_search_hint), color = TextMuted)
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Default.Search, contentDescription = null, tint = TextMuted)
+                        },
+                        trailingIcon = {
+                            if (viewModel.searchQuery.isNotBlank()) {
+                                IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = stringResource(R.string.cd_clear),
+                                        tint = TextMuted,
+                                    )
+                                }
+                            }
+                        },
+                        singleLine = true,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = SurfaceCard,
+                            unfocusedContainerColor = SurfaceCard,
+                            cursorColor = Brass,
+                            focusedIndicatorColor = Brass,
+                            unfocusedIndicatorColor = Hairline,
+                            focusedTextColor = InkText,
+                            unfocusedTextColor = InkText,
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Filter chips
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(end = 16.dp),
+                    ) {
+                        StarSystemFilter.entries.forEach { filter ->
+                            item(key = filter.name) {
+                                AlmanacChip(
+                                    label = stringResource(filter.labelRes),
+                                    selected = viewModel.selectedFilter == filter,
+                                ) { viewModel.onFilterSelected(filter) }
                             }
                         }
-                    },
-                    singleLine = true,
-                    shape = RoundedCornerShape(8.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = SurfaceCard,
-                        unfocusedContainerColor = SurfaceCard,
-                        cursorColor = Brass,
-                        focusedIndicatorColor = Brass,
-                        unfocusedIndicatorColor = Hairline,
-                        focusedTextColor = InkText,
-                        unfocusedTextColor = InkText,
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Filter chips
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(end = 16.dp),
-                ) {
-                    StarSystemFilter.entries.forEach { filter ->
-                        item(key = filter.name) {
-                            AlmanacChip(
-                                label = stringResource(filter.labelRes),
-                                selected = viewModel.selectedFilter == filter,
-                            ) { viewModel.onFilterSelected(filter) }
-                        }
                     }
                 }
-            }
-
+            },
+        ) { headerHeight ->
             // System list
             if (viewModel.isLoading) {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().padding(top = headerHeight),
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator(color = Brass)
@@ -204,7 +208,7 @@ fun StarSystemListScreen(
                     contentPadding = PaddingValues(
                         start = 16.dp,
                         end = 16.dp,
-                        top = 8.dp,
+                        top = headerHeight + 8.dp,
                         bottom = 16.dp,
                     ),
                     verticalArrangement = Arrangement.spacedBy(12.dp),

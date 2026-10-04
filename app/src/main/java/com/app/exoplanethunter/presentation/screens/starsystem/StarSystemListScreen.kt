@@ -44,6 +44,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -52,6 +56,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,7 +70,6 @@ import com.app.exoplanethunter.presentation.components.BackToTopButton
 import com.app.exoplanethunter.presentation.components.CollapsingHeaderLayout
 import com.app.exoplanethunter.presentation.components.rememberCollapsingHeaderState
 import com.app.exoplanethunter.presentation.components.formatLightYears
-import com.app.exoplanethunter.presentation.components.starTypeLabel
 import com.app.exoplanethunter.presentation.theme.AlmanacData
 import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
 import com.app.exoplanethunter.presentation.theme.AlmanacMeta
@@ -91,6 +95,7 @@ fun StarSystemListScreen(
     val listState = rememberLazyListState()
     val animatedSystemIds = remember { mutableSetOf<Long>() }
     val headerState = rememberCollapsingHeaderState()
+    val focusManager = LocalFocusManager.current
     val adPool = rememberBannerAdPool()
 
     // New filter / search results start at the top, not at the old list's position.
@@ -110,6 +115,7 @@ fun StarSystemListScreen(
     ) {
         CollapsingHeaderLayout(
             state = headerState,
+            onUserScroll = { focusManager.clearFocus() },
             header = {
                 // Header (hides on scroll down, returns on scroll up)
                 Column(
@@ -185,6 +191,8 @@ fun StarSystemListScreen(
                             }
                         },
                         singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
@@ -223,6 +231,19 @@ fun StarSystemListScreen(
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator(color = Brass)
+                }
+            } else if (viewModel.starSystems.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(top = headerHeight),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = stringResource(R.string.star_system_list_empty),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = InkTextFaint,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(32.dp),
+                    )
                 }
             } else {
                 val showAds = bannerAdsVisible()
@@ -306,7 +327,7 @@ private fun AnimatedSystemCard(
 
 /**
  * A star-system row in the same almanac plate style as [PlanetRowCard]: a brass star disc,
- * the host name in serif, a mono line (spectral type · multiplicity), and distance with the
+ * the host name in serif, a mono line ([spectral type ·] multiplicity), and distance with the
  * planet count on the right.
  */
 @Composable
@@ -316,8 +337,9 @@ private fun StarSystemCard(
 ) {
     val context = LocalContext.current
     val spectral = system.spectralType?.trim()?.takeIf { it.isNotBlank() }
-        ?: starTypeLabel(system.spectralType)
     val multiplicity = starCountLabel(context, system.numStars)
+    // Most catalogue entries have no spectral type; leave it out rather than print "UNCLASSED".
+    val meta = listOfNotNull(spectral, multiplicity).joinToString(" · ") { it.uppercase() }
 
     Row(
         modifier = Modifier
@@ -355,7 +377,7 @@ private fun StarSystemCard(
             )
             Spacer(modifier = Modifier.height(3.dp))
             Text(
-                text = "${spectral.uppercase()} · ${multiplicity.uppercase()}",
+                text = meta,
                 style = AlmanacMeta,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

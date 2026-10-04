@@ -46,18 +46,45 @@
     <string name="planet_detail_disclaimer_dismiss">Got it</string>
 
     <!-- Planet Detail: card titles -->
-    <string name="planet_detail_title_habitability">ML Habitability Analysis</string>
+    <string name="planet_detail_title_habitability">AI Habitability Estimate</string>
     <string name="planet_detail_title_properties">Planet Properties</string>
     <string name="planet_detail_title_earth_comparison">Compared to Earth</string>
     <string name="planet_detail_title_host_star">Host Star: %s</string>
     <string name="planet_detail_title_discovery">Discovery</string>
-    <string name="planet_detail_title_insights">ML Analysis Insights</string>
+    <string name="planet_detail_title_insights">AI Insights</string>
 
     <!-- Planet Detail: habitability card -->
-    <string name="planet_detail_drag_to_rotate">Drag to rotate</string>
+    <!-- Planet hero: readouts, inferred composition, size to scale -->
+    <string name="hero_label_temp">EQ. TEMP</string>
+    <string name="hero_label_est_temp">EST. TEMP</string>
+    <string name="hero_label_gravity">GRAVITY</string>
+    <string name="hero_label_year">YEAR</string>
+    <string name="hero_label_density">DENSITY</string>
+    <string name="hero_detail_earth_is_one_g">Earth = 1 g</string>
+    <string name="hero_detail_earth_density">Earth = 5.5</string>
+    <string name="hero_impression_caption">%1$s\nArtist\'s impression · Drag to spin</string>
+    <string name="composition_iron_rich">Iron-rich rocky world</string>
+    <string name="composition_rocky">Rocky world</string>
+    <string name="composition_rocky_or_water">Rocky or water-rich world</string>
+    <string name="composition_water_rich">Water-rich world</string>
+    <string name="composition_mini_neptune">Gas-rich mini-Neptune</string>
+    <string name="composition_ice_giant">Neptune-like ice giant</string>
+    <string name="composition_gas_giant">Gas giant</string>
+    <string name="composition_puffy_giant">Puffy, low-density gas giant</string>
+    <string name="composition_hot_jupiter">Hot Jupiter</string>
+    <string name="composition_unknown">Composition unknown</string>
+    <string name="composition_basis_density">Inferred from density</string>
+    <string name="composition_basis_radius">Inferred from radius</string>
+    <string name="composition_basis_mass">Inferred from mass</string>
+    <string name="composition_basis_none">Not enough data</string>
+    <string name="size_scale_title">SIZE TO SCALE</string>
+    <string name="size_scale_ratio">%s× EARTH</string>
+    <string name="size_scale_earth">Earth</string>
+    <string name="size_scale_neptune">Neptune</string>
+    <string name="size_scale_jupiter">Jupiter</string>
     <string name="planet_detail_subtitle">A world orbiting %1$s</string>
     <string name="planet_detail_earth_similarity">EARTH SIMILARITY</string>
-    <string name="planet_detail_ml_verdict">ML VERDICT · %1$s</string>
+    <string name="planet_detail_ml_verdict">AI ESTIMATE · %1$s</string>
     <string name="planet_detail_confidence_high">HIGH CONFIDENCE</string>
     <string name="planet_detail_confidence_low">LOW CONFIDENCE</string>
     <string name="planet_detail_score_na">N/A</string>
@@ -135,10 +162,10 @@
     <string name="compare_metric_discovery_year">Discovery year</string>
     <string name="compare_metric_insolation">Insolation (S⊕)</string>
     <string name="compare_no_data">—</string>
-    <string name="compare_section_ml">ML Habitability Analysis</string>
+    <string name="compare_section_ml">AI Habitability Estimate</string>
     <string name="compare_section_properties">Physical Properties</string>
     <string name="compare_overall_habitability">Overall habitability</string>
-    <string name="compare_ml_disclaimer">ML estimates from limited data — rough, educational, not scientific fact.</string>
+    <string name="compare_ml_disclaimer">AI estimates from limited data — rough, educational, not scientific fact.</string>
 
     <!-- Compare: verdict summary -->
     <string name="compare_verdict_title">At a glance</string>
@@ -275,6 +302,7 @@
     <string name="star_system_list_loading">Loading…</string>
     <string name="star_system_list_count">Explore %d star systems</string>
     <string name="star_system_list_filtered_count">Showing %1$s of %2$s star systems</string>
+    <string name="star_system_list_empty">No star systems found matching your criteria.</string>
     <string name="star_system_list_search_hint">Search star systems…</string>
     <string name="star_system_spectral_type">Spectral type %s</string>
     <string name="star_system_multiplicity_single">Single star</string>

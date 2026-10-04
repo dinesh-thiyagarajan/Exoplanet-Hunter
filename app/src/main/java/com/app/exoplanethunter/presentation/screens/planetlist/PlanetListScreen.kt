@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -23,6 +24,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -50,6 +52,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -99,6 +105,7 @@ fun PlanetListScreen(
     val listState = rememberLazyListState()
     val animatedPlanetIds = remember { mutableSetOf<Long>() }
     val headerState = rememberCollapsingHeaderState()
+    val focusManager = LocalFocusManager.current
     val adPool = rememberBannerAdPool()
     var showSortSheet by remember { mutableStateOf(false) }
     val activity = LocalContext.current as? Activity
@@ -121,6 +128,7 @@ fun PlanetListScreen(
     Box(modifier = Modifier.fillMaxSize().background(Ink)) {
         CollapsingHeaderLayout(
             state = headerState,
+            onUserScroll = { focusManager.clearFocus() },
             header = {
                 // ---- Header (hides on scroll down, returns on scroll up) ----
                 Column(
@@ -174,6 +182,8 @@ fun PlanetListScreen(
                             }
                         },
                         singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
@@ -226,16 +236,28 @@ fun PlanetListScreen(
 
                     // ---- Sort + compare row ----
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(
-                                R.string.planet_list_sorted_by,
-                                stringResource(viewModel.sortOption.labelRes).uppercase()
-                            ),
-                            style = AlmanacSectionLabel,
+                        Row(
                             modifier = Modifier
-                                .weight(1f)
+                                .clip(RoundedCornerShape(4.dp))
                                 .clickable { showSortSheet = true }
-                        )
+                                .padding(vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(
+                                    R.string.planet_list_sorted_by,
+                                    stringResource(viewModel.sortOption.labelRes).uppercase()
+                                ),
+                                style = AlmanacSectionLabel
+                            )
+                            Icon(
+                                Icons.Default.ArrowDropDown,
+                                contentDescription = null,
+                                tint = InkTextDim,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
                         if (compareEnabled) {
                             AlmanacOutlinedButton(
                                 label = stringResource(R.string.compare_action).uppercase(),

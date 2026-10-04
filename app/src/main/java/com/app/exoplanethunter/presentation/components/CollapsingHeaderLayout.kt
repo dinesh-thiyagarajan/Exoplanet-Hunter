@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -50,16 +51,26 @@ fun rememberCollapsingHeaderState(): CollapsingHeaderState = remember { Collapsi
  * The header is drawn over the content, so [content] receives the header's height and must
  * add it as top content padding to its scrolling list — that way the first item starts
  * below the header while the list still uses the full screen once the header is hidden.
+ *
+ * [onUserScroll] fires when the user drags the content (not for programmatic scrolls), e.g.
+ * to close the search keyboard.
  */
 @Composable
 fun CollapsingHeaderLayout(
     header: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     state: CollapsingHeaderState = rememberCollapsingHeaderState(),
+    onUserScroll: () -> Unit = {},
     content: @Composable (headerHeight: Dp) -> Unit,
 ) {
+    val currentOnUserScroll by rememberUpdatedState(onUserScroll)
     val connection = remember(state) {
         object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                if (source == NestedScrollSource.Drag && available.y != 0f) currentOnUserScroll()
+                return Offset.Zero
+            }
+
             override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
                 // Follow only what the list actually scrolled, so a short list that can't scroll
                 // never hides the header and reaching the top of the list always fully reveals it.

@@ -569,7 +569,7 @@ private fun classificationColor(classification: PlanetClassification): Color = w
     PlanetClassification.POTENTIALLY_HABITABLE -> HabitableGreen
     PlanetClassification.ROCKY -> CosmicCyan
     PlanetClassification.SUPER_EARTH -> AuroraGreen
-    PlanetClassification.SUB_EARTH -> CautionYellow
+    PlanetClassification.SUB_NEPTUNE -> CautionYellow
     PlanetClassification.NEPTUNE_LIKE -> NebulaPink
     PlanetClassification.GAS_GIANT -> SolarOrange
     PlanetClassification.UNKNOWN -> TextMuted

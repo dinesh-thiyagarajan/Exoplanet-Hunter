@@ -23,9 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
@@ -35,11 +32,10 @@ import com.app.exoplanethunter.ads.rememberBannerAdPool
 import com.app.exoplanethunter.presentation.components.PlanetRowCard
 import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
 import com.app.exoplanethunter.presentation.theme.AlmanacMeta
-import com.app.exoplanethunter.presentation.theme.CosmicCyan
-import com.app.exoplanethunter.presentation.theme.NebulaPink
+import com.app.exoplanethunter.presentation.theme.Brass
 import com.app.exoplanethunter.presentation.theme.SpaceBlack
-import com.app.exoplanethunter.presentation.theme.TextMuted
-import com.app.exoplanethunter.presentation.theme.TextSecondary
+import com.app.exoplanethunter.presentation.theme.InkTextFaint
+import com.app.exoplanethunter.presentation.theme.InkTextDim
 
 @Composable
 fun FavoritesScreen(
@@ -70,7 +66,7 @@ fun FavoritesScreen(
             when {
                 viewModel.isLoading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = CosmicCyan)
+                        CircularProgressIndicator(color = Brass)
                     }
                 }
 
@@ -83,21 +79,21 @@ fun FavoritesScreen(
                             Icon(
                                 Icons.Default.StarBorder,
                                 contentDescription = null,
-                                tint = TextMuted,
+                                tint = InkTextFaint,
                                 modifier = Modifier.size(56.dp)
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = stringResource(R.string.favorites_empty_title),
                                 style = MaterialTheme.typography.titleMedium,
-                                color = TextSecondary,
+                                color = InkTextDim,
                                 textAlign = TextAlign.Center
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = stringResource(R.string.favorites_empty_subtitle),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = TextMuted,
+                                color = InkTextFaint,
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -111,10 +107,10 @@ fun FavoritesScreen(
                         contentPadding = PaddingValues(
                             start = 16.dp,
                             end = 16.dp,
-                            top = 8.dp,
+                            top = 10.dp,
                             bottom = 16.dp
                         ),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         val planets = viewModel.planets
                         planets.forEachIndexed { index, planet ->

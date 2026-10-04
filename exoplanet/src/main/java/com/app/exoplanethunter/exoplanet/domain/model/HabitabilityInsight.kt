@@ -15,7 +15,7 @@ data class HabitabilityInsight(
 )
 
 enum class PlanetClassification(val label: String, val description: String) {
-    SUB_EARTH("Sub-Earth", "Smaller than Earth, may lack atmosphere"),
+    SUB_NEPTUNE("Sub-Neptune", "Between Earth and Neptune in size, likely with a thick gas envelope"),
     ROCKY("Rocky World", "Earth-sized rocky planet"),
     POTENTIALLY_HABITABLE("Potentially Habitable", "Earth-like conditions possible"),
     SUPER_EARTH("Super-Earth", "Larger rocky planet with thick atmosphere"),

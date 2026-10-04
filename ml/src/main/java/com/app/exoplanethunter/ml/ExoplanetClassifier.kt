@@ -450,7 +450,7 @@ class ExoplanetClassifier(private val context: Context) {
             "Gas Giant" -> PlanetClassification.GAS_GIANT
             "Neptune-like" -> PlanetClassification.NEPTUNE_LIKE
             "Rocky" -> PlanetClassification.ROCKY
-            "Sub-Neptune" -> PlanetClassification.SUB_EARTH
+            "Sub-Neptune" -> PlanetClassification.SUB_NEPTUNE
             "Super-Earth" -> PlanetClassification.SUPER_EARTH
             "Unknown" -> PlanetClassification.UNKNOWN
             else -> PlanetClassification.UNKNOWN
@@ -638,7 +638,7 @@ class ExoplanetClassifier(private val context: Context) {
             val habitPct = "%.1f".format(habitableProb * 100)
             if (habitableProb >= habitableThreshold) {
                 insights.add(
-                    "The ML model gives a habitability probability of $habitPct%, which exceeds " +
+                    "The AI model gives a habitability probability of $habitPct%, which exceeds " +
                             "the ${(habitableThreshold * 100).toInt()}% threshold. This planet may " +
                             "have conditions compatible with life as we know it."
                 )

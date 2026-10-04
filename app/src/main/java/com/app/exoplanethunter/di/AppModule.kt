@@ -6,6 +6,8 @@ import com.app.exoplanethunter.exoplanet.data.repository.ExoplanetRepositoryImpl
 import com.app.exoplanethunter.exoplanet.domain.repository.ExoplanetRepository
 import com.app.exoplanethunter.exoplanet.domain.usecase.FilterPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllPlanetsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetPlanetCountUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemCountUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllStarSystemsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetDiscoveryMethodsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetFavoriteNamesUseCase
@@ -59,6 +61,8 @@ val mlModule = module {
 
 val useCaseModule = module {
     factory { GetAllPlanetsUseCase(get()) }
+    factory { GetPlanetCountUseCase(get()) }
+    factory { GetStarSystemCountUseCase(get()) }
     factory { SearchPlanetsUseCase(get()) }
     factory { GetPlanetByIdUseCase(get()) }
     factory { GetDiscoveryMethodsUseCase(get()) }
@@ -78,11 +82,11 @@ val useCaseModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { PlanetListViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { PlanetListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { PlanetDetailViewModel(get(), get(), get(), get(), get()) }
     viewModel { FavoritesViewModel(get(), get(), get()) }
     viewModel { StatisticsViewModel(get(), get()) }
-    viewModel { StarSystemListViewModel(get(), get(), get(), get(), get()) }
+    viewModel { StarSystemListViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { StarSystemDetailViewModel(get(), get()) }
     viewModel { GalaxyMapViewModel(get(), get()) }
     viewModel { SplashViewModel(get()) }

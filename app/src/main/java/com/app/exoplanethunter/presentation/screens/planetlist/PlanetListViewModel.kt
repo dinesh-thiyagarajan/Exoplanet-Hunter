@@ -13,6 +13,7 @@ import com.app.exoplanethunter.exoplanet.domain.usecase.FilterPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetDiscoveryMethodsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetFavoriteNamesUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetPlanetCountUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchPlanetsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.ToggleFavoriteUseCase
 import kotlinx.coroutines.Job
@@ -25,6 +26,7 @@ import kotlin.math.log10
 
 class PlanetListViewModel(
     private val getAllPlanetsUseCase: GetAllPlanetsUseCase,
+    private val getPlanetCountUseCase: GetPlanetCountUseCase,
     private val searchPlanetsUseCase: SearchPlanetsUseCase,
     private val filterPlanetsUseCase: FilterPlanetsUseCase,
     private val getDiscoveryMethodsUseCase: GetDiscoveryMethodsUseCase,
@@ -120,7 +122,7 @@ class PlanetListViewModel(
 
     private fun observeTotalCount() {
         viewModelScope.launch {
-            getAllPlanetsUseCase().collectLatest { totalPlanetCount = it.size }
+            getPlanetCountUseCase().collectLatest { totalPlanetCount = it }
         }
     }
 
@@ -220,7 +222,9 @@ class PlanetListViewModel(
     private fun applyCurrentFilter() {
         listJob?.cancel()
         listJob = viewModelScope.launch {
-            isLoading = true
+            // Only show the spinner on first load; afterwards keep the current list on screen
+            // until the new results arrive, instead of flashing a spinner on every filter tap.
+            if (planets.isEmpty()) isLoading = true
             collectResults(currentFilterFlow())
         }
     }

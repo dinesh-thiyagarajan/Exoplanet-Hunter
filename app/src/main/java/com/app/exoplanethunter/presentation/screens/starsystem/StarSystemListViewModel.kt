@@ -13,6 +13,7 @@ import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetAllStarSystemsUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetMultiPlanetSystemsUseCase
+import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemCountUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemsByStarCountUseCase
 import com.app.exoplanethunter.exoplanet.domain.usecase.SearchStarSystemsUseCase
 import kotlinx.coroutines.Job
@@ -32,6 +33,7 @@ enum class StarSystemFilter(@StringRes val labelRes: Int) {
 
 class StarSystemListViewModel(
     private val getAllStarSystemsUseCase: GetAllStarSystemsUseCase,
+    private val getStarSystemCountUseCase: GetStarSystemCountUseCase,
     private val searchStarSystemsUseCase: SearchStarSystemsUseCase,
     private val getMultiPlanetSystemsUseCase: GetMultiPlanetSystemsUseCase,
     private val getStarSystemsByStarCountUseCase: GetStarSystemsByStarCountUseCase,
@@ -74,14 +76,16 @@ class StarSystemListViewModel(
 
     private fun observeTotalCount() {
         viewModelScope.launch {
-            getAllStarSystemsUseCase().collectLatest { totalSystemCount = it.size }
+            getStarSystemCountUseCase().collectLatest { totalSystemCount = it }
         }
     }
 
     private fun loadSystems() {
         listJob?.cancel()
         listJob = viewModelScope.launch {
-            isLoading = true
+            // Only show the spinner on first load; afterwards keep the current list on screen
+            // until the new results arrive, instead of flashing a spinner on every filter tap.
+            if (starSystems.isEmpty()) isLoading = true
             collectResults(currentFilterFlow())
         }
     }

@@ -28,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -273,6 +274,9 @@ private fun MainScreen(
     onOpenFactLibrary: () -> Unit
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(BottomNavTab.Planets.name) }
+    // Keeps each tab's saved UI state (scroll position, search text) while it's off screen,
+    // so switching tabs and back returns you to where you were.
+    val tabStateHolder = rememberSaveableStateHolder()
 
     Scaffold(
         containerColor = SpaceBlack,
@@ -322,20 +326,22 @@ private fun MainScreen(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            when (BottomNavTab.valueOf(selectedTab)) {
-                BottomNavTab.Planets -> PlanetListScreen(
-                    onPlanetClick = onPlanetClick,
-                    onCompare = onCompare
-                )
-                BottomNavTab.StarSystems -> StarSystemListScreen(
-                    onSystemClick = onSystemClick,
-                    onOpenGalaxyMap = onOpenGalaxyMap
-                )
-                BottomNavTab.Favorites -> FavoritesScreen(
-                    onPlanetClick = onPlanetClick
-                )
-                BottomNavTab.Statistics -> StatisticsScreen()
-                BottomNavTab.About -> AboutScreen(onOpenFactLibrary = onOpenFactLibrary)
+            tabStateHolder.SaveableStateProvider(selectedTab) {
+                when (BottomNavTab.valueOf(selectedTab)) {
+                    BottomNavTab.Planets -> PlanetListScreen(
+                        onPlanetClick = onPlanetClick,
+                        onCompare = onCompare
+                    )
+                    BottomNavTab.StarSystems -> StarSystemListScreen(
+                        onSystemClick = onSystemClick,
+                        onOpenGalaxyMap = onOpenGalaxyMap
+                    )
+                    BottomNavTab.Favorites -> FavoritesScreen(
+                        onPlanetClick = onPlanetClick
+                    )
+                    BottomNavTab.Statistics -> StatisticsScreen()
+                    BottomNavTab.About -> AboutScreen(onOpenFactLibrary = onOpenFactLibrary)
+                }
             }
         }
     }

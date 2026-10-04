@@ -57,11 +57,10 @@ import androidx.compose.ui.unit.dp
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.exoplanet.domain.model.PlanetClassification
-import com.app.exoplanethunter.presentation.components.Planet3DRenderer
-import com.app.exoplanethunter.presentation.components.ReticleOverlay
 import com.app.exoplanethunter.presentation.components.SkyChartCard
-import com.app.exoplanethunter.presentation.components.graticule
 import com.app.exoplanethunter.presentation.components.catalogueId
+import com.app.exoplanethunter.presentation.components.agreesWith
+import com.app.exoplanethunter.presentation.components.composition
 import com.app.exoplanethunter.presentation.components.isLikelyTidallyLocked
 import com.app.exoplanethunter.presentation.theme.AlmanacCaption
 import com.app.exoplanethunter.presentation.theme.AlmanacMeta
@@ -174,25 +173,10 @@ fun PlanetDetailContent(
                 ) {
                     val tidallyLocked = remember(planet) { isLikelyTidallyLocked(planet) }
 
-                    // 3D Planet, sighted in a brass reticle over a graticule
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                            .graticule(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        ReticleOverlay(modifier = Modifier.size(290.dp))
-                        Planet3DRenderer(
-                            planet = planet,
-                            size = 240.dp,
-                            enableRotation = true,
-                            autoRotate = true,
-                            tidallyLocked = tidallyLocked,
-                        )
-                    }
+                    // The planet as it most plausibly looks, with its key numbers at the corners
+                    PlanetHero(planet = planet, tidallyLocked = tidallyLocked)
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
                         text = planet.planetName,
@@ -211,12 +195,11 @@ fun PlanetDetailContent(
                             .padding(top = 4.dp),
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = stringResource(R.string.planet_detail_drag_to_rotate),
-                        style = AlmanacMeta,
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    CompositionLine(
+                        planet = planet,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(top = 12.dp, start = 24.dp, end = 24.dp),
                     )
 
                     if (tidallyLocked) {
@@ -229,8 +212,8 @@ fun PlanetDetailContent(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Classification badge
-                    insight?.let { ins ->
+                    // AI classification badge — only when it doesn't contradict the composition line
+                    insight?.takeIf { it.classification.agreesWith(planet.composition().first) }?.let { ins ->
                         ClassificationBadge(
                             classification = ins.classification,
                             modifier = Modifier
@@ -246,6 +229,8 @@ fun PlanetDetailContent(
                     ) {
                         // Verdict instrument: temperature verdict + Earth-similarity figure
                         VerdictInstrument(planet = planet, insight = insight)
+
+                        SizeToScaleCard(planet = planet)
 
                         // ML Habitability Insight
                         insight?.let { ins ->
@@ -335,7 +320,7 @@ private fun ClassificationBadge(
         PlanetClassification.POTENTIALLY_HABITABLE -> HabitableGreen
         PlanetClassification.ROCKY -> CosmicCyan
         PlanetClassification.SUPER_EARTH -> AuroraGreen
-        PlanetClassification.SUB_EARTH -> CautionYellow
+        PlanetClassification.SUB_NEPTUNE -> CautionYellow
         PlanetClassification.NEPTUNE_LIKE -> NebulaPink
         PlanetClassification.GAS_GIANT -> SolarOrange
         PlanetClassification.UNKNOWN -> TextMuted

@@ -30,7 +30,14 @@ interface ExoplanetDao {
     @Query("SELECT COUNT(*) FROM exoplanets WHERE isDefault = 1")
     fun getPlanetCount(): Flow<Int>
 
-    @Query("SELECT COUNT(DISTINCT hostName) FROM exoplanets WHERE isDefault = 1")
+    // Counts systems exactly the way [getAllStarSystems] lists them, so totals always match.
+    @Query(
+        """
+        SELECT COUNT(DISTINCT ss.id)
+        FROM star_systems ss
+        INNER JOIN exoplanets e ON e.systemId = ss.id AND e.isDefault = 1
+        """
+    )
     fun getStarSystemCount(): Flow<Int>
 
     @Query("SELECT * FROM exoplanets WHERE isDefault = 1 ORDER BY planetName ASC")

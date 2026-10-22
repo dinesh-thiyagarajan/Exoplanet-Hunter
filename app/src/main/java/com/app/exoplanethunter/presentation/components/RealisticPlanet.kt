@@ -11,9 +11,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -36,6 +38,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.PI
@@ -104,6 +107,7 @@ fun RealisticPlanet(
     val bitmap = remember(renderPx) { Bitmap.createBitmap(renderPx, renderPx, Bitmap.Config.ARGB_8888) }
     val image = remember(bitmap) { bitmap.asImageBitmap() }
 
+    var onScreen by remember { mutableStateOf(true) }
     LaunchedEffect(renderer) {
         val r = renderer ?: return@LaunchedEffect
         val pixels = IntArray(renderPx * renderPx)
@@ -111,6 +115,11 @@ fun RealisticPlanet(
         var last = 0L
         launch { fadeIn.animateTo(1f, tween(500)) }
         while (true) {
+            if (!onScreen) {
+                // Scrolled away: stop rendering until it's back, and don't jump when it is.
+                snapshotFlow { onScreen }.first { it }
+                last = 0L
+            }
             val now = withFrameNanos { it }
             val dt = if (last == 0L) 0f else (now - last) / 1e9f
             last = now
@@ -130,6 +139,7 @@ fun RealisticPlanet(
     Canvas(
         modifier = modifier
             .size(size)
+            .onScreenChanged { onScreen = it }
             .pointerInput(radiusPx) {
                 detectHorizontalDragGestures(
                     onDragStart = { dragging = 1f },

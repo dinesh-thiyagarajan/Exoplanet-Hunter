@@ -64,8 +64,11 @@ fun PlanetRowCard(
     isSelected: Boolean = false,
 ) {
     val discColor = planetAccentColor(planet)
-    val tempColor = temperatureColor(planet.equilibriumTempK)
-    val tempLabel = temperatureLabel(planet.equilibriumTempK)
+    // Measured where the catalogue has it, otherwise estimated from the star and orbit —
+    // the same reading the detail screen shows, so the two never disagree.
+    val tempK = planet.estimatedTempK()
+    val tempColor = temperatureColor(tempK)
+    val tempLabel = temperatureLabel(tempK)
 
     Row(
         modifier = Modifier

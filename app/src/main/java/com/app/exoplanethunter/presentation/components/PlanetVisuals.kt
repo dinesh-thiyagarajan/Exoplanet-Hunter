@@ -56,7 +56,7 @@ fun planetTypeColor(typeLabel: String): Color = when (typeLabel) {
  * (physically meaningful glow), otherwise by planet type so it's never a dull grey.
  */
 fun planetAccentColor(planet: Exoplanet): Color =
-    planetAccentColor(planet.equilibriumTempK, planet.planetRadiusEarth, planet.planetMassEarth)
+    planetAccentColor(planet.estimatedTempK(), planet.planetRadiusEarth, planet.planetMassEarth)
 
 /** Field-based overload so non-domain callers (e.g. the widget) can reuse the same logic. */
 fun planetAccentColor(equilibriumTempK: Double?, radiusEarth: Double?, massEarth: Double?): Color {

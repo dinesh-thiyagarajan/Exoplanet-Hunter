@@ -316,7 +316,27 @@
 
     <!-- Star system detail screen -->
     <string name="star_system_empty">No data available for this star system</string>
-    <string name="star_system_tap_hint">Tap a planet to select • Tap again to view details</string>
+    <string name="star_system_tap_hint">Tap a planet to select · Pinch to zoom · Two-finger drag to tilt</string>
+    <!-- Orrery (star system view) -->
+    <string name="orrery_day">DAY %s</string>
+    <string name="orrery_rate">1 s ≈ %s</string>
+    <string name="orrery_play">Play</string>
+    <string name="orrery_pause">Pause</string>
+    <string name="orrery_hz">Habitable zone</string>
+    <string name="orrery_solar_system">Our Solar System</string>
+    <string name="orrery_3d">3D</string>
+    <string name="orrery_year">Year %s</string>
+    <string name="orrery_scale_note">Distances √-scaled · sizes exaggerated</string>
+    <string name="orrery_companion_off_scale">far off scale</string>
+    <string name="orrery_circumbinary_note">Planets orbit both stars</string>
+    <plurals name="orrery_companions_note">
+        <item quantity="one">Companion star far off scale</item>
+        <item quantity="other">%d companion stars far off scale</item>
+    </plurals>
+    <string name="orrery_missing_note">%d without orbit data</string>
+    <string name="orrery_mercury">Mercury</string>
+    <string name="orrery_venus">Venus</string>
+    <string name="orrery_mars">Mars</string>
     <string name="star_system_view">View</string>
     <string name="star_system_view_arrow">View →</string>
     <string name="star_system_host_single">Star: %s</string>

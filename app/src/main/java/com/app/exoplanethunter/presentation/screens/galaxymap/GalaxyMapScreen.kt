@@ -54,6 +54,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
+import com.app.exoplanethunter.presentation.theme.Ink
+import com.app.exoplanethunter.presentation.theme.InkText
+import com.app.exoplanethunter.presentation.theme.StarOrange
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.draw.shadow
 import com.app.exoplanethunter.presentation.components.BackTopBar
@@ -147,10 +150,16 @@ private fun GalaxyMapContent(
     val textMeasurer = rememberTextMeasurer()
     val galacticCentreLabel = stringResource(R.string.galaxy_map_galactic_centre)
     val sunLabel = stringResource(R.string.galaxy_map_sun)
-    val maxDist = remember(stars) { stars.maxOfOrNull { it.distanceParsec }?.coerceAtLeast(1.0) ?: 1.0 }
+    // Scale to where most stars are, not the farthest outlier: the field fills the screen and
+    // the few distant stars simply sit past its edge until you zoom out.
+    val reach = remember(stars) {
+        val d = stars.map { it.distanceParsec }.sorted()
+        (if (d.isEmpty()) 1.0 else d[((d.size - 1) * 0.8).toInt()]).coerceAtLeast(1.0)
+    }
+    val backdrop = remember { backgroundStars() }
 
     var yaw by remember { mutableFloatStateOf(0f) }
-    var pitch by remember { mutableFloatStateOf(15f) }
+    var pitch by remember { mutableFloatStateOf(DEFAULT_PITCH) }
     var zoom by remember { mutableFloatStateOf(1f) }
     var autoRotate by remember { mutableStateOf(true) }
     var selectedId by remember { mutableStateOf<Long?>(null) }
@@ -163,7 +172,7 @@ private fun GalaxyMapContent(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 90_000, easing = LinearEasing),
+            animation = tween(durationMillis = 140_000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "auto_spin"
@@ -177,20 +186,12 @@ private fun GalaxyMapContent(
                 .fillMaxSize()
                 .pointerInput(stars) {
                     detectTapGestures { tap ->
-                        val hit = screenPositions.entries.minByOrNull { (_, p) ->
-                            val dx = tap.x - p.x; val dy = tap.y - p.y
-                            dx * dx + dy * dy
-                        }
-                        val newId = if (hit != null) {
-                            val dx = tap.x - hit.value.x; val dy = tap.y - hit.value.y
-                            if (sqrt(dx * dx + dy * dy) < 48f) {
-                                autoRotate = false
-                                hit.key
-                            } else null
+                        val hit = screenPositions.entries.minByOrNull { (_, p) -> (p - tap).getDistance() }
+                        val newId = if (hit != null && (hit.value - tap).getDistance() < 24.dp.toPx()) {
+                            autoRotate = false
+                            hit.key
                         } else null
-                        if (newId != null && newId != selectedId) {
-                            onStarSelected()
-                        }
+                        if (newId != null && newId != selectedId) onStarSelected()
                         selectedId = newId
                     }
                 }
@@ -198,142 +199,122 @@ private fun GalaxyMapContent(
                     detectTransformGestures { _, pan, gestureZoom, _ ->
                         autoRotate = false
                         yaw += pan.x * 0.3f
-                        pitch = (pitch + pan.y * 0.3f).coerceIn(-85f, 85f)
-                        zoom = (zoom * gestureZoom).coerceIn(0.5f, 4f)
+                        pitch = (pitch + pan.y * 0.2f).coerceIn(6f, 85f)
+                        zoom = (zoom * gestureZoom).coerceIn(0.4f, 5f)
                     }
                 }
         ) {
             val cx = size.width / 2f
-            val cy = size.height / 2f
-            val base = min(cx, cy)
+            // A little above centre, leaving room for the card at the bottom.
+            val cy = size.height * 0.46f
+
+            // A still, faint field of background stars for depth.
+            backdrop.forEach { (x, y, a) ->
+                drawCircle(InkText.copy(alpha = a), 0.9.dp.toPx(), Offset(x * size.width, y * size.height))
+            }
 
             val effYaw = (yaw + if (autoRotate) autoSpin else 0f) * (PI / 180.0)
             val pitchR = pitch * (PI / 180.0)
             val cosYaw = cos(effYaw); val sinYaw = sin(effYaw)
             val cosPitch = cos(pitchR); val sinPitch = sin(pitchR)
-            val norm = 1.0 / maxDist
-            val cam = 2.6f
-            val spread = 1.7f
+            val norm = 1.0 / reach
+            val cam = 3.2
+            // The 80th-percentile star sits at ~90% of the half-width at zoom 1.
+            val scale = size.width * 0.45f * zoom
 
             screenPositions.clear()
 
-            fun project(wx: Double, wy: Double, wz: Double): Offset {
+            /** World (units of [reach]) → screen, with a gentle perspective; returns depth too. */
+            fun project(wx: Double, wy: Double, wz: Double): Pair<Offset, Float> {
                 val x1 = wx * cosYaw + wz * sinYaw
                 val z1 = -wx * sinYaw + wz * cosYaw
                 val y2 = wy * cosPitch - z1 * sinPitch
                 val z2 = wy * sinPitch + z1 * cosPitch
-                val depth = (cam + z2).toFloat().coerceAtLeast(0.05f)
-                val k = base * spread / depth * zoom
-                return Offset(cx + (x1 * k).toFloat(), cy - (y2 * k).toFloat())
+                val depth = ((cam + z2) / cam).toFloat().coerceAtLeast(0.2f)
+                val k = scale / depth
+                return Offset(cx + (x1 * k).toFloat(), cy - (y2 * k).toFloat()) to depth
             }
 
-            // Three scale rings at round distances, in the plane of the celestial equator.
-            scaleRingsLy(maxDist * PARSEC_TO_LY).forEach { ly ->
-                val rPc = ly / PARSEC_TO_LY
-                if (rPc > maxDist * 1.15) return@forEach
+            // Three scale rings at round distances around the Sun, labelled at their right end.
+            val ringStyle = TextStyle(color = InkTextFaint, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+            scaleRingsLy(reach * PARSEC_TO_LY * 1.1).forEach { ly ->
+                val r = ly / PARSEC_TO_LY * norm
                 val ring = androidx.compose.ui.graphics.Path()
-                for (i in 0..96) {
-                    val t = i / 96.0 * 2 * PI
-                    val o = project(rPc * cos(t) * norm, 0.0, rPc * sin(t) * norm)
+                var right = Offset(-1f, 0f)
+                for (i in 0..120) {
+                    val t = i / 120.0 * 2 * PI
+                    val (o, _) = project(r * cos(t), 0.0, r * sin(t))
                     if (i == 0) ring.moveTo(o.x, o.y) else ring.lineTo(o.x, o.y)
+                    if (o.x > right.x) right = o
                 }
-                drawPath(ring, Line, style = Stroke(width = 1.2.dp.toPx()))
-                val tag = project(rPc * norm, 0.0, 0.0)
-                val layout = textMeasurer.measure("$ly ly", TextStyle(color = InkTextFaint, fontSize = 10.sp))
-                drawText(layout, topLeft = Offset(
-                    (tag.x + 4f).coerceIn(0f, (size.width - layout.size.width).coerceAtLeast(0f)),
-                    (tag.y - layout.size.height).coerceIn(0f, (size.height - layout.size.height).coerceAtLeast(0f)),
-                ))
-            }
-
-            // Which way the centre of the Milky Way lies (Sagittarius A*: RA 266.4°, Dec −28.9°).
-            run {
-                val raR = 266.4 * (PI / 180.0); val decR = -28.94 * (PI / 180.0)
-                val d = maxDist * 1.05 * norm
-                val o = project(d * cos(decR) * cos(raR), d * sin(decR), d * cos(decR) * sin(raR))
-                val toward = o - Offset(cx, cy)
-                val arrow = if (toward.x < 0) "\u2190 " else ""
-                val trail = if (toward.x >= 0) " \u2192" else ""
-                val layout = textMeasurer.measure(
-                    arrow + galacticCentreLabel + trail,
-                    TextStyle(color = InkTextDim, fontSize = 11.sp, fontWeight = FontWeight.SemiBold),
-                )
-                drawText(layout, topLeft = Offset(
-                    (o.x - layout.size.width / 2f).coerceIn(8f, (size.width - layout.size.width - 8f).coerceAtLeast(8f)),
-                    (o.y - layout.size.height / 2f).coerceIn(8f, (size.height - layout.size.height - 8f).coerceAtLeast(8f)),
-                ))
+                drawPath(ring, InkTextFaint.copy(alpha = 0.32f), style = Stroke(width = 1.dp.toPx()))
+                val layout = textMeasurer.measure("$ly ly", ringStyle)
+                val x = (right.x + 6.dp.toPx()).coerceAtMost(size.width - layout.size.width - 8.dp.toPx())
+                if (x > 0f) drawText(layout, topLeft = Offset(x, (right.y - layout.size.height / 2f).coerceIn(0f, (size.height - layout.size.height).coerceAtLeast(0f))))
             }
 
             // Project every star, then paint far-to-near (painter's algorithm).
             val projected = stars.map { s ->
                 val raR = s.ra * (PI / 180.0)
                 val decR = s.dec * (PI / 180.0)
-                val wx = s.distanceParsec * cos(decR) * cos(raR) * norm
-                val wy = s.distanceParsec * sin(decR) * norm
-                val wz = s.distanceParsec * cos(decR) * sin(raR) * norm
-
-                val x1 = wx * cosYaw + wz * sinYaw
-                val z1 = -wx * sinYaw + wz * cosYaw
-                val y2 = wy * cosPitch - z1 * sinPitch
-                val z2 = wy * sinPitch + z1 * cosPitch
-
-                val depth = (cam + z2).toFloat().coerceAtLeast(0.05f)
-                val k = base * spread / depth * zoom
-                val sx = cx + (x1 * k).toFloat()
-                val sy = cy - (y2 * k).toFloat()
-                val r = (base * 0.016f / depth * zoom * (1f + min(s.numPlanets, 6) * 0.12f))
-                    .coerceIn(1.2f, base * 0.06f)
-                ProjectedStar(s, Offset(sx, sy), depth, r)
+                val (o, depth) = project(
+                    s.distanceParsec * cos(decR) * cos(raR) * norm,
+                    s.distanceParsec * sin(decR) * norm,
+                    s.distanceParsec * cos(decR) * sin(raR) * norm,
+                )
+                val r = ((1.6f + min(s.numPlanets, 6) * 0.35f) / depth * zoom.coerceAtMost(2f).let { 0.8f + it * 0.2f })
+                    .coerceIn(1.2f, 5f).dp.toPx()
+                ProjectedStar(s, o, depth, r)
             }.sortedByDescending { it.depth }
 
             projected.forEach { p ->
+                if (p.center.x < -20f || p.center.x > size.width + 20f || p.center.y < -20f || p.center.y > size.height + 20f) return@forEach
                 screenPositions[p.star.id] = p.center
                 val color = spectralColor(p.star.spectralType)
-                val alpha = (1.6f / p.depth).coerceIn(0.35f, 1f)
-                // soft halo
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(color.copy(alpha = 0.5f * alpha), Color.Transparent),
-                        center = p.center,
-                        radius = p.radius * 3f
-                    ),
-                    radius = p.radius * 3f,
-                    center = p.center
-                )
-                drawCircle(color = color.copy(alpha = alpha), radius = p.radius, center = p.center)
-
+                val alpha = (1.25f / p.depth).coerceIn(0.4f, 1f)
+                if (p.radius > 2.5.dp.toPx()) {
+                    drawCircle(color.copy(alpha = 0.12f * alpha), p.radius * 2.2f, p.center)
+                }
+                drawCircle(color.copy(alpha = alpha), p.radius, p.center)
                 if (p.star.id == selectedId) {
-                    drawCircle(
-                        color = Matcha,
-                        radius = p.radius + 8.dp.toPx(),
-                        center = p.center,
-                        style = Stroke(width = 2.5.dp.toPx())
-                    )
-                    val label = p.star.hostName
-                    val layout = textMeasurer.measure(
-                        label,
-                        style = TextStyle(color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                    )
-                    drawText(layout, topLeft = Offset(p.center.x + p.radius + 8f, p.center.y - layout.size.height / 2f))
+                    drawCircle(Matcha, p.radius + 9.dp.toPx(), p.center, style = Stroke(width = 2.dp.toPx()))
                 }
             }
 
-            // The Sun at the origin — always projects to the center.
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(StarGold.copy(alpha = 0.6f), Color.Transparent),
-                    center = Offset(cx, cy),
-                    radius = 26f
-                ),
-                radius = 26f,
-                center = Offset(cx, cy)
+            // The Sun at the origin.
+            val sun = Offset(cx, cy)
+            drawCircle(StarOrange.copy(alpha = 0.28f), 14.dp.toPx(), sun)
+            drawCircle(StarClassG, 6.dp.toPx(), sun)
+            val sunLayout = textMeasurer.measure(sunLabel, TextStyle(color = InkText, fontSize = 12.sp, fontWeight = FontWeight.Bold))
+            drawRoundRect(
+                Ink.copy(alpha = 0.7f),
+                topLeft = Offset(cx + 4.dp.toPx(), cy + 2.dp.toPx()),
+                size = androidx.compose.ui.geometry.Size(sunLayout.size.width + 8.dp.toPx(), sunLayout.size.height + 4.dp.toPx()),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(6.dp.toPx()),
             )
-            drawCircle(color = StarClassG, radius = 6.dp.toPx(), center = Offset(cx, cy))
-            val sunLayout = textMeasurer.measure(
-                sunLabel,
-                style = TextStyle(color = InkText, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-            )
-            drawText(sunLayout, topLeft = Offset(cx + 10f, cy - sunLayout.size.height - 4f))
+            drawText(sunLayout, topLeft = Offset(cx + 8.dp.toPx(), cy + 4.dp.toPx()))
+
+            // Which way the centre of the Milky Way lies (Sagittarius A*: RA 266.4°, Dec −28.9°),
+            // pinned to the side of the screen it's on.
+            run {
+                val raR = 266.4 * (PI / 180.0); val decR = -28.94 * (PI / 180.0)
+                val (o, _) = project(cos(decR) * cos(raR), sin(decR), cos(decR) * sin(raR))
+                val left = o.x < cx
+                val layout = textMeasurer.measure(
+                    if (left) "\u2190 $galacticCentreLabel" else "$galacticCentreLabel \u2192",
+                    TextStyle(color = InkTextDim, fontSize = 12.sp, fontWeight = FontWeight.SemiBold),
+                )
+                val margin = 16.dp.toPx()
+                val x = if (left) margin else size.width - layout.size.width - margin
+                val y = (o.y - layout.size.height / 2f).coerceIn(cy + 40.dp.toPx(), (size.height * 0.72f).coerceAtLeast(cy + 40.dp.toPx()))
+                drawRoundRect(
+                    Ink.copy(alpha = 0.75f),
+                    topLeft = Offset(x - 6.dp.toPx(), y - 2.dp.toPx()),
+                    size = androidx.compose.ui.geometry.Size(layout.size.width + 12.dp.toPx(), layout.size.height + 4.dp.toPx()),
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(8.dp.toPx()),
+                )
+                drawText(layout, topLeft = Offset(x, y))
+            }
         }
 
         // Selected star info card
@@ -395,6 +376,14 @@ private data class ProjectedStar(
 
 /** Approximate visible colour of a star from its spectral class (O→M). */
 private fun spectralColor(type: String?): Color = starClassColor(type)
+
+private const val DEFAULT_PITCH = 24f
+
+/** A fixed scatter of faint background stars: x, y (0–1) and alpha. */
+private fun backgroundStars(): List<Triple<Float, Float, Float>> {
+    val rnd = kotlin.random.Random(7)
+    return List(140) { Triple(rnd.nextFloat(), rnd.nextFloat(), 0.08f + rnd.nextFloat() * 0.22f) }
+}
 
 /** Three evenly spaced, round ring distances that fit inside [maxLy], e.g. 25 / 50 / 75 ly. */
 internal fun scaleRingsLy(maxLy: Double): List<Int> {

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.app.exoplanethunter.presentation.navigation.ExoplanetNavigation
 import com.app.exoplanethunter.presentation.theme.ExoplanetHunterTheme
@@ -54,6 +55,8 @@ class MainActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* no-op */ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // The system splash shows only until the first frame; the Compose splash takes over.
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         appUpdates = AppUpdateController(this, trackEvent)
         pendingFactId = intent.factId()

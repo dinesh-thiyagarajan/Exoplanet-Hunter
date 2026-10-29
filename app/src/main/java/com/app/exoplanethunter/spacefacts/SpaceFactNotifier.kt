@@ -61,7 +61,7 @@ object SpaceFactNotifier {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(R.drawable.ic_stat_notify)
             .setColor(NOTIFICATION_ACCENT)
             .setContentTitle(fact.title)
             .setContentText(fact.shortDescription)

@@ -6,4 +6,13 @@
     <style name="Theme.ExoplanetHunter" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@color/space_black</item>
     </style>
+
+    <!-- System splash: the logo on the splash ground. Hands off to the Compose splash,
+         which uses the same ground colour. -->
+    <style name="Theme.ExoplanetHunter.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_ground</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/splash_ground</item>
+        <item name="postSplashScreenTheme">@style/Theme.ExoplanetHunter</item>
+    </style>
 </resources>

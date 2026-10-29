@@ -37,7 +37,7 @@ import com.app.exoplanethunter.presentation.components.EmptyArtSize
 import com.app.exoplanethunter.presentation.components.EmptyState
 import com.app.exoplanethunter.presentation.components.PlanetDisc
 import com.app.exoplanethunter.presentation.components.SkeletonRow
-import com.app.exoplanethunter.presentation.components.StarHugBadge
+import com.app.exoplanethunter.presentation.components.LogoBadge
 import com.app.exoplanethunter.presentation.components.TabHeader
 import com.app.exoplanethunter.presentation.components.TempBucket
 import com.app.exoplanethunter.presentation.components.estimatedTempK
@@ -71,7 +71,7 @@ fun FavoritesScreen(
                 EmptyState(
                     title = stringResource(R.string.favorites_empty_title),
                     hint = stringResource(R.string.favorites_empty_subtitle),
-                    art = { StarHugBadge(size = EmptyArtSize) },
+                    art = { LogoBadge(size = EmptyArtSize) },
                     actionLabel = stringResource(R.string.favorites_browse),
                     onAction = onBrowsePlanets,
                 )

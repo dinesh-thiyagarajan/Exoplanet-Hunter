@@ -19,12 +19,14 @@ object FeatureFlags {
         _compareEnabled.value = enabled
     }
 
-    /** In-app review prompt: whether it's allowed, and the minimum days of use before asking. */
+    /** In-app review prompt: whether it's allowed. */
     @Volatile
     var reviewEnabled: Boolean = true
 
+
+    /** Days of use before the first review request, and between requests after that. */
     @Volatile
-    var reviewMinDays: Int = 3
+    var reviewIntervalDays: Int = 60
 
     /** In-app update prompt: whether it's allowed at all. */
     @Volatile

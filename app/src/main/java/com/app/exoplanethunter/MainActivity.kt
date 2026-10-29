@@ -67,14 +67,14 @@ class MainActivity : ComponentActivity() {
 
         if (savedInstanceState == null) {
             ReviewPreferences(this).recordLaunch()
-            // After a short settle delay, offer an update if there is one; otherwise ask for a
-            // review — never both at once, and neither when opened from a notification
-            // (don't interrupt the user reading a space fact).
+            // After a short settle delay, offer an update if there is one — not when opened from a
+            // notification (don't interrupt the user reading a space fact). The review request
+            // lives on the planet detail screen, and is skipped in a session that showed this.
             lifecycleScope.launch {
                 delay(2500)
                 if (pendingFactId == null) {
                     appUpdates.checkForUpdate { prompted ->
-                        if (!prompted) AppReviewManager.maybeRequestReview(this@MainActivity)
+                        if (prompted) AppReviewManager.holdForThisSession()
                     }
                 }
             }

@@ -1,6 +1,8 @@
 package com.app.exoplanethunter.presentation.screens.planetdetail
 
+import android.app.Activity
 import android.widget.Toast
+import com.app.exoplanethunter.review.AppReviewManager
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -75,6 +77,15 @@ fun PlanetDetailScreen(
     LaunchedEffect(planetId) {
         viewModel.loadPlanet(planetId)
     }
+    // Ask for a review (at most every 60 days) only after a few seconds with a loaded planet,
+    // when the user is engaged rather than on their way somewhere.
+    val activity = LocalContext.current as? Activity
+    val loaded = viewModel.uiState.planet != null
+    LaunchedEffect(planetId, loaded) {
+        if (!loaded || activity == null) return@LaunchedEffect
+        delay(REVIEW_DELAY_MILLIS)
+        AppReviewManager.maybeRequestReview(activity)
+    }
     PlanetDetailContent(
         state = viewModel.uiState,
         onBack = onBack,
@@ -82,6 +93,8 @@ fun PlanetDetailScreen(
         onOpenSystem = onOpenSystem,
     )
 }
+
+private const val REVIEW_DELAY_MILLIS = 6_000L
 
 @Composable
 fun PlanetDetailContent(

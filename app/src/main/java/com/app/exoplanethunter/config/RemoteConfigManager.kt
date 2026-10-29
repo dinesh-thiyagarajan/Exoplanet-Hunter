@@ -33,7 +33,7 @@ object RemoteConfigManager {
     const val KEY_DISCOVERY_INTERVAL_HOURS = "new_discovery_interval_hours"
     const val KEY_COMPARE_ENABLED = "compare_feature_enabled"
     const val KEY_REVIEW_ENABLED = "in_app_review_enabled"
-    const val KEY_REVIEW_MIN_DAYS = "in_app_review_min_days"
+    const val KEY_REVIEW_INTERVAL_DAYS = "in_app_review_interval_days"
     const val KEY_ADS_ENABLED = "ads_enabled"
     const val KEY_UPDATE_ENABLED = "in_app_update_enabled"
     const val KEY_UPDATE_MIN_VERSION_CODE = "in_app_update_min_version_code"
@@ -57,7 +57,7 @@ object RemoteConfigManager {
                 KEY_DISCOVERY_INTERVAL_HOURS to DiscoveryPreferences.DEFAULT_INTERVAL_HOURS,
                 KEY_COMPARE_ENABLED to true,
                 KEY_REVIEW_ENABLED to true,
-                KEY_REVIEW_MIN_DAYS to 3L,
+                KEY_REVIEW_INTERVAL_DAYS to 60L,
                 KEY_ADS_ENABLED to false,
                 KEY_UPDATE_ENABLED to true,
                 KEY_UPDATE_MIN_VERSION_CODE to 0L
@@ -90,7 +90,8 @@ object RemoteConfigManager {
 
         FeatureFlags.setCompareEnabled(remoteConfig.getBoolean(KEY_COMPARE_ENABLED))
         FeatureFlags.reviewEnabled = remoteConfig.getBoolean(KEY_REVIEW_ENABLED)
-        FeatureFlags.reviewMinDays = remoteConfig.getLong(KEY_REVIEW_MIN_DAYS).toInt().coerceAtLeast(0)
+        // Never more often than monthly, whatever the server says.
+        FeatureFlags.reviewIntervalDays = remoteConfig.getLong(KEY_REVIEW_INTERVAL_DAYS).toInt().coerceAtLeast(30)
         FeatureFlags.updateEnabled = remoteConfig.getBoolean(KEY_UPDATE_ENABLED)
         FeatureFlags.updateMinVersionCode = remoteConfig.getLong(KEY_UPDATE_MIN_VERSION_CODE)
 

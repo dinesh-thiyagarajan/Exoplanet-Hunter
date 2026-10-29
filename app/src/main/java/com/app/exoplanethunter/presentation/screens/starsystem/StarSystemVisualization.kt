@@ -51,6 +51,8 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -65,6 +67,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -85,6 +88,7 @@ import com.app.exoplanethunter.presentation.theme.Brass
 import com.app.exoplanethunter.presentation.theme.Hairline
 import com.app.exoplanethunter.presentation.theme.InkText
 import com.app.exoplanethunter.presentation.theme.InkTextFaint
+import com.app.exoplanethunter.presentation.theme.SpaceBlack
 import com.app.exoplanethunter.presentation.theme.Surface as SurfaceColor
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -141,9 +145,10 @@ internal fun SolarSystemVisualization(
     val bodies = remember(system) { buildBodies(system) }
     val hz = remember(system) { habitableZone(system) }
     val circumbinary = remember(system) { isCircumbinary(system) }
-    val companions = remember(system) { companionLabels(system) }
-    // A close pair circles faster than any planet that can stably orbit both stars.
-    val pairPeriodDays = remember(bodies) { (bodies.minOfOrNull { it.periodDays } ?: 30.0) / 6.0 }
+    val companions = remember(system) { companionsOf(system) }
+    val companionAngles = remember(system) { companionAngles(system.hostName, companions.size) }
+    val knownPairPeriod = KNOWN_STARS[system.hostName]?.binaryPeriodDays
+    val pairPeriodDays = remember(system, bodies) { pairPeriodDays(system, bodies.minOfOrNull { it.periodDays }) }
     val missing = system.planets.size - bodies.size
     val starColor = getStarColor(system.stellarEffectiveTempK)
     val textMeasurer = rememberTextMeasurer()
@@ -190,7 +195,12 @@ internal fun SolarSystemVisualization(
     }
     val solarShown = SOLAR_SYSTEM.filter { it.au <= max(systemReach * 1.25, 1.6) }
     val reach by animateFloatAsState(
-        targetValue = (if (showSolar) max(systemReach, solarShown.maxOf { it.au }) else systemReach).toFloat(),
+        targetValue = listOfNotNull(
+            systemReach,
+            // The whole habitable zone, so its band ends inside the view rather than at the edge.
+            if (showHz) hz?.endInclusive else null,
+            if (showSolar) solarShown.maxOf { it.au } else null,
+        ).max().toFloat(),
         animationSpec = tween(700, easing = FastOutSlowInEasing),
         label = "reach",
     )
@@ -207,6 +217,8 @@ internal fun SolarSystemVisualization(
     val ghostStyle = AlmanacMeta.copy(fontSize = 9.sp, color = InkTextFaint)
     val hzLabel = stringResource(R.string.orrery_hz)
     val offScaleLabel = stringResource(R.string.orrery_companion_off_scale)
+    val starLabel = stringResource(R.string.orrery_star_letter)
+    val distanceLabel = stringResource(R.string.orrery_companion_distance)
     // Companions' temperatures aren't catalogued; most are cooler than the planet host.
     val companionColor = getStarColor(system.stellarEffectiveTempK?.times(0.75) ?: 4500.0)
     val solarLabels = solarShown.map { stringResource(it.labelRes) }
@@ -215,6 +227,8 @@ internal fun SolarSystemVisualization(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
+                // Keep everything inside the view, whatever the zoom.
+                .clipToBounds()
                 .pointerInput(Unit) {
                     detectTapGestures { tap ->
                         val hit = hitTargets.minByOrNull { (_, p) -> (p - tap).getDistance() }
@@ -242,13 +256,19 @@ internal fun SolarSystemVisualization(
                     }
                 }
         ) {
-            val c = center
             val t = tilt.value
             val squash = cos(t)
+            // Draw in the clear area between the time controls and the toggles, with a margin
+            // at the sides, so orbits and bands never run under the controls or to the edge.
+            val top = 60.dp.toPx()
+            val bottom = size.height - 80.dp.toPx()
+            val c = Offset(size.width / 2f, (top + bottom) / 2f)
             val starPx = (8f + 5f * ln(1f + (system.stellarRadiusSolar ?: 1.0).toFloat())).coerceIn(8f, 20f).dp.toPx()
             // A central pair needs room inside the innermost orbit.
             val innerPx = if (circumbinary) starPx * 2.6f + 12.dp.toPx() else starPx + 12.dp.toPx()
-            val outerPx = size.width / 2f - 18.dp.toPx()
+            // Fit whichever is tighter. Tilted, orbits are squashed vertically, so they can use
+            // more of the height; on tablets and in landscape the height is what limits them.
+            val outerPx = min(size.width / 2f - 28.dp.toPx(), (bottom - top) / 2f / squash)
             val k = (outerPx - innerPx) / sqrt(reach.toDouble()).toFloat() * zoom
 
             // AU in the orbital plane → screen, with square-root distance scaling.
@@ -271,24 +291,36 @@ internal fun SolarSystemVisualization(
                     addOval(Rect(c.x - rIn, c.y - rIn * squash, c.x + rIn, c.y + rIn * squash))
                 }
                 drawPath(band, HZ_GREEN.copy(alpha = 0.13f))
-                drawText(
-                    textMeasurer, hzLabel,
-                    topLeft = Offset(c.x - rOut * 0.71f, c.y + rOut * squash * 0.71f),
-                    style = ghostStyle.copy(color = HZ_GREEN.copy(alpha = 0.8f)),
-                )
+                // At the band's left end, away from the Solar System labels in the middle.
+                val hzLayout = textMeasurer.measure(hzLabel, ghostStyle.copy(color = HZ_GREEN))
+                // Skip it when the band is too small to hold it (it'd cover the planets).
+                if ((rIn + rOut) / 2f > hzLayout.size.width) {
+                    drawLabel(hzLayout, Offset(c.x - (rIn + rOut) / 2f - hzLayout.size.width / 2f, c.y - hzLayout.size.height / 2f), backdrop = true)
+                }
             }
 
             // Our Solar System's orbits, ghosted, at the same scale.
             if (showSolar) {
+                val solarStyle = ghostStyle.copy(color = SOLAR_BLUE)
                 solarShown.forEachIndexed { i, ref ->
                     val r = ringRadius(ref.au)
                     drawOval(
-                        color = Color.White.copy(alpha = 0.22f),
+                        color = SOLAR_BLUE.copy(alpha = 0.45f),
                         topLeft = Offset(c.x - r, c.y - r * squash),
                         size = Size(r * 2, r * 2 * squash),
-                        style = Stroke(1.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(2f, 7f))),
+                        style = Stroke(1.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(3f, 6f))),
                     )
-                    drawText(textMeasurer, solarLabels[i], topLeft = Offset(c.x + r + 3f, c.y - 6f), style = ghostStyle)
+                    // Labels alternate below and above the star, so neighbouring rings'
+                    // labels are two rings apart and never collide.
+                    val below = i % 2 == 0
+                    val anchor = Offset(c.x, c.y + (if (below) r else -r) * squash)
+                    drawCircle(SOLAR_BLUE, radius = 2.dp.toPx(), center = anchor)
+                    val layout = textMeasurer.measure(solarLabels[i], solarStyle)
+                    drawLabel(
+                        layout,
+                        Offset(anchor.x - layout.size.width / 2f, if (below) anchor.y + 3.dp.toPx() else anchor.y - 3.dp.toPx() - layout.size.height),
+                        backdrop = true,
+                    )
                 }
             }
 
@@ -323,8 +355,9 @@ internal fun SolarSystemVisualization(
                 targets += b.planet.id to pos
             }
             // Distant companions: far beyond these orbits, so marked at the edge of the view.
-            companions.forEachIndexed { i, letter ->
-                drawCompanionMarker(c, innerPx + k * sqrt(reach.toDouble()).toFloat(), i, letter, companionColor, textMeasurer, ghostStyle, offScaleLabel)
+            companions.forEachIndexed { i, companion ->
+                val note = companion.distanceAu?.let { distanceLabel.format("%,d".format(it)) } ?: offScaleLabel
+                drawCompanionPointer(c, companionAngles[i], companion.letter, companionColor, textMeasurer, ghostStyle, starLabel, note)
             }
             drawBodies(far = true)
             if (circumbinary) {
@@ -393,8 +426,11 @@ internal fun SolarSystemVisualization(
                     }
                 }
                 val notes = listOfNotNull(
+                    if (showSolar) stringResource(R.string.orrery_solar_legend) else null,
                     stringResource(R.string.orrery_scale_note),
                     when {
+                        circumbinary && knownPairPeriod != null ->
+                            stringResource(R.string.orrery_circumbinary_period_note, formatOrbitalPeriod(knownPairPeriod))
                         circumbinary -> stringResource(R.string.orrery_circumbinary_note)
                         companions.isNotEmpty() -> pluralStringResource(R.plurals.orrery_companions_note, companions.size, companions.size)
                         else -> null
@@ -412,50 +448,81 @@ internal fun SolarSystemVisualization(
 }
 
 private val HZ_GREEN = Color(0xFF7FB069)
+private val SOLAR_BLUE = Color(0xFF7FA8D8)
 
 /**
- * A distant companion star, drawn at the edge of the view — real separations are typically
- * tens to thousands of AU, far outside the frame — with a dashed line pointing back to it.
+ * Points to a distant companion star. Real separations are typically tens to thousands of
+ * AU — far outside the frame — so instead of a misleading dot "here", this is an
+ * off-screen pointer at the edge: an arrow aimed outward along the star's direction.
  */
-private fun DrawScope.drawCompanionMarker(
+private fun DrawScope.drawCompanionPointer(
     c: Offset,
-    systemEdgePx: Float,
-    index: Int,
+    angle: Float,
     letter: String,
     color: Color,
     textMeasurer: TextMeasurer,
     style: TextStyle,
+    starLabel: String,
     offScaleLabel: String,
 ) {
-    // Upper right first, then lower left: clear of the time controls and the toggles.
-    val angle = if (index % 2 == 0) -0.6 else PI - 0.55
-    val dir = Offset(cos(angle).toFloat(), sin(angle).toFloat())
-    val margin = 24.dp.toPx()
-    val reachX = (size.width / 2f - margin) / abs(dir.x).coerceAtLeast(0.01f)
-    val reachY = (size.height / 2f - margin - 48.dp.toPx()) / abs(dir.y).coerceAtLeast(0.01f)
-    val pos = c + dir * min(reachX, reachY)
-    val start = c + dir * min(systemEdgePx, (pos - c).getDistance() - 16.dp.toPx())
+    val dir = Offset(cos(angle), sin(angle))
+    // Keep clear of the time controls (top) and the toggles (bottom).
+    val marginX = 20.dp.toPx()
+    val marginTop = 64.dp.toPx()
+    val marginBottom = 72.dp.toPx()
+    val reachX = (size.width / 2f - marginX) / abs(dir.x).coerceAtLeast(0.01f)
+    val reachY = (if (dir.y < 0) c.y - marginTop else size.height - c.y - marginBottom) / abs(dir.y).coerceAtLeast(0.01f)
+    val tip = c + dir * min(reachX, reachY)
+
+    // Arrowhead pointing outward.
+    val side = Offset(-dir.y, dir.x)
+    val len = 9.dp.toPx()
+    val head = Path().apply {
+        moveTo(tip.x, tip.y)
+        lineTo(tip.x - dir.x * len + side.x * len * 0.6f, tip.y - dir.y * len + side.y * len * 0.6f)
+        lineTo(tip.x - dir.x * len - side.x * len * 0.6f, tip.y - dir.y * len - side.y * len * 0.6f)
+        close()
+    }
+    drawPath(head, color)
     drawLine(
-        color = color.copy(alpha = 0.35f),
-        start = start,
-        end = pos - dir * 10.dp.toPx(),
-        strokeWidth = 1.dp.toPx(),
-        pathEffect = PathEffect.dashPathEffect(floatArrayOf(4f, 8f)),
+        color = color.copy(alpha = 0.5f),
+        start = tip - dir * 34.dp.toPx(),
+        end = tip - dir * len,
+        strokeWidth = 1.5.dp.toPx(),
+        pathEffect = PathEffect.dashPathEffect(floatArrayOf(4f, 4f)),
     )
-    drawCircle(
-        brush = Brush.radialGradient(listOf(color.copy(alpha = 0.5f), Color.Transparent), center = pos, radius = 14.dp.toPx()),
-        radius = 14.dp.toPx(),
-        center = pos,
-    )
-    drawCircle(color, radius = 4.dp.toPx(), center = pos)
-    val title = textMeasurer.measure(letter, style.copy(color = InkText))
+    val title = textMeasurer.measure(starLabel.format(letter), style.copy(color = InkText))
     val note = textMeasurer.measure(offScaleLabel, style)
-    val textX = if (dir.x > 0) pos.x - 10.dp.toPx() - note.size.width else pos.x + 10.dp.toPx()
-    drawText(title, topLeft = Offset(if (dir.x > 0) pos.x - 10.dp.toPx() - title.size.width else textX, pos.y - title.size.height))
-    drawText(note, topLeft = Offset(textX, pos.y))
+    // Text hugs the arrow on the side away from the star, i.e. outside the orbits.
+    val alignRight = dir.x > 0
+    val w = max(title.size.width, note.size.width)
+    val h = title.size.height + note.size.height
+    val gap = 6.dp.toPx()
+    val x = if (alignRight) tip.x - w else tip.x
+    val y = if (dir.y < 0) tip.y - h - gap else tip.y + gap
+    drawLabel(title, Offset(if (alignRight) x + w - title.size.width else x, y), backdrop = true)
+    drawLabel(note, Offset(if (alignRight) x + w - note.size.width else x, y + title.size.height), backdrop = true)
 }
 
-/** A compact on/off chip for the orrery's overlays — smaller than the list filter chips. */
+/**
+ * Draws pre-measured text, nudged so it always stays fully inside the canvas. With
+ * [backdrop], a dark plate behind it keeps it readable over orbits and bands.
+ */
+private fun DrawScope.drawLabel(layout: TextLayoutResult, topLeft: Offset, backdrop: Boolean = false) {
+    val x = topLeft.x.coerceIn(0f, (size.width - layout.size.width).coerceAtLeast(0f))
+    val y = topLeft.y.coerceIn(0f, (size.height - layout.size.height).coerceAtLeast(0f))
+    if (backdrop) {
+        val pad = 3.dp.toPx()
+        drawRoundRect(
+            color = SpaceBlack.copy(alpha = 0.8f),
+            topLeft = Offset(x - pad, y),
+            size = Size(layout.size.width + pad * 2, layout.size.height.toFloat()),
+            cornerRadius = CornerRadius(pad),
+        )
+    }
+    drawText(layout, topLeft = Offset(x, y))
+}
+
 @Composable
 private fun ToggleChip(label: String, on: Boolean, onClick: () -> Unit) {
     Box(
@@ -555,7 +622,7 @@ private fun DrawScope.drawPlanet(
         drawCircle(Brass, radius = r + 4.dp.toPx(), center = pos, style = Stroke(1.5.dp.toPx()))
     }
     val layout = textMeasurer.measure(b.label, if (selected) labelStyle.copy(color = Brass) else labelStyle)
-    drawText(layout, topLeft = Offset(pos.x + r + 3.dp.toPx(), pos.y - r - layout.size.height * 0.6f))
+    drawLabel(layout, Offset(pos.x + r + 3.dp.toPx(), pos.y - r - layout.size.height * 0.6f))
 }
 
 private fun lighten(c: Color) = Color(

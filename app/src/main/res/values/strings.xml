@@ -327,11 +327,15 @@
     <string name="orrery_3d">3D</string>
     <string name="orrery_year">Year %s</string>
     <string name="orrery_scale_note">Distances √-scaled · sizes exaggerated</string>
-    <string name="orrery_companion_off_scale">far off scale</string>
+    <string name="orrery_companion_off_scale">far beyond view</string>
+    <string name="orrery_star_letter">Star %s</string>
+    <string name="orrery_companion_distance">~%s AU away</string>
+    <string name="orrery_circumbinary_period_note">Planets orbit both stars, which circle each other every %s</string>
+    <string name="orrery_solar_legend">Blue rings: our Solar System at the same scale</string>
     <string name="orrery_circumbinary_note">Planets orbit both stars</string>
     <plurals name="orrery_companions_note">
-        <item quantity="one">Companion star far off scale</item>
-        <item quantity="other">%d companion stars far off scale</item>
+        <item quantity="one">Companion star far beyond view</item>
+        <item quantity="other">%d companion stars far beyond view</item>
     </plurals>
     <string name="orrery_missing_note">%d without orbit data</string>
     <string name="orrery_mercury">Mercury</string>

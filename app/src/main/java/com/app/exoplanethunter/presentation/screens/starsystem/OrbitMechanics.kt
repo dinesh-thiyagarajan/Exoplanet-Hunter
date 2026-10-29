@@ -99,13 +99,52 @@ internal fun OrbitBody.orbitPoint(ecc: Double): Pair<Double, Double> {
 // ---------------------------------------------------------------------------
 
 /**
+ * What's known about a system's other stars, for the handful of well-studied systems where
+ * the NASA catalogue (which only counts stars) doesn't say. Hand-curated from the
+ * literature; separations are approximate (often projected on the sky).
+ *
+ * @property companions the other stars' letters and rough distance from the planets' star, AU.
+ * @property binaryPeriodDays for circumbinary systems, how long the central pair takes to
+ *   orbit each other.
+ */
+internal data class KnownStars(
+    val companions: List<Pair<String, Int>> = emptyList(),
+    val binaryPeriodDays: Double? = null,
+)
+
+internal val KNOWN_STARS: Map<String, KnownStars> = mapOf(
+    // Planets orbiting one star; companions far away.
+    "HD 189733" to KnownStars(listOf("B" to 220)),
+    "16 Cyg B" to KnownStars(listOf("A" to 850, "C" to 850)),
+    "gam Cep" to KnownStars(listOf("B" to 20)),
+    // Proxima is α Centauri C; its name alone would suggest companions "B" and "C".
+    "Proxima Cen" to KnownStars(listOf("A" to 13_000, "B" to 13_000)),
+    "55 Cnc" to KnownStars(listOf("B" to 1_065)),
+    "55 Cnc B" to KnownStars(listOf("A" to 1_065)),
+    "GJ 667 C" to KnownStars(listOf("A" to 230, "B" to 230)),
+    "HD 41004 A" to KnownStars(listOf("B" to 23)),
+    "HD 41004 B" to KnownStars(listOf("A" to 23)),
+    "Kepler-444" to KnownStars(listOf("B" to 66, "C" to 66)),
+    "HD 80606" to KnownStars(listOf("B" to 1_200)),
+    // Circumbinary ("Tatooine") systems: planets orbit a close pair.
+    "Kepler-16" to KnownStars(binaryPeriodDays = 41.08),
+    "Kepler-34" to KnownStars(binaryPeriodDays = 27.80),
+    "Kepler-35" to KnownStars(binaryPeriodDays = 20.73),
+    "Kepler-38" to KnownStars(binaryPeriodDays = 18.80),
+    "Kepler-47" to KnownStars(binaryPeriodDays = 7.45),
+    "Kepler-413" to KnownStars(binaryPeriodDays = 10.12),
+    "Kepler-453" to KnownStars(binaryPeriodDays = 27.32),
+    "Kepler-1647" to KnownStars(binaryPeriodDays = 11.26),
+    "Kepler-1661" to KnownStars(binaryPeriodDays = 28.16),
+    "TOI-1338" to KnownStars(binaryPeriodDays = 14.61),
+)
+
+/**
  * Well-known circumbinary hosts whose catalogue names don't say so ("Kepler-16 b", not
  * "Kepler-16 AB b"). Everything else is detected from an "AB" in the planet name.
  */
-private val KNOWN_CIRCUMBINARY_HOSTS = setOf(
-    "Kepler-16", "Kepler-34", "Kepler-35", "Kepler-38", "Kepler-47", "Kepler-64",
-    "Kepler-413", "Kepler-453", "Kepler-1647", "Kepler-1661", "TOI-1338",
-)
+private val KNOWN_CIRCUMBINARY_HOSTS =
+    KNOWN_STARS.filterValues { it.binaryPeriodDays != null }.keys + "Kepler-64"
 
 /**
  * True when the planets orbit *both* stars of a close pair (a "Tatooine" system), so the
@@ -137,3 +176,34 @@ internal fun companionLabels(system: StarSystem): List<String> {
     val others = system.numStars - inCentre.size
     return letters.filter { it !in inCentre }.take(others.coerceAtLeast(0))
 }
+
+/**
+ * Screen directions (radians) for companion-star pointers. Real directions aren't
+ * catalogued, so each system gets its own stable choice, kept to the left and right
+ * sides where there's room, and spread apart when there are several.
+ */
+internal fun companionAngles(hostName: String, count: Int): List<Float> {
+    if (count <= 0) return emptyList()
+    val rnd = Random(hostName.hashCode())
+    // Upper right, lower left, lower right, upper left — then a per-system wobble.
+    val slots = listOf(-0.55, PI - 0.55, 0.55, PI + 0.55)
+    val start = rnd.nextInt(slots.size)
+    return List(count) { i -> (slots[(start + i) % slots.size] + rnd.nextDouble(-0.25, 0.25)).toFloat() }
+}
+
+/** A distant companion star: its letter, and its rough distance in AU when known. */
+internal data class Companion(val letter: String, val distanceAu: Int? = null)
+
+/** The system's distant companions — curated where known, otherwise letters only. */
+internal fun companionsOf(system: StarSystem): List<Companion> {
+    KNOWN_STARS[system.hostName]?.companions?.takeIf { it.isNotEmpty() }?.let { known ->
+        return known.map { (letter, au) -> Companion(letter, au) }
+    }
+    return companionLabels(system).map { Companion(it) }
+}
+
+/** How long a circumbinary pair takes to orbit each other: known value, else an estimate. */
+internal fun pairPeriodDays(system: StarSystem, innermostPlanetPeriodDays: Double?): Double =
+    KNOWN_STARS[system.hostName]?.binaryPeriodDays
+        // A pair circles faster than any planet that can stably orbit both stars.
+        ?: (innermostPlanetPeriodDays ?: 30.0) / 6.0

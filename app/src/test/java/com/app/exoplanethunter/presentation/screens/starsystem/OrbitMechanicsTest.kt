@@ -174,4 +174,77 @@ class OrbitMechanicsTest {
         val sys = starSystem(host = "Kepler-64", numStars = 4, planets = listOf(planet(name = "Kepler-64 b")))
         assertEquals(listOf("C", "D"), companionLabels(sys))
     }
+
+    @Test
+    fun `companion pointers are stable per system and point to the sides`() {
+        val a = companionAngles("16 Cyg B", 2)
+        assertEquals(a, companionAngles("16 Cyg B", 2))
+        assertEquals(2, a.size)
+        // Away from straight up/down, where the controls and toggles live.
+        a.forEach { assertTrue("angle $it too vertical", kotlin.math.abs(kotlin.math.cos(it.toDouble())) > 0.5) }
+    }
+
+    @Test
+    fun `several companions point in clearly different directions`() {
+        val (x, y) = companionAngles("Kepler-64", 2)
+        val gap = kotlin.math.abs(kotlin.math.atan2(kotlin.math.sin(x - y), kotlin.math.cos(x - y)))
+        assertTrue("gap $gap", gap > 0.6)
+    }
+
+    @Test
+    fun `not every system's companion points the same way`() {
+        val firsts = listOf("HD 189733", "16 Cyg B", "Gliese 667 C", "55 Cnc", "HD 41004 B", "WASP-12")
+            .map { kotlin.math.round(companionAngles(it, 1).single() * 2) }.toSet()
+        assertTrue(firsts.size > 1)
+    }
+
+    // --- Curated multi-star data ---------------------------------------------------
+
+    @Test
+    fun `known systems show the companion's real distance`() {
+        val sys = starSystem(host = "HD 189733", numStars = 2, planets = listOf(planet(name = "HD 189733 b")))
+        assertEquals(listOf(Companion("B", 220)), companionsOf(sys))
+    }
+
+    @Test
+    fun `Proxima's companions are alpha Centauri A and B, not what its name suggests`() {
+        val sys = starSystem(host = "Proxima Cen", numStars = 3, planets = listOf(planet(name = "Proxima Cen b")))
+        assertEquals(listOf("A", "B"), companionsOf(sys).map { it.letter })
+        assertTrue(companionsOf(sys).all { it.distanceAu == 13_000 })
+    }
+
+    @Test
+    fun `unlisted systems fall back to letters with no distance`() {
+        val sys = starSystem(host = "WASP-12", numStars = 3, planets = listOf(planet(name = "WASP-12 b")))
+        assertEquals(listOf(Companion("B"), Companion("C")), companionsOf(sys))
+    }
+
+    @Test
+    fun `Kepler-16's pair uses its real 41-day orbit`() {
+        val sys = starSystem(host = "Kepler-16", numStars = 2, planets = listOf(planet(name = "Kepler-16 b")))
+        assertEquals(41.08, pairPeriodDays(sys, innermostPlanetPeriodDays = 228.8), 0.0)
+    }
+
+    @Test
+    fun `unknown pair period is estimated from the innermost planet`() {
+        val sys = starSystem(host = "HIP 79098", numStars = 2, planets = listOf(planet(name = "HIP 79098 AB b")))
+        assertEquals(10.0, pairPeriodDays(sys, innermostPlanetPeriodDays = 60.0), 1e-9)
+    }
+
+    @Test
+    fun `every curated pair is treated as circumbinary, every curated companion as distant`() {
+        KNOWN_STARS.forEach { (host, known) ->
+            val sys = starSystem(host = host, numStars = 1 + maxOf(1, known.companions.size), planets = listOf(planet(name = "$host b")))
+            if (known.binaryPeriodDays != null) assertTrue("$host should be circumbinary", isCircumbinary(sys))
+            else assertTrue("$host should not be circumbinary", !isCircumbinary(sys))
+        }
+    }
+
+    @Test
+    fun `stable pairs circle each other much faster than their planets`() {
+        // Real circumbinary planets orbit at least ~5x the binary period — a sanity check on the table.
+        mapOf("Kepler-16" to 228.8, "Kepler-47" to 49.5, "TOI-1338" to 95.2).forEach { (host, planetDays) ->
+            assertTrue(host, KNOWN_STARS.getValue(host).binaryPeriodDays!! * 4 < planetDays)
+        }
+    }
 }

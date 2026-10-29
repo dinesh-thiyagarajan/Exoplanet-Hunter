@@ -3,6 +3,8 @@ package com.app.exoplanethunter.presentation.screens.starsystem
 import androidx.compose.ui.graphics.Color
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
+import com.app.exoplanethunter.presentation.components.TempBucket
+import com.app.exoplanethunter.presentation.components.estimatedTempK
 import com.app.exoplanethunter.presentation.components.hasRings
 import com.app.exoplanethunter.presentation.components.surfaceKind
 import com.app.exoplanethunter.presentation.components.swatch
@@ -53,7 +55,7 @@ internal fun buildBodies(system: StarSystem): List<OrbitBody> {
             m0 = rnd.nextDouble(0.0, 2 * PI),
             periodDays = period,
             radiusEarth = p.planetRadiusEarth?.takeIf { it > 0.0 },
-            color = p.surfaceKind().swatch(),
+            color = TempBucket.of(p.estimatedTempK()).color,
             rings = p.surfaceKind().hasRings(p),
         )
     }.sortedBy { it.aAu }

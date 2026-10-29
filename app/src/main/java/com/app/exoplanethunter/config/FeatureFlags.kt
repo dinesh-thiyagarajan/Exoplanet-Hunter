@@ -25,4 +25,12 @@ object FeatureFlags {
 
     @Volatile
     var reviewMinDays: Int = 3
+
+    /** In-app update prompt: whether it's allowed at all. */
+    @Volatile
+    var updateEnabled: Boolean = true
+
+    /** Installed versions below this get the full-screen, must-update flow (0 = never). */
+    @Volatile
+    var updateMinVersionCode: Long = 0L
 }

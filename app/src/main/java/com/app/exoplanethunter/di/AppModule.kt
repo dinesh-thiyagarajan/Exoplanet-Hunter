@@ -41,6 +41,8 @@ import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemDetailV
 import com.app.exoplanethunter.presentation.screens.starsystem.StarSystemListViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
+import com.app.exoplanethunter.presentation.screens.search.RecentSearches
+import com.app.exoplanethunter.presentation.screens.search.SearchViewModel
 import org.koin.dsl.module
 
 val databaseModule = module {
@@ -91,9 +93,10 @@ val viewModelModule = module {
     viewModel { GalaxyMapViewModel(get(), get()) }
     viewModel { SplashViewModel(get()) }
     viewModel { AboutViewModel(get(), get(), get(), androidContext()) }
-    viewModel { CompareViewModel(get(), get(), get()) }
+    viewModel { CompareViewModel(get(), get(), get(), get()) }
     viewModel { SpaceFactDetailViewModel(get(), get()) }
     viewModel { SpaceFactLibraryViewModel(get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get(), get(), get(), RecentSearches(androidContext())) }
 }
 
 val appModules = listOf(

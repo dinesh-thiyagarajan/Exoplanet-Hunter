@@ -3,66 +3,92 @@ package com.app.exoplanethunter.presentation.theme
 import androidx.compose.ui.graphics.Color
 
 // ===========================================================================
-// Observatory Almanac palette
-// An observatory logbook: ink canvas, brass as the single decorative colour,
-// a warm text ramp, and temperature as the only semantic encoding.
+// Matcha Night palette (design handoff, "Star hug" icon)
+// Dark only: a warm olive-black ground, matcha green for buttons and selection,
+// orange only for stars and favourites, and temperature as the one colour scale
+// that carries meaning (always shown with its word).
 // ===========================================================================
 
-// Foundation (exact handoff tokens)
-val Ink = Color(0xFF0E1319)          // canvas / background
-val InkRaised = Color(0xFF0B1016)    // recessed wells: nav bar, charts, insets
-val Surface = Color(0xFF161C24)      // raised surface: cards, widget
-val SurfaceRaised = Color(0xFF1E2630) // elevated fills, track backgrounds
-val Hairline = Color(0xFF20262E)     // hairline borders / dividers on dark
+// Ground
+val Ink = Color(0xFF0F1009)          // page background
+val Well = Color(0xFF090A05)         // bottom nav, chart and orrery wells, ad slot
+val Surface = Color(0xFF191B11)      // cards, rows on cards, search field, unselected chips
+val Raised = Color(0xFF24271B)       // progress and bar tracks, dialogs, secondary buttons
+val Line = Color(0xFF2F3226)         // orbit lines, outlined borders, dashed boxes
 
-// Brand — the ONLY decorative colour. Used once per view.
-val Brass = Color(0xFFC68A3E)
-val BrassLight = Color(0xFFD29A4C)   // brass as text/strokes on dark
-val BrassDim = Color(0xFF8C6026)
+// Text
+val InkText = Color(0xFFF5EAD8)      // titles, key values
+val InkTextDim = Color(0xFFDCD3C4)   // body copy
+val InkTextFaint = Color(0xFFA19786) // labels, captions, unit lines, inactive nav
 
-// Text ramp (warm off-white, not pure white)
-val InkText = Color(0xFFECE6D8)      // primary — headlines, key values
-val InkTextDim = Color(0xFFC9C3B4)   // secondary — body copy
-val InkTextFaint = Color(0xFF8A8478) // tertiary/muted — labels, captions, ticks
+// Brand
+val Matcha = Color(0xFFAEBF92)       // primary buttons, selected chips, charts, links, AI chip
+val OnMatcha = Color(0xFF272E1B)     // text and icons on matcha
+val MatchaDeep = Color(0xFF3D472B)   // active nav pill, toggled-on chips, update bar
+val OnMatchaDeep = Color(0xFFCCDBB2) // icons and text on matcha deep
+val MatchaMid = Color(0xFF8FA073)    // the planet character in the icon and splash
 
-// Semantic — encodes temperature only
-val TempTemperate = Color(0xFF7BA05B)
-val TempHot = Color(0xFFC25A45)
-val TempCold = Color(0xFF5B7E9C)
-val TempUnknown = Color(0xFF8A8478)
+// Stars — used only for stars and favourites
+val StarOrange = Color(0xFFF6A06B)
+val StarDeep = Color(0xFFD67F48)
+val StarGlow = Color(0xFF8C491A)
+val StarCheek = Color(0xFFFFE1D0)
+
+// Star colour by spectral class
+val StarClassM = StarDeep
+val StarClassK = StarOrange
+val StarClassG = Color(0xFFFFE1D0)
+val StarClassF = Color(0xFFF5EAD8)
+val StarClassHot = Color(0xFFCFE3F5) // A, B, O: bluish white
+
+// Temperature scale — always shown with its word
+val TempScorched = Color(0xFFE86154)
+val TempHotColor = Color(0xFFEC9845)
+val TempTemperate = Color(0xFF65D68A)
+val TempCold = Color(0xFF73B7DF)
+val TempFrozen = Color(0xFFB6E4F0)
+val TempUnknown = Color(0xFFA19786)
 
 // ===========================================================================
-// Legacy token names — repointed to the almanac palette so existing screens
-// keep compiling while they are migrated. Prefer the tokens above for new work.
+// Legacy token names, repointed to Matcha Night so older call sites pick up the
+// new look. Prefer the tokens above in new code.
 // ===========================================================================
+
+val InkRaised = Well
+val SurfaceRaised = Raised
+val Hairline = Line
+val Brass = Matcha
+val BrassLight = Matcha
+val BrassDim = MatchaDeep
+val TempHot = TempScorched
 
 val SpaceBlack = Ink
-val DeepSpaceBlue = InkRaised
+val DeepSpaceBlue = Well
 val NebulaPurple = Surface
-val CosmicBlue = SurfaceRaised
+val CosmicBlue = Raised
 
 val StarWhite = InkText
-val StarGold = Brass
-val NebulaPink = Brass
-val CosmicCyan = Brass
+val StarGold = StarOrange
+val NebulaPink = Matcha
+val CosmicCyan = Matcha
 val AuroraGreen = TempTemperate
-val SolarOrange = Brass
+val SolarOrange = TempHotColor
 
-val SurfaceDark = InkRaised
+val SurfaceDark = Well
 val SurfaceCard = Surface
-val SurfaceCardLight = SurfaceRaised
+val SurfaceCardLight = Raised
 
 val HabitableGreen = TempTemperate
-val CautionYellow = Brass
-val HostileRed = TempHot
+val CautionYellow = TempHotColor
+val HostileRed = TempScorched
 
-// Planet temperature colours (used by the 3D renderer)
-val FrozenBlue = TempCold
-val CoolBlue = Color(0xFF6E96B0)
+// Planet temperature colours (used by the planet renderer)
+val FrozenBlue = TempFrozen
+val CoolBlue = TempCold
 val TemperateGreen = TempTemperate
-val WarmYellow = Brass
-val HotOrange = Color(0xFFC0703E)
-val ScorchingRed = TempHot
+val WarmYellow = TempHotColor
+val HotOrange = TempHotColor
+val ScorchingRed = TempScorched
 
 val TextPrimary = InkText
 val TextSecondary = InkTextDim

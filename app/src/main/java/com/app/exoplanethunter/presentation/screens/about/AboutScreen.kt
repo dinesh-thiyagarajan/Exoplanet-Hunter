@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import android.widget.Toast
 import com.app.exoplanethunter.BuildConfig
 import com.app.exoplanethunter.R
@@ -20,191 +21,154 @@ import com.app.exoplanethunter.presentation.theme.*
 import com.app.exoplanethunter.discovery.DiscoveryScheduler
 import com.app.exoplanethunter.spacefacts.SpaceFactScheduler
 import com.app.exoplanethunter.widget.WidgetPinHelper
+import androidx.compose.foundation.background
+import com.app.exoplanethunter.presentation.components.BackTopBar
+import com.app.exoplanethunter.presentation.components.SecondaryButton
+import com.app.exoplanethunter.presentation.components.SectionCard
+import com.app.exoplanethunter.presentation.components.TabHeader
+import com.app.exoplanethunter.presentation.components.screenContentInsets
+import com.app.exoplanethunter.presentation.components.topBarInsets
 import org.koin.androidx.compose.koinViewModel
 import kotlinx.coroutines.delay
 import java.util.*
 
+/** The Settings tab: preferences, the NASA catalog, and links to the fact library and About. */
 @Composable
 fun AboutScreen(
     onOpenFactLibrary: () -> Unit = {},
+    onOpenAbout: () -> Unit = {},
     viewModel: AboutViewModel = koinViewModel()
 ) {
     val syncStatus by viewModel.syncStatus.collectAsState()
-    val planetCount by viewModel.planetCount.collectAsState()
-    val systemCount by viewModel.systemCount.collectAsState()
     val lastSyncTime by viewModel.lastSyncTime.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
     val discoveryEnabled by viewModel.discoveryEnabled.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
-    Scaffold(
-        containerColor = SpaceBlack,
-        // Hosted inside MainScreen's Scaffold, which already applies system-bar/bottom-nav
-        // insets. Zero these so the bottom inset isn't padded twice (which left a black gap).
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp)
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Ink)
+            .verticalScroll(rememberScrollState())
+    ) {
+        TabHeader(title = stringResource(R.string.nav_about), subtitle = null)
+        Spacer(modifier = Modifier.height(12.dp))
 
-            AboutHeader(planetCount, systemCount)
-
-            Spacer(modifier = Modifier.height(28.dp))
-
+        Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             // Preferences
-            AnimatedSection(delay = 100) {
-                Column {
-                    SectionHeader(stringResource(R.string.settings_section_preferences))
-
-                    SettingsToggleRow(
-                        icon = Icons.Default.Notifications,
-                        iconColor = StarGold,
-                        title = stringResource(R.string.settings_notifications_title),
-                        subtitle = notificationIntervalLabel(viewModel.notificationIntervalHours),
-                        checked = notificationsEnabled,
-                        onCheckedChange = viewModel::setNotificationsEnabled
+            SectionCard(padding = PaddingValues(vertical = 8.dp)) {
+                SettingsSwitchRow(
+                    title = stringResource(R.string.settings_notifications_title),
+                    subtitle = notificationIntervalLabel(viewModel.notificationIntervalHours),
+                    checked = notificationsEnabled,
+                    onCheckedChange = viewModel::setNotificationsEnabled
+                )
+                SettingsSwitchRow(
+                    title = stringResource(R.string.settings_discovery_title),
+                    subtitle = stringResource(R.string.settings_discovery_subtitle),
+                    checked = discoveryEnabled,
+                    onCheckedChange = viewModel::setDiscoveryEnabled
+                )
+                if (WidgetPinHelper.isSupported(context)) {
+                    SettingsLinkRow(
+                        title = stringResource(R.string.settings_widget_title),
+                        subtitle = stringResource(R.string.settings_widget_subtitle),
+                        onClick = { WidgetPinHelper.requestPin(context) }
                     )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    SettingsToggleRow(
-                        icon = Icons.Default.NewReleases,
-                        iconColor = HabitableGreen,
-                        title = stringResource(R.string.settings_discovery_title),
-                        subtitle = stringResource(R.string.settings_discovery_subtitle),
-                        checked = discoveryEnabled,
-                        onCheckedChange = viewModel::setDiscoveryEnabled
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    SettingsActionRow(
-                        icon = Icons.Default.AutoStories,
-                        iconColor = NebulaPink,
-                        title = stringResource(R.string.settings_fact_library_title),
-                        subtitle = stringResource(R.string.settings_fact_library_subtitle),
-                        onClick = onOpenFactLibrary
-                    )
-
-                    val widgetContext = LocalContext.current
-                    if (WidgetPinHelper.isSupported(widgetContext)) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        SettingsActionRow(
-                            icon = Icons.Default.Widgets,
-                            iconColor = CosmicCyan,
-                            title = stringResource(R.string.settings_widget_title),
-                            subtitle = stringResource(R.string.settings_widget_subtitle),
-                            onClick = { WidgetPinHelper.requestPin(widgetContext) }
-                        )
-                    }
                 }
             }
-
-            Spacer(modifier = Modifier.height(28.dp))
 
             // Data
-            AnimatedSection(delay = 200) {
-                Column {
-                    SectionHeader(stringResource(R.string.settings_section_data))
-                    SyncControl(
-                        status = syncStatus,
-                        lastSyncTime = lastSyncTime,
-                        onSyncClick = { viewModel.syncData() }
-                    )
-                }
+            SyncCard(status = syncStatus, lastSyncTime = lastSyncTime, onSyncClick = { viewModel.syncData() })
+
+            // Links
+            SectionCard(padding = PaddingValues(vertical = 4.dp)) {
+                SettingsLinkRow(stringResource(R.string.settings_fact_library_title), onClick = onOpenFactLibrary)
+                SettingsLinkRow(stringResource(R.string.settings_about_link), onClick = onOpenAbout)
             }
 
-            Spacer(modifier = Modifier.height(28.dp))
-
-            // About — plain list, all content visible
-            AnimatedSection(delay = 300) {
-                Column {
-                    SectionHeader(stringResource(R.string.settings_section_about))
-
-                    InfoListCard(
-                        items = listOf(
-                            InfoItem(
-                                icon = Icons.Default.Dataset,
-                                iconColor = CosmicCyan,
-                                title = stringResource(R.string.about_data_source_title),
-                                description = stringResource(R.string.about_data_source_description)
-                            ),
-                            InfoItem(
-                                icon = Icons.Default.AutoAwesome,
-                                iconColor = StarGold,
-                                title = stringResource(R.string.about_verification_title),
-                                description = stringResource(R.string.about_verification_description)
-                            ),
-                            InfoItem(
-                                icon = Icons.Default.Psychology,
-                                iconColor = NebulaPink,
-                                title = stringResource(R.string.about_ml_title),
-                                description = stringResource(R.string.about_ml_description)
-                            ),
-                            InfoItem(
-                                icon = Icons.Default.Info,
-                                iconColor = CosmicCyan,
-                                title = stringResource(R.string.about_affiliation_title),
-                                description = stringResource(R.string.about_affiliation_description)
-                            ),
-                            InfoItem(
-                                icon = Icons.Default.WorkspacePremium,
-                                iconColor = HabitableGreen,
-                                title = stringResource(R.string.about_acknowledgement_row_title),
-                                description = stringResource(R.string.about_acknowledgement_text) + "\n\n" +
-                                    stringResource(R.string.about_acknowledgement_citation) + "\n" +
-                                    stringResource(R.string.about_acknowledgement_attribution)
-                            )
-                        )
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                stringResource(R.string.settings_attribution),
+                style = AlmanacCaption,
+                modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+            )
 
             // Debug-only: fire a space-fact notification immediately for testing.
             if (BuildConfig.DEBUG) {
-                val context = LocalContext.current
-                OutlinedButton(
+                SecondaryButton(
+                    label = "DEBUG: space-fact notification",
                     onClick = {
                         SpaceFactScheduler.triggerNow(context)
-                        Toast.makeText(
-                            context,
-                            "Triggering space-fact notification…",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, "Triggering space-fact notification…", Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("DEBUG: Show space-fact notification")
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                OutlinedButton(
+                )
+                SecondaryButton(
+                    label = "DEBUG: new-discovery check",
                     onClick = {
                         DiscoveryScheduler.triggerNow(context)
-                        Toast.makeText(
-                            context,
-                            "Checking archive for new worlds…",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, "Checking archive for new worlds…", Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("DEBUG: Run new-discovery check")
-                }
-
-                Spacer(modifier = Modifier.height(28.dp))
+                )
             }
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(8.dp))
+/** About & data sources: where the data comes from, how planets are confirmed, the AI, credits. */
+@Composable
+fun AboutPageScreen(
+    onBack: () -> Unit,
+    viewModel: AboutViewModel = koinViewModel()
+) {
+    val planetCount by viewModel.planetCount.collectAsState()
+    val systemCount by viewModel.systemCount.collectAsState()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Ink)
+            .screenContentInsets()
+    ) {
+        BackTopBar(
+            onBack = onBack,
+            backDescription = stringResource(R.string.cd_back),
+            title = stringResource(R.string.settings_about_link),
+            titleSize = 26,
+            modifier = Modifier.topBarInsets(),
+        )
+        Column(
+            Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+        ) {
+            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                SectionCard(Modifier.weight(1f), small = true) {
+                    Text("%,d".format(planetCount), style = AlmanacHeroFigure.copy(fontSize = 28.sp))
+                    Text(stringResource(R.string.about_planets), style = AlmanacCaption.copy(color = InkTextDim, fontSize = 14.sp))
+                }
+                SectionCard(Modifier.weight(1f), small = true) {
+                    Text("%,d".format(systemCount), style = AlmanacHeroFigure.copy(fontSize = 28.sp, color = StarOrange))
+                    Text(stringResource(R.string.about_systems), style = AlmanacCaption.copy(color = InkTextDim, fontSize = 14.sp))
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+            AboutSection(stringResource(R.string.about_data_source_title), stringResource(R.string.about_data_source_description))
+            AboutSection(stringResource(R.string.about_verification_title), stringResource(R.string.about_verification_description))
+            AboutSection(stringResource(R.string.about_ml_title), stringResource(R.string.about_ml_description))
+            AboutSection(stringResource(R.string.about_affiliation_title), stringResource(R.string.about_affiliation_description))
+            Spacer(Modifier.height(8.dp))
+            SectionCard(small = true) {
+                Text(stringResource(R.string.about_acknowledgement_row_title), style = CardTitle)
+                Spacer(Modifier.height(6.dp))
+                Text(stringResource(R.string.about_acknowledgement_text), style = MaterialTheme.typography.bodyMedium)
+                Spacer(Modifier.height(10.dp))
+                Text(stringResource(R.string.about_acknowledgement_citation), style = AlmanacCaption.copy(color = InkTextDim))
+                Text(stringResource(R.string.about_acknowledgement_attribution), style = AlmanacCaption)
+            }
+            Spacer(Modifier.height(32.dp))
         }
     }
 }
@@ -217,26 +181,5 @@ private fun notificationIntervalLabel(hours: Long): String {
             if (days == 1L) stringResource(R.string.settings_notifications_every_day)
             else stringResource(R.string.settings_notifications_every_days, days)
         else -> stringResource(R.string.settings_notifications_every_hours, hours)
-    }
-}
-
-@Composable
-private fun AnimatedSection(delay: Int, content: @Composable () -> Unit) {
-    var visible by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        delay(delay.toLong())
-        visible = true
-    }
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(tween(600)) + slideInVertically(
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioLowBouncy,
-                stiffness = Spring.StiffnessLow
-            ),
-            initialOffsetY = { it / 3 }
-        )
-    ) {
-        content()
     }
 }

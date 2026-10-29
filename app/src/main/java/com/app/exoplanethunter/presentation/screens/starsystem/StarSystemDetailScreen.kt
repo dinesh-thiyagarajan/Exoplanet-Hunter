@@ -30,6 +30,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import com.app.exoplanethunter.presentation.components.BackTopBar
+import com.app.exoplanethunter.presentation.components.formatLightYears
+import com.app.exoplanethunter.presentation.components.multiplicityLabel
 import androidx.compose.ui.unit.dp
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.presentation.components.SkyChartCard
@@ -61,7 +65,7 @@ fun StarSystemDetailScreen(
     ) {
         if (viewModel.isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = StarGold)
+                CircularProgressIndicator(color = com.app.exoplanethunter.presentation.theme.Matcha)
             }
         } else if (viewModel.starSystem == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -82,90 +86,40 @@ fun StarSystemDetailScreen(
                     .screenContentInsets()
                     .verticalScroll(rememberScrollState()),
             ) {
-                // Top bar
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(top = 8.dp, start = 8.dp, end = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.cd_back),
-                            tint = InkText,
-                        )
-                    }
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            stringResource(R.string.star_system_detail_eyebrow),
-                            style = AlmanacEyebrow,
-                        )
-                        Text(
-                            text = system.hostName,
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = InkText,
-                        )
-                        val planetsText = pluralStringResource(
-                            R.plurals.planet_count, system.numPlanets, system.numPlanets,
-                        )
-                        val systemDesc = if (system.numStars > 1) {
-                            "$planetsText \u2022 " +
-                                    stringResource(R.string.star_system_star_count, system.numStars)
-                        } else planetsText
-                        Text(
-                            text = systemDesc,
-                            style = AlmanacMeta,
-                        )
-                    }
-
-                    // System type badge
-                    val badgeText = when {
-                        system.numStars >= 3 -> stringResource(R.string.star_system_multiplicity_trinary)
-                        system.numStars == 2 -> stringResource(R.string.star_system_multiplicity_binary)
-                        else -> pluralStringResource(
-                            R.plurals.planet_count,
-                            system.numPlanets,
-                            system.numPlanets,
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .border(0.5.dp, Brass, RoundedCornerShape(6.dp))
-                            .padding(horizontal = 10.dp, vertical = 5.dp),
-                    ) {
-                        Text(text = badgeText.uppercase(), style = AlmanacEyebrow)
-                    }
-                }
+                // Top bar: back, the system's name, and what it is.
+                val context = LocalContext.current
+                BackTopBar(
+                    onBack = onBack,
+                    backDescription = stringResource(R.string.cd_back),
+                    title = system.hostName,
+                    titleSize = 30,
+                    subtitle = listOfNotNull(
+                        pluralStringResource(R.plurals.planet_count, system.numPlanets, system.numPlanets),
+                        multiplicityLabel(context, system.numStars).lowercase().let {
+                            if (system.numStars <= 1) stringResource(R.string.star_system_single_star_lower) else it
+                        },
+                        system.distanceParsec?.let { formatLightYears(it) },
+                    ).joinToString(" · "),
+                    modifier = Modifier.statusBarsPadding(),
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Solar system visualization — fills most of the screen
                 SolarSystemVisualization(
                     system = system,
                     onPlanetClick = onPlanetClick,
+                    onToggle = viewModel::onOrreryToggle,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(420.dp)
-                        .padding(horizontal = 4.dp),
+                        .padding(horizontal = 16.dp),
                 )
 
-                Text(
-                    text = stringResource(R.string.star_system_tap_hint),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TextMuted,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 4.dp, bottom = 16.dp),
-                )
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Cards section
                 Column(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     AnimatedSection(delayMs = 0) {
                         StellarInfoCard(system = system)

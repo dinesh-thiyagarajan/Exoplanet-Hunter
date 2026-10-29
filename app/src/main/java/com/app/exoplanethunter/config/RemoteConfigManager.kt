@@ -18,6 +18,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
  *  - [KEY_INTERVAL_HOURS] — how many hours between notifications.
  *  - [KEY_COMPARE_ENABLED] — show/hide the planet-compare feature remotely.
  *  - [KEY_ADS_ENABLED] — turn ads on/off remotely (fail-closed: off until the server says on).
+ *  - [KEY_UPDATE_ENABLED] / [KEY_UPDATE_MIN_VERSION_CODE] — in-app update prompt, and the
+ *    oldest version allowed to skip it (older ones must update).
  *
  * Notification values are mirrored into [SpaceFactPreferences] so the existing worker/scheduler
  * keep reading a single local source of truth; the compare flag is published to [FeatureFlags]
@@ -33,6 +35,8 @@ object RemoteConfigManager {
     const val KEY_REVIEW_ENABLED = "in_app_review_enabled"
     const val KEY_REVIEW_MIN_DAYS = "in_app_review_min_days"
     const val KEY_ADS_ENABLED = "ads_enabled"
+    const val KEY_UPDATE_ENABLED = "in_app_update_enabled"
+    const val KEY_UPDATE_MIN_VERSION_CODE = "in_app_update_min_version_code"
 
     // Minimum sane interval (also respects WorkManager's 15-minute periodic floor).
     private const val MIN_INTERVAL_HOURS = 1L
@@ -54,7 +58,9 @@ object RemoteConfigManager {
                 KEY_COMPARE_ENABLED to true,
                 KEY_REVIEW_ENABLED to true,
                 KEY_REVIEW_MIN_DAYS to 3L,
-                KEY_ADS_ENABLED to false
+                KEY_ADS_ENABLED to false,
+                KEY_UPDATE_ENABLED to true,
+                KEY_UPDATE_MIN_VERSION_CODE to 0L
             )
         )
 
@@ -85,6 +91,8 @@ object RemoteConfigManager {
         FeatureFlags.setCompareEnabled(remoteConfig.getBoolean(KEY_COMPARE_ENABLED))
         FeatureFlags.reviewEnabled = remoteConfig.getBoolean(KEY_REVIEW_ENABLED)
         FeatureFlags.reviewMinDays = remoteConfig.getLong(KEY_REVIEW_MIN_DAYS).toInt().coerceAtLeast(0)
+        FeatureFlags.updateEnabled = remoteConfig.getBoolean(KEY_UPDATE_ENABLED)
+        FeatureFlags.updateMinVersionCode = remoteConfig.getLong(KEY_UPDATE_MIN_VERSION_CODE)
 
         // Fail-closed: ads stay off (in-app default false) until the server enables them.
         // A cached activated value applies immediately on later launches, before any fetch.

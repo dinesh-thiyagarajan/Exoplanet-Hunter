@@ -1,10 +1,8 @@
 package com.app.exoplanethunter.presentation.components
 
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,25 +13,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.R
@@ -42,17 +31,24 @@ import com.app.exoplanethunter.presentation.preview.PreviewData
 import com.app.exoplanethunter.presentation.preview.PreviewSurface
 import com.app.exoplanethunter.presentation.theme.AlmanacData
 import com.app.exoplanethunter.presentation.theme.AlmanacMeta
-import com.app.exoplanethunter.presentation.theme.Brass
-import com.app.exoplanethunter.presentation.theme.Hairline
+import com.app.exoplanethunter.presentation.theme.Corners
 import com.app.exoplanethunter.presentation.theme.InkTextFaint
+import com.app.exoplanethunter.presentation.theme.Matcha
+import com.app.exoplanethunter.presentation.theme.RowName
+import com.app.exoplanethunter.presentation.theme.StarOrange
 import com.app.exoplanethunter.presentation.theme.Surface
-import com.app.exoplanethunter.presentation.theme.SurfaceRaised
+
+/** Whether a planet is drawn with gas-giant bands. */
+fun Exoplanet.isBanded(): Boolean = (planetRadiusEarth ?: 0.0) >= 6.0
+
+/** The catalogue line under a planet's name, e.g. "EH-0412 · M-type · Sub-Neptune". */
+fun Exoplanet.catalogueLine(): String =
+    listOfNotNull(catalogueId(id), starTypeLabel(spectralType), classificationLabel(this)).joinToString(" · ")
 
 /**
- * The catalogue list-row, shared by the Planets list and Favorites. An almanac
- * plate: a temperature-tinted disc, the planet name in serif, a mono catalogue
- * line (id · star class · classification), distance in light-years, and a
- * temperature dot. Selected rows gain a brass left rule and a raised surface.
+ * The planet list row, shared by Planets, Search and Compare mode: a 40 dp disc in the
+ * temperature colour, the name and catalogue line, the distance over the temperature word,
+ * and the favourite star. Selected rows (compare mode) sit on a surface pill with a matcha ring.
  */
 @Composable
 fun PlanetRowCard(
@@ -62,61 +58,38 @@ fun PlanetRowCard(
     onClick: () -> Unit,
     isYearHighlighted: Boolean = false,
     isSelected: Boolean = false,
+    secondaryLine: String = planet.catalogueLine(),
 ) {
-    val discColor = planetAccentColor(planet)
     // Measured where the catalogue has it, otherwise estimated from the star and orbit —
     // the same reading the detail screen shows, so the two never disagree.
-    val tempK = planet.estimatedTempK()
-    val tempColor = temperatureColor(tempK)
-    val tempLabel = temperatureLabel(tempK)
+    val bucket = TempBucket.of(planet.estimatedTempK())
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(6.dp))
-            .background(if (isSelected) SurfaceRaised else Surface)
-            .border(
-                width = 0.5.dp,
-                color = if (isSelected) Brass else Hairline,
-                shape = RoundedCornerShape(6.dp),
+            .clip(Corners.SmallCard)
+            .then(
+                if (isSelected) Modifier.background(Surface).border(2.dp, Matcha, Corners.SmallCard)
+                else Modifier
             )
-            .clickable { onClick() }
-            // Brass left rule for the selected entry.
-            .drawBehind {
-                if (isSelected) {
-                    drawRect(color = Brass, size = Size(3.dp.toPx(), size.height), topLeft = Offset.Zero)
-                }
-            }
-            .padding(start = 16.dp, top = 13.dp, bottom = 13.dp, end = 6.dp),
+            .clickable(onClick = onClick)
+            .padding(start = if (isSelected) 12.dp else 0.dp, top = 10.dp, bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Temperature-tinted disc with a faint inner light.
-        Box(
-            modifier = Modifier
-                .size(34.dp)
-                .clip(CircleShape)
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(discColor, discColor.copy(alpha = 0.65f)),
-                        center = Offset(11f, 11f),
-                        radius = 38f,
-                    )
-                )
-                .border(0.5.dp, Hairline, CircleShape),
-        )
+        PlanetDisc(color = bucket.color, size = 40.dp, banded = planet.isBanded())
 
         Spacer(modifier = Modifier.width(14.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = planet.planetName,
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
+                style = RowName,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Spacer(modifier = Modifier.height(3.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = "${catalogueId(planet.id)} · ${starTypeLabel(planet.spectralType)} · ${classificationLabel(planet)}",
+                text = if (isYearHighlighted) "$secondaryLine · ${planet.discoveryYear}" else secondaryLine,
                 style = AlmanacMeta,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -126,26 +99,23 @@ fun PlanetRowCard(
         Spacer(modifier = Modifier.width(10.dp))
 
         Column(horizontalAlignment = Alignment.End) {
-            Text(text = formatLightYears(planet.distanceParsec), style = AlmanacData)
-            Spacer(modifier = Modifier.height(5.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(6.dp)
-                        .clip(CircleShape)
-                        .background(tempColor)
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(text = tempLabel, style = AlmanacMeta.copy(color = tempColor))
-            }
+            Text(text = formatLightYears(planet.distanceParsec), style = AlmanacData.copy(fontSize = 14.sp))
+            Spacer(modifier = Modifier.height(4.dp))
+            TempIndicator(bucket)
         }
 
-        IconButton(onClick = onToggleFavorite, modifier = Modifier.size(36.dp)) {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .clickable(role = Role.Checkbox, onClick = onToggleFavorite),
+            contentAlignment = Alignment.Center,
+        ) {
             Icon(
-                imageVector = if (isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
+                imageVector = if (isFavorite) AppIcons.StarFilled else AppIcons.Star,
                 contentDescription = if (isFavorite) stringResource(R.string.favorite_remove) else stringResource(R.string.favorite_add),
-                tint = if (isFavorite) Brass else InkTextFaint,
-                modifier = Modifier.size(18.dp),
+                tint = if (isFavorite) StarOrange else InkTextFaint,
+                modifier = Modifier.size(22.dp),
             )
         }
     }

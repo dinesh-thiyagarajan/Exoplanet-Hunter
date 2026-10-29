@@ -27,4 +27,6 @@ data class Exoplanet(
     val distanceParsec: Double?,
     val ra: Double?,
     val dec: Double?,
+    /** The star system this planet belongs to (0 when unknown). */
+    val systemId: Long = 0,
 )

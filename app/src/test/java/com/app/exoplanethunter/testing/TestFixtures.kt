@@ -103,7 +103,8 @@ class FakeExoplanetRepository : ExoplanetRepository {
     override suspend fun getDiscoveryMethods() = listOf("Transit", "Radial Velocity")
 
     override fun getAllStarSystems() = allSystems
-    override suspend fun getStarSystem(systemId: Long): StarSystem? = null
+    val starSystems = mutableMapOf<Long, StarSystem>()
+    override suspend fun getStarSystem(systemId: Long): StarSystem? = starSystems[systemId]
     override fun searchStarSystems(query: String): Flow<List<StarSystemSummary>> = flowOf(systemSearchResults[query].orEmpty())
     override fun getMultiPlanetSystems() = systemsMultiPlanet
     override fun getStarSystemsByStarCount(starCount: Int) =

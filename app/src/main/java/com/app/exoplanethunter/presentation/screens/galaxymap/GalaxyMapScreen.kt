@@ -54,6 +54,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.draw.shadow
+import com.app.exoplanethunter.presentation.components.BackTopBar
+import com.app.exoplanethunter.presentation.components.PrimaryButton
+import com.app.exoplanethunter.presentation.components.starClassColor
+import com.app.exoplanethunter.presentation.theme.BodyFamily
+import com.app.exoplanethunter.presentation.theme.Corners
+import com.app.exoplanethunter.presentation.theme.InkTextDim
+import com.app.exoplanethunter.presentation.theme.InkTextFaint
+import com.app.exoplanethunter.presentation.theme.Line
+import com.app.exoplanethunter.presentation.theme.Matcha
+import com.app.exoplanethunter.presentation.theme.SectionTitle
+import com.app.exoplanethunter.presentation.theme.StarClassG
+import com.app.exoplanethunter.presentation.theme.Surface
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
@@ -96,7 +110,7 @@ fun GalaxyMapScreen(
     ) {
         if (viewModel.isLoading) {
             CircularProgressIndicator(
-                color = CosmicCyan,
+                color = Matcha,
                 modifier = Modifier.align(Alignment.Center)
             )
         } else if (viewModel.stars.isEmpty()) {
@@ -114,29 +128,13 @@ fun GalaxyMapScreen(
         }
 
         // Top bar
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .topBarInsets()
-                .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.cd_back),
-                    tint = InkText
-                )
-            }
-            Column {
-                Text(stringResource(R.string.galaxy_map_eyebrow), style = AlmanacEyebrow)
-                Text(
-                    text = stringResource(R.string.galaxy_map_title),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = InkText
-                )
-            }
-        }
+        BackTopBar(
+            onBack = onBack,
+            backDescription = stringResource(R.string.cd_back),
+            title = stringResource(R.string.galaxy_map_title),
+            subtitle = if (viewModel.stars.isNotEmpty()) stringResource(R.string.galaxy_map_hint, viewModel.stars.size) else null,
+            modifier = Modifier.topBarInsets(),
+        )
     }
 }
 
@@ -147,6 +145,8 @@ private fun GalaxyMapContent(
     onSystemClick: (Long) -> Unit
 ) {
     val textMeasurer = rememberTextMeasurer()
+    val galacticCentreLabel = stringResource(R.string.galaxy_map_galactic_centre)
+    val sunLabel = stringResource(R.string.galaxy_map_sun)
     val maxDist = remember(stars) { stars.maxOfOrNull { it.distanceParsec }?.coerceAtLeast(1.0) ?: 1.0 }
 
     var yaw by remember { mutableFloatStateOf(0f) }
@@ -171,7 +171,7 @@ private fun GalaxyMapContent(
 
     val selectedStar = remember(selectedId, stars) { stars.firstOrNull { it.id == selectedId } }
 
-    Box(modifier = Modifier.fillMaxSize().graticule()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -217,6 +217,53 @@ private fun GalaxyMapContent(
 
             screenPositions.clear()
 
+            fun project(wx: Double, wy: Double, wz: Double): Offset {
+                val x1 = wx * cosYaw + wz * sinYaw
+                val z1 = -wx * sinYaw + wz * cosYaw
+                val y2 = wy * cosPitch - z1 * sinPitch
+                val z2 = wy * sinPitch + z1 * cosPitch
+                val depth = (cam + z2).toFloat().coerceAtLeast(0.05f)
+                val k = base * spread / depth * zoom
+                return Offset(cx + (x1 * k).toFloat(), cy - (y2 * k).toFloat())
+            }
+
+            // Three scale rings at round distances, in the plane of the celestial equator.
+            scaleRingsLy(maxDist * PARSEC_TO_LY).forEach { ly ->
+                val rPc = ly / PARSEC_TO_LY
+                if (rPc > maxDist * 1.15) return@forEach
+                val ring = androidx.compose.ui.graphics.Path()
+                for (i in 0..96) {
+                    val t = i / 96.0 * 2 * PI
+                    val o = project(rPc * cos(t) * norm, 0.0, rPc * sin(t) * norm)
+                    if (i == 0) ring.moveTo(o.x, o.y) else ring.lineTo(o.x, o.y)
+                }
+                drawPath(ring, Line, style = Stroke(width = 1.2.dp.toPx()))
+                val tag = project(rPc * norm, 0.0, 0.0)
+                val layout = textMeasurer.measure("$ly ly", TextStyle(color = InkTextFaint, fontSize = 10.sp))
+                drawText(layout, topLeft = Offset(
+                    (tag.x + 4f).coerceIn(0f, (size.width - layout.size.width).coerceAtLeast(0f)),
+                    (tag.y - layout.size.height).coerceIn(0f, (size.height - layout.size.height).coerceAtLeast(0f)),
+                ))
+            }
+
+            // Which way the centre of the Milky Way lies (Sagittarius A*: RA 266.4°, Dec −28.9°).
+            run {
+                val raR = 266.4 * (PI / 180.0); val decR = -28.94 * (PI / 180.0)
+                val d = maxDist * 1.05 * norm
+                val o = project(d * cos(decR) * cos(raR), d * sin(decR), d * cos(decR) * sin(raR))
+                val toward = o - Offset(cx, cy)
+                val arrow = if (toward.x < 0) "\u2190 " else ""
+                val trail = if (toward.x >= 0) " \u2192" else ""
+                val layout = textMeasurer.measure(
+                    arrow + galacticCentreLabel + trail,
+                    TextStyle(color = InkTextDim, fontSize = 11.sp, fontWeight = FontWeight.SemiBold),
+                )
+                drawText(layout, topLeft = Offset(
+                    (o.x - layout.size.width / 2f).coerceIn(8f, (size.width - layout.size.width - 8f).coerceAtLeast(8f)),
+                    (o.y - layout.size.height / 2f).coerceIn(8f, (size.height - layout.size.height - 8f).coerceAtLeast(8f)),
+                ))
+            }
+
             // Project every star, then paint far-to-near (painter's algorithm).
             val projected = stars.map { s ->
                 val raR = s.ra * (PI / 180.0)
@@ -257,10 +304,10 @@ private fun GalaxyMapContent(
 
                 if (p.star.id == selectedId) {
                     drawCircle(
-                        color = CosmicCyan,
-                        radius = p.radius + 6f,
+                        color = Matcha,
+                        radius = p.radius + 8.dp.toPx(),
                         center = p.center,
-                        style = Stroke(width = 2f)
+                        style = Stroke(width = 2.5.dp.toPx())
                     )
                     val label = p.star.hostName
                     val layout = textMeasurer.measure(
@@ -281,24 +328,13 @@ private fun GalaxyMapContent(
                 radius = 26f,
                 center = Offset(cx, cy)
             )
-            drawCircle(color = StarGold, radius = 5.5f, center = Offset(cx, cy))
+            drawCircle(color = StarClassG, radius = 6.dp.toPx(), center = Offset(cx, cy))
             val sunLayout = textMeasurer.measure(
-                "SOL ☉",
-                style = TextStyle(color = StarGold, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                sunLabel,
+                style = TextStyle(color = InkText, fontSize = 11.sp, fontWeight = FontWeight.Bold)
             )
             drawText(sunLayout, topLeft = Offset(cx + 10f, cy - sunLayout.size.height - 4f))
         }
-
-        // Hint / count line
-        Text(
-            text = stringResource(R.string.galaxy_map_hint, stars.size),
-            style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .statusBarsPadding()
-                .padding(top = 60.dp)
-        )
 
         // Selected star info card
         AnimatedVisibility(
@@ -324,51 +360,29 @@ private fun StarInfoCard(star: StarPosition, onView: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clip(RoundedCornerShape(20.dp))
-            .background(SurfaceCard)
+            .shadow(20.dp, Corners.Card)
+            .clip(Corners.Card)
+            .background(Surface)
             .padding(20.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(12.dp)
-                    .clip(CircleShape)
-                    .background(spectralColor(star.spectralType))
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Text(
-                text = star.hostName,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
+        Text(star.hostName, style = SectionTitle.copy(fontSize = 26.sp))
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.galaxy_map_card_distance, pc, ly),
-            style = MaterialTheme.typography.bodyMedium,
-            color = TextSecondary
+            fontFamily = BodyFamily, fontSize = 15.sp, color = InkTextDim
         )
         Text(
-            text = stringResource(
-                R.string.galaxy_map_card_meta,
+            text = pluralStringResource(
+                R.plurals.galaxy_map_card_meta,
+                star.numPlanets,
                 star.numPlanets,
                 star.spectralType?.takeIf { it.isNotBlank() } ?: "—"
             ),
-            style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            fontFamily = BodyFamily, fontSize = 15.sp, color = InkTextDim,
             modifier = Modifier.padding(top = 2.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = onView,
-            colors = ButtonDefaults.buttonColors(containerColor = CosmicCyan, contentColor = SpaceBlack),
-            shape = RoundedCornerShape(14.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.galaxy_map_card_view), fontWeight = FontWeight.SemiBold)
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
-        }
+        PrimaryButton(stringResource(R.string.galaxy_map_card_view), onView, modifier = Modifier.fillMaxWidth())
     }
 }
 
@@ -380,13 +394,11 @@ private data class ProjectedStar(
 )
 
 /** Approximate visible colour of a star from its spectral class (O→M). */
-private fun spectralColor(type: String?): Color = when (type?.trim()?.firstOrNull()?.uppercaseChar()) {
-    'O' -> Color(0xFF9BB0FF)
-    'B' -> Color(0xFFAABFFF)
-    'A' -> Color(0xFFCAD7FF)
-    'F' -> Color(0xFFF8F7FF)
-    'G' -> Color(0xFFFFF4EA)
-    'K' -> Color(0xFFFFD2A1)
-    'M' -> Color(0xFFFFB56C)
-    else -> CosmicCyan
+private fun spectralColor(type: String?): Color = starClassColor(type)
+
+/** Three evenly spaced, round ring distances that fit inside [maxLy], e.g. 25 / 50 / 75 ly. */
+internal fun scaleRingsLy(maxLy: Double): List<Int> {
+    val target = maxLy / 4
+    val step = listOf(5, 10, 25, 50, 100, 250, 500, 1000, 2500).lastOrNull { it <= target } ?: 5
+    return listOf(step, step * 2, step * 3)
 }

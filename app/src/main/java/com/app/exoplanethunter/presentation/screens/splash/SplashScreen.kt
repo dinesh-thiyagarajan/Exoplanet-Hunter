@@ -1,194 +1,278 @@
 package com.app.exoplanethunter.presentation.screens.splash
 
-import androidx.compose.ui.res.stringResource
-import com.app.exoplanethunter.R
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
+import android.provider.Settings
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.exoplanethunter.R
+import com.app.exoplanethunter.presentation.components.drawPlanetFace
+import com.app.exoplanethunter.presentation.components.drawStarFace
+import com.app.exoplanethunter.presentation.theme.BodyFamily
+import com.app.exoplanethunter.presentation.theme.Corners
+import com.app.exoplanethunter.presentation.theme.HeadlineFamily
+import com.app.exoplanethunter.presentation.theme.Ink
+import com.app.exoplanethunter.presentation.theme.InkText
+import com.app.exoplanethunter.presentation.theme.InkTextDim
+import com.app.exoplanethunter.presentation.theme.Matcha
+import com.app.exoplanethunter.presentation.theme.Raised
+import com.app.exoplanethunter.presentation.theme.StarOrange
+import com.app.exoplanethunter.presentation.theme.Surface
 import org.koin.androidx.compose.koinViewModel
-import com.app.exoplanethunter.presentation.components.graticule
-import com.app.exoplanethunter.presentation.theme.CosmicCyan
-import com.app.exoplanethunter.presentation.theme.NebulaPink
-import com.app.exoplanethunter.presentation.theme.SpaceBlack
-import com.app.exoplanethunter.presentation.theme.StarGold
-import com.app.exoplanethunter.presentation.theme.TextSecondary
+import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
-import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.sin
 
+// Easing from the handoff's splash: cubic ease-out, and a back-out "pop" with overshoot.
+private fun ease(x: Float): Float = 1f - (1f - x.coerceIn(0f, 1f)).pow(3)
+private fun pop(x: Float): Float {
+    val t = x.coerceIn(0f, 1f) - 1f
+    val c = 1.70158f * 1.3f
+    return 1f + (c + 1f) * t * t * t + c * t * t
+}
+
+// Background stars in the 300-unit scene: x, y, size, twinkle phase.
+private val Twinkles = listOf(
+    floatArrayOf(30f, 40f, 1.4f, 0f), floatArrayOf(260f, 30f, 1.2f, 1.3f), floatArrayOf(280f, 210f, 1.6f, 2.1f),
+    floatArrayOf(20f, 230f, 1.1f, 0.7f), floatArrayOf(150f, 16f, 1f, 2.8f), floatArrayOf(60f, 150f, 1.2f, 1.9f),
+    floatArrayOf(240f, 120f, 1f, 0.4f), floatArrayOf(110f, 270f, 1.3f, 3.1f),
+)
+
+private const val FIRST_LAUNCH_MIN_SECONDS = 3.2f
+private const val RETURNING_EXIT_AT = 1.1f
+private const val FADE_OUT_SECONDS = 0.6f
+
+/**
+ * The "Star hug" splash. Returning launches are a ≤1 s hello: the star pops in and the planet
+ * swoops round once. The first launch stays a little longer, with a progress bar and a fact
+ * card while the catalogue is set up. With animations turned off, it shows a still frame.
+ */
 @Composable
 fun SplashScreen(
     onDataLoaded: () -> Unit,
     viewModel: SplashViewModel = koinViewModel()
 ) {
-    val fadeIn = remember { Animatable(0f) }
-    val titleSlide = remember { Animatable(50f) }
     val isDataLoaded by viewModel.loadingState.collectAsState()
+    val isFirstLaunch by viewModel.isFirstLaunch.collectAsState()
+    val context = LocalContext.current
+    val reducedMotion = remember {
+        Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
+    }
+
+    var t by remember { mutableFloatStateOf(0f) }
+    var readyAt by remember { mutableFloatStateOf(-1f) }
+    var exitAt by remember { mutableFloatStateOf(-1f) }
 
     LaunchedEffect(Unit) {
-        fadeIn.animateTo(1f, tween(1200))
-        titleSlide.animateTo(0f, tween(800))
-    }
-
-    LaunchedEffect(isDataLoaded) {
-        if (isDataLoaded) {
-            kotlinx.coroutines.delay(500)
-            onDataLoaded()
+        var start = 0L
+        while (true) {
+            withFrameNanos { now ->
+                if (start == 0L) start = now
+                t = (now - start) / 1e9f
+            }
         }
     }
 
-    val infiniteTransition = rememberInfiniteTransition(label = "splash")
-    val pulseAngle by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(4000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "pulse"
-    )
+    // Leave once the data is ready and the intro has had its moment.
+    LaunchedEffect(isDataLoaded, isFirstLaunch) {
+        if (!isDataLoaded || isFirstLaunch == null) return@LaunchedEffect
+        readyAt = t
+        val minimum = if (reducedMotion) 0.4f else if (isFirstLaunch == true) FIRST_LAUNCH_MIN_SECONDS else RETURNING_EXIT_AT
+        val leave = maxOf(minimum, t + if (isFirstLaunch == true) 0.6f else 0f)
+        exitAt = leave
+        kotlinx.coroutines.delay(((leave - t) * 1000).toLong().coerceAtLeast(0))
+        if (isFirstLaunch == true && !reducedMotion) kotlinx.coroutines.delay((FADE_OUT_SECONDS * 1000).toLong())
+        onDataLoaded()
+    }
+
+    val c = if (reducedMotion) 10f else t
+    val first = isFirstLaunch == true
+    val out = if (first && exitAt > 0f) ease((c - exitAt) / FADE_OUT_SECONDS) else 0f
 
     Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Ink)
+            .graphicsLayer { alpha = 1f - out }
     ) {
-        // Background
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawRect(
-                brush = Brush.radialGradient(
-                    colors = listOf(
-                        Color(0xFF0F1629),
-                        SpaceBlack
-                    ),
-                    center = center,
-                    radius = size.maxDimension
-                )
-            )
-        }
-
-        // Measuring graticule above the background
-        Box(modifier = Modifier.fillMaxSize().graticule())
-
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
             modifier = Modifier
-                .alpha(fadeIn.value)
-                .padding(bottom = titleSlide.value.dp)
+                .fillMaxSize()
+                .systemBarsPadding()
+                .padding(start = 32.dp, end = 32.dp, bottom = 40.dp)
         ) {
-            // Animated planet logo
-            Canvas(modifier = Modifier.size(140.dp)) {
-                val cx = size.width / 2
-                val cy = size.height / 2
-                val radius = min(cx, cy) * 0.6f
-
-                // Outer glow
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            CosmicCyan.copy(alpha = 0.3f),
-                            Color.Transparent
-                        ),
-                        center = Offset(cx, cy),
-                        radius = radius * 2f
-                    ),
-                    radius = radius * 2f,
-                    center = Offset(cx, cy)
-                )
-
-                // Planet
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            CosmicCyan,
-                            Color(0xFF1565C0),
-                            Color(0xFF0D47A1)
-                        ),
-                        center = Offset(cx - radius * 0.3f, cy - radius * 0.3f),
-                        radius = radius * 1.5f
-                    ),
-                    radius = radius,
-                    center = Offset(cx, cy)
-                )
-
-                // Orbit ring
-                val angleRad = Math.toRadians(pulseAngle.toDouble()).toFloat()
-                drawCircle(
-                    color = StarGold,
-                    radius = 6f,
-                    center = Offset(
-                        cx + radius * 1.4f * cos(angleRad),
-                        cy + radius * 0.4f * sin(angleRad)
-                    )
-                )
-
-                drawOval(
-                    color = CosmicCyan.copy(alpha = 0.3f),
-                    topLeft = Offset(cx - radius * 1.5f, cy - radius * 0.4f),
-                    size = androidx.compose.ui.geometry.Size(radius * 3f, radius * 0.8f),
-                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2f)
-                )
+            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                StarScene(t = c, first = first, reducedMotion = reducedMotion, modifier = Modifier.size(300.dp))
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
+            // Title: "Exoplanet" over a matcha "Hunter".
+            val titleIn = if (first) ease((c - 0.5f) / 0.6f) else ease((c - 0.25f) / 0.35f)
             Text(
-                text = stringResource(R.string.splash_title_line1),
-                style = MaterialTheme.typography.displayLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 8.sp,
-                    brush = Brush.linearGradient(
-                        colors = listOf(CosmicCyan, NebulaPink)
-                    )
-                )
+                buildAnnotatedString {
+                    append(stringResource(R.string.splash_title_line1))
+                    append("\n")
+                    withStyle(SpanStyle(color = Matcha)) { append(stringResource(R.string.splash_title_line2)) }
+                },
+                fontFamily = HeadlineFamily,
+                fontSize = 52.sp,
+                lineHeight = 50.sp,
+                color = InkText,
+                modifier = Modifier
+                    .padding(bottom = 28.dp)
+                    .graphicsLayer {
+                        alpha = titleIn
+                        translationY = (1f - titleIn) * 16.dp.toPx()
+                    }
             )
 
-            Text(
-                text = stringResource(R.string.splash_title_line2),
-                style = MaterialTheme.typography.displayMedium.copy(
-                    fontWeight = FontWeight.Light,
-                    letterSpacing = 12.sp,
-                    color = TextSecondary
-                )
-            )
+            if (first) FirstLaunchExtras(c = c, ready = isDataLoaded && readyAt >= 0f, readyAt = readyAt)
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(48.dp))
+/** The star with its face and the little planet orbiting (first launch) or swooping in. */
+@Composable
+private fun StarScene(t: Float, first: Boolean, reducedMotion: Boolean, modifier: Modifier = Modifier) {
+    Canvas(modifier) {
+        val u = size.width / 300f
+        fun p(x: Float, y: Float) = Offset(x * u, y * u)
+        val twinkle = if (first) ease(t / 0.7f) else 1f
+        Twinkles.forEach { (x, y, r, ph) ->
+            drawCircle(InkText.copy(alpha = twinkle * (0.35f + 0.65f * abs(sin(t * 1.3f + ph)))), r * 1.4f * u, p(x, y))
+        }
 
-            Text(
-                text = if (isDataLoaded) stringResource(R.string.splash_ready)
-                else stringResource(R.string.splash_loading),
-                style = MaterialTheme.typography.bodyMedium,
-                color = TextSecondary
+        val starScale = if (reducedMotion) 1f else if (first) pop(t / 0.7f) else pop(t / 0.45f)
+        val bob = if (reducedMotion) 0f else sin(t * 1.6f) * 3f
+        val glow = 64f + 5f * sin(t * 2.2f)
+
+        // Planet position: an orbit on a tilted ellipse (first launch) or one swoop (returning).
+        val planet: Triple<Offset, Float, Boolean> = when {
+            reducedMotion -> Triple(p(232f, 176f), 1f, false)
+            first -> {
+                val ang = -PI.toFloat() / 2 + maxOf(0f, t - 0.5f) * 1.1f
+                val rIn = ease((t - 0.4f) / 0.8f)
+                val behind = sin(ang) < 0
+                Triple(p(150f + 118f * rIn * cos(ang), 150f + 34f * rIn * sin(ang)), (if (behind) 0.8f else 1f) * pop((t - 0.4f) / 0.6f), behind)
+            }
+            else -> {
+                val a = -PI.toFloat() * 0.9f + ease((t - 0.15f) / 0.65f) * PI.toFloat() * 1.65f
+                val r = 118f - ease((t - 0.15f) / 0.65f) * 58f
+                Triple(p(150f + r * cos(a), 150f + 40f * sin(a) + ease((t - 0.6f) / 0.3f) * 24f), pop((t - 0.15f) / 0.4f), false)
+            }
+        }
+
+        if (first && !reducedMotion) {
+            // The orbit, dashed, eased out with the planet.
+            val rIn = ease((t - 0.4f) / 0.8f)
+            drawOval(
+                InkTextDim.copy(alpha = 0.35f * rIn),
+                topLeft = p(150f - 118f * rIn, 150f - 34f * rIn),
+                size = androidx.compose.ui.geometry.Size(236f * rIn * u, 68f * rIn * u),
+                style = Stroke(1.5f * u, pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(5f * u, 6f * u))),
             )
         }
+        if (planet.third) drawPlanetFace(planet.first, 17f * u * planet.second)
+
+        val center = Offset(150f * u, (150f + bob) * u)
+        val r = 50f * u * starScale
+        if (r > 0.5f) {
+            drawStarFace(
+                center = center,
+                r = r,
+                glowRadius = glow * u * starScale,
+                glowAlpha = 0.4f + 0.05f * sin(t * 2.2f),
+                blink = !reducedMotion && (t % 3.4f) < 0.14f,
+            )
+        }
+        if (!planet.third && planet.second > 0.05f) drawPlanetFace(planet.first, 17f * u * planet.second)
+    }
+}
+
+/** First launch only: the progress bar and a "While you wait" fact that changes every 4 s. */
+@Composable
+private fun FirstLaunchExtras(c: Float, ready: Boolean, readyAt: Float) {
+    val barIn = ease((c - 0.9f) / 0.4f)
+    // Fills steadily while setting up, then completes once the catalogue is ready.
+    val progress = if (ready) minOf(1f, 0.7f + ease((c - readyAt) / 0.5f) * 0.3f) else minOf(0.7f, maxOf(0f, (c - 1f) / 3f) * 0.7f)
+    Column(Modifier.graphicsLayer { alpha = barIn }) {
+        Box(Modifier.fillMaxWidth().height(10.dp).clip(Corners.Pill).background(Raised)) {
+            Box(Modifier.fillMaxWidth(progress.coerceAtLeast(0.02f)).height(10.dp).clip(Corners.Pill).background(Matcha))
+        }
+        Row(Modifier.fillMaxWidth().padding(top = 10.dp)) {
+            val done = ready && progress >= 1f
+            Text(
+                if (done) "✓ " + stringResource(R.string.splash_ready) else stringResource(R.string.splash_loading),
+                fontFamily = BodyFamily,
+                fontSize = 14.sp,
+                fontWeight = if (done) FontWeight.Bold else FontWeight.Normal,
+                color = if (done) Matcha else InkTextDim,
+            )
+        }
+    }
+
+    val facts = stringArrayResource(R.array.splash_facts)
+    val cardIn = ease((c - 1.2f) / 0.5f)
+    val since = maxOf(0f, c - 1.2f)
+    val index = (since / 4f).toInt() % facts.size
+    val phase = since % 4f
+    val factAlpha = minOf(1f, minOf(phase, 4f - phase) * 2.5f) * cardIn
+    Column(
+        modifier = Modifier
+            .padding(top = 24.dp)
+            .fillMaxWidth()
+            .heightIn(min = 100.dp)
+            .graphicsLayer {
+                alpha = cardIn
+                translationY = (1f - cardIn) * 14.dp.toPx()
+            }
+            .clip(Corners.Card)
+            .background(Surface)
+            .padding(20.dp)
+    ) {
+        Text(stringResource(R.string.splash_while_you_wait), fontFamily = BodyFamily, fontWeight = FontWeight.Bold, fontSize = 13.sp, color = StarOrange)
+        Spacer(Modifier.height(6.dp))
+        Text(
+            facts[index],
+            fontFamily = BodyFamily,
+            fontSize = 16.sp,
+            lineHeight = 23.sp,
+            color = InkText,
+            modifier = Modifier.graphicsLayer { alpha = factAlpha },
+        )
     }
 }

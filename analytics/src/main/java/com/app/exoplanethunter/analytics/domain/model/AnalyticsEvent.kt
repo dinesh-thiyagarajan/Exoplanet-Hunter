@@ -69,6 +69,13 @@ sealed class AnalyticsEvent {
         val filter: String
     ) : AnalyticsEvent()
 
+    /** User switched an orrery overlay on the star system screen on or off. */
+    data class OrreryToggleChanged(
+        val hostName: String,
+        val toggle: OrreryToggle,
+        val enabled: Boolean
+    ) : AnalyticsEvent()
+
     // ── Sort ────────────────────────────────────────────────────────────────
 
     data class PlanetSortApplied(
@@ -109,4 +116,25 @@ sealed class AnalyticsEvent {
 
     /** User opened a planet by tapping the Planet-of-the-Day home-screen widget. */
     object WidgetPlanetOpened : AnalyticsEvent()
+
+    // ── In-app updates ──────────────────────────────────────────────────────
+
+    /** The Play update prompt was shown. [updateType] is "flexible" or "immediate". */
+    data class AppUpdatePrompted(
+        val updateType: String,
+        val availableVersionCode: Int
+    ) : AnalyticsEvent()
+
+    /** What the user did with it: "accepted", "declined", "failed" or "installed". */
+    data class AppUpdateResult(
+        val updateType: String,
+        val result: String
+    ) : AnalyticsEvent()
+}
+
+/** The orrery's on/off controls; [key] is what's sent to analytics. */
+enum class OrreryToggle(val key: String) {
+    HABITABLE_ZONE("habitable_zone"),
+    SOLAR_SYSTEM("solar_system"),
+    TILT_3D("3d"),
 }

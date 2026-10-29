@@ -3,7 +3,6 @@ package com.app.exoplanethunter.presentation.screens.starsystem
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,81 +14,57 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Explore
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.R
 import com.app.exoplanethunter.ads.AdBannerCard
 import com.app.exoplanethunter.ads.bannerAdsVisible
 import com.app.exoplanethunter.ads.rememberBannerAdPool
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystemSummary
 import com.app.exoplanethunter.presentation.components.AlmanacChip
+import com.app.exoplanethunter.presentation.components.AppIcons
 import com.app.exoplanethunter.presentation.components.BackToTopButton
+import com.app.exoplanethunter.presentation.components.CircleIconButton
 import com.app.exoplanethunter.presentation.components.CollapsingHeaderLayout
+import com.app.exoplanethunter.presentation.components.EmptyState
+import com.app.exoplanethunter.presentation.components.SkeletonRow
+import com.app.exoplanethunter.presentation.components.StarSystemRow
+import com.app.exoplanethunter.presentation.components.TabHeader
 import com.app.exoplanethunter.presentation.components.rememberCollapsingHeaderState
-import com.app.exoplanethunter.presentation.components.formatLightYears
-import com.app.exoplanethunter.presentation.theme.AlmanacData
-import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
 import com.app.exoplanethunter.presentation.theme.AlmanacMeta
-import com.app.exoplanethunter.presentation.theme.Brass
-import com.app.exoplanethunter.presentation.theme.Hairline
-import com.app.exoplanethunter.presentation.theme.InkText
-import com.app.exoplanethunter.presentation.theme.InkTextFaint
-import com.app.exoplanethunter.presentation.theme.SpaceBlack
-import com.app.exoplanethunter.presentation.theme.Surface as SurfaceColor
-import com.app.exoplanethunter.presentation.theme.SurfaceCard
-import com.app.exoplanethunter.presentation.theme.TextMuted
-import com.app.exoplanethunter.presentation.theme.TextSecondary
+import com.app.exoplanethunter.presentation.theme.CardTitle
+import com.app.exoplanethunter.presentation.theme.Corners
+import com.app.exoplanethunter.presentation.theme.Ink
+import com.app.exoplanethunter.presentation.theme.InkTextDim
+import com.app.exoplanethunter.presentation.theme.Matcha
+import com.app.exoplanethunter.presentation.theme.OnMatcha
+import com.app.exoplanethunter.presentation.theme.StarGlow
+import com.app.exoplanethunter.presentation.theme.Surface
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StarSystemListScreen(
     onSystemClick: (Long) -> Unit,
     onOpenGalaxyMap: () -> Unit = {},
+    onOpenSearch: () -> Unit = {},
     viewModel: StarSystemListViewModel = koinViewModel(),
 ) {
     val listState = rememberLazyListState()
@@ -98,7 +73,7 @@ fun StarSystemListScreen(
     val focusManager = LocalFocusManager.current
     val adPool = rememberBannerAdPool()
 
-    // New filter / search results start at the top, not at the old list's position.
+    // New filter results start at the top, not at the old list's position.
     var handledScrollReset by rememberSaveable { mutableIntStateOf(viewModel.scrollResetCount) }
     LaunchedEffect(viewModel.scrollResetCount) {
         if (viewModel.scrollResetCount != handledScrollReset) {
@@ -108,109 +83,36 @@ fun StarSystemListScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(SpaceBlack),
-    ) {
+    Box(modifier = Modifier.fillMaxSize().background(Ink)) {
         CollapsingHeaderLayout(
             state = headerState,
             onUserScroll = { focusManager.clearFocus() },
             header = {
                 // Header (hides on scroll down, returns on scroll up)
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(SpaceBlack)
-                        .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 10.dp),
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top,
+                Column(modifier = Modifier.fillMaxWidth().background(Ink).padding(bottom = 8.dp)) {
+                    val shown = viewModel.starSystems.size
+                    val total = viewModel.totalSystemCount
+                    TabHeader(
+                        title = stringResource(R.string.star_system_list_title),
+                        subtitle = when {
+                            viewModel.isLoading -> stringResource(R.string.star_system_list_loading)
+                            total > 0 && shown != total -> stringResource(
+                                R.string.star_system_list_filtered_count, "%,d".format(shown), "%,d".format(total),
+                            )
+                            else -> stringResource(R.string.star_system_list_subtitle, "%,d".format(total.coerceAtLeast(shown)))
+                        },
                     ) {
-                        Column {
-                            Text(stringResource(R.string.star_system_list_eyebrow), style = AlmanacEyebrow)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = stringResource(R.string.star_system_list_title),
-                                style = MaterialTheme.typography.displayMedium,
-                            )
-                        }
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(SurfaceCard)
-                                .border(0.5.dp, Brass, RoundedCornerShape(8.dp))
-                                .clickable(onClick = onOpenGalaxyMap)
-                                .padding(10.dp),
-                        ) {
-                            Icon(
-                                Icons.Default.Explore,
-                                contentDescription = stringResource(R.string.galaxy_map_title),
-                                tint = Brass,
-                            )
-                        }
+                        CircleIconButton(AppIcons.Search, stringResource(R.string.search_action), onOpenSearch)
                     }
 
-                    Text(
-                        text = if (viewModel.isLoading) stringResource(R.string.star_system_list_loading)
-                        else if (viewModel.totalSystemCount > 0 && viewModel.starSystems.size != viewModel.totalSystemCount) {
-                            stringResource(
-                                R.string.star_system_list_filtered_count,
-                                "%,d".format(viewModel.starSystems.size),
-                                "%,d".format(viewModel.totalSystemCount),
-                            )
-                        } else stringResource(R.string.star_system_list_count, viewModel.starSystems.size),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary,
-                        modifier = Modifier.padding(top = 4.dp),
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Search bar
-                    TextField(
-                        value = viewModel.searchQuery,
-                        onValueChange = viewModel::onSearchQueryChanged,
-                        placeholder = {
-                            Text(stringResource(R.string.star_system_list_search_hint), color = TextMuted)
-                        },
-                        leadingIcon = {
-                            Icon(Icons.Default.Search, contentDescription = null, tint = TextMuted)
-                        },
-                        trailingIcon = {
-                            if (viewModel.searchQuery.isNotBlank()) {
-                                IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                                    Icon(
-                                        Icons.Default.Close,
-                                        contentDescription = stringResource(R.string.cd_clear),
-                                        tint = TextMuted,
-                                    )
-                                }
-                            }
-                        },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                        keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            cursorColor = Brass,
-                            focusedIndicatorColor = Brass,
-                            unfocusedIndicatorColor = Hairline,
-                            focusedTextColor = InkText,
-                            unfocusedTextColor = InkText,
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(Modifier.height(12.dp))
+                    GalaxyMapCard(onClick = onOpenGalaxyMap, modifier = Modifier.padding(horizontal = 16.dp))
+                    Spacer(Modifier.height(12.dp))
 
                     // Filter chips
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(end = 16.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
                     ) {
                         StarSystemFilter.entries.forEach { filter ->
                             item(key = filter.name) {
@@ -224,38 +126,25 @@ fun StarSystemListScreen(
                 }
             },
         ) { headerHeight ->
-            // System list
             if (viewModel.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(top = headerHeight),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator(color = Brass)
+                Column(Modifier.fillMaxSize().padding(top = headerHeight, start = 16.dp, end = 16.dp)) {
+                    repeat(8) { SkeletonRow() }
                 }
             } else if (viewModel.starSystems.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(top = headerHeight),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = stringResource(R.string.star_system_list_empty),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = InkTextFaint,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(32.dp),
+                Box(Modifier.fillMaxSize().padding(top = headerHeight)) {
+                    EmptyState(
+                        title = stringResource(R.string.planet_list_empty_title),
+                        hint = stringResource(R.string.star_system_list_empty),
+                        actionLabel = stringResource(R.string.star_system_show_all),
+                        onAction = { viewModel.onFilterSelected(StarSystemFilter.All) },
                     )
                 }
             } else {
                 val showAds = bannerAdsVisible()
                 LazyColumn(
                     state = listState,
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = headerHeight + 8.dp,
-                        bottom = 16.dp,
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = headerHeight + 4.dp, bottom = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     val systems = viewModel.starSystems
                     systems.forEachIndexed { index, system ->
@@ -263,7 +152,7 @@ fun StarSystemListScreen(
                             val animateIn = remember {
                                 index < ANIMATED_ROW_LIMIT && animatedSystemIds.add(system.id)
                             }
-                            AnimatedSystemCard(
+                            AnimatedSystemRow(
                                 system = system,
                                 index = index,
                                 animateIn = animateIn,
@@ -287,126 +176,55 @@ fun StarSystemListScreen(
         BackToTopButton(
             listState = listState,
             headerState = headerState,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp),
+            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 16.dp, bottom = 16.dp),
         )
+    }
+}
+
+/** Entry to the Galaxy Map: a surface card warmed by a star-glow gradient, with a matcha arrow. */
+@Composable
+private fun GalaxyMapCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(Corners.SmallCard)
+            .background(Brush.horizontalGradient(0.35f to Surface, 1f to StarGlow.copy(alpha = 0.85f)))
+            .clickable(onClick = onClick)
+            .padding(start = 20.dp, end = 14.dp, top = 16.dp, bottom = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(stringResource(R.string.galaxy_map_title), style = CardTitle)
+            Text(stringResource(R.string.galaxy_map_entry_subtitle), style = AlmanacMeta.copy(color = InkTextDim))
+        }
+        CircleIconButton(AppIcons.ArrowRight, stringResource(R.string.galaxy_map_title), onClick, container = Matcha, tint = OnMatcha, size = 44.dp)
     }
 }
 
 /**
  * Rows only animate the first time they appear near the top of a list (first load or a new
- * filter/search result) — never when scrolled back into view, which made fast scrolls flicker.
+ * filter result) — never when scrolled back into view, which made fast scrolls flicker.
  */
 private const val ANIMATED_ROW_LIMIT = 12
 
 @Composable
-private fun AnimatedSystemCard(
+private fun AnimatedSystemRow(
     system: StarSystemSummary,
     index: Int,
     animateIn: Boolean,
     onClick: () -> Unit,
 ) {
     val progress = remember { Animatable(if (animateIn) 0f else 1f) }
-
     if (animateIn) LaunchedEffect(Unit) {
         delay(index.coerceAtMost(10) * 30L)
         progress.animateTo(1f, animationSpec = tween(250))
     }
-
     Box(
-        modifier = Modifier
-            .graphicsLayer {
-                alpha = progress.value
-                translationY = (1f - progress.value) * 24f
-            },
+        modifier = Modifier.graphicsLayer {
+            alpha = progress.value
+            translationY = (1f - progress.value) * 24f
+        },
     ) {
-        StarSystemCard(system = system, onClick = onClick)
+        StarSystemRow(system = system, onClick = onClick)
     }
-}
-
-/**
- * A star-system row in the same almanac plate style as [PlanetRowCard]: a brass star disc,
- * the host name in serif, a mono line ([spectral type ·] multiplicity), and distance with the
- * planet count on the right.
- */
-@Composable
-private fun StarSystemCard(
-    system: StarSystemSummary,
-    onClick: () -> Unit,
-) {
-    val context = LocalContext.current
-    val spectral = system.spectralType?.trim()?.takeIf { it.isNotBlank() }
-    val multiplicity = starCountLabel(context, system.numStars)
-    // Most catalogue entries have no spectral type; leave it out rather than print "UNCLASSED".
-    val meta = listOfNotNull(spectral, multiplicity).joinToString(" · ") { it.uppercase() }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(6.dp))
-            .background(SurfaceColor)
-            .border(0.5.dp, Hairline, RoundedCornerShape(6.dp))
-            .clickable { onClick() }
-            .padding(start = 16.dp, top = 13.dp, bottom = 13.dp, end = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        // Brass star disc with a faint inner light.
-        Box(
-            modifier = Modifier
-                .size(34.dp)
-                .clip(CircleShape)
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(Brass, Brass.copy(alpha = 0.45f)),
-                        center = Offset(11f, 11f),
-                        radius = 38f,
-                    )
-                )
-                .border(0.5.dp, Hairline, CircleShape),
-        )
-
-        Spacer(modifier = Modifier.width(14.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = system.hostName,
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Spacer(modifier = Modifier.height(3.dp))
-            Text(
-                text = meta,
-                style = AlmanacMeta,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-
-        Spacer(modifier = Modifier.width(10.dp))
-
-        Column(horizontalAlignment = Alignment.End) {
-            Text(text = formatLightYears(system.distanceParsec), style = AlmanacData)
-            Spacer(modifier = Modifier.height(5.dp))
-            Text(
-                text = pluralStringResource(R.plurals.planet_count, system.numPlanets, system.numPlanets).uppercase(),
-                style = AlmanacMeta.copy(color = Brass),
-            )
-        }
-
-        Icon(
-            Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = InkTextFaint,
-            modifier = Modifier.padding(start = 6.dp).size(18.dp),
-        )
-    }
-}
-
-private fun starCountLabel(context: android.content.Context, numStars: Int): String = when (numStars) {
-    0, 1 -> context.getString(R.string.star_system_multiplicity_single)
-    2 -> context.getString(R.string.star_system_multiplicity_binary)
-    3 -> context.getString(R.string.star_system_multiplicity_trinary)
-    else -> context.getString(R.string.star_system_multiplicity_many, numStars)
 }

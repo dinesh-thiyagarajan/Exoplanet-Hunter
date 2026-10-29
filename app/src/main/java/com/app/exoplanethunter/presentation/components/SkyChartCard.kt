@@ -37,7 +37,16 @@ import com.app.exoplanethunter.R
 import com.app.exoplanethunter.presentation.preview.PreviewSurface
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
 import com.app.exoplanethunter.presentation.theme.SurfaceCard
-import com.app.exoplanethunter.presentation.theme.SurfaceCardLight
+import com.app.exoplanethunter.presentation.theme.AlmanacData
+import com.app.exoplanethunter.presentation.theme.CardTitle
+import com.app.exoplanethunter.presentation.theme.Corners
+import com.app.exoplanethunter.presentation.theme.InkTextDim
+import com.app.exoplanethunter.presentation.theme.InkTextFaint
+import com.app.exoplanethunter.presentation.theme.Line
+import com.app.exoplanethunter.presentation.theme.Matcha
+import com.app.exoplanethunter.presentation.theme.StarOrange
+import com.app.exoplanethunter.presentation.theme.Surface
+import com.app.exoplanethunter.presentation.theme.Well
 import com.app.exoplanethunter.presentation.theme.TextMuted
 import com.app.exoplanethunter.presentation.theme.TextSecondary
 import kotlin.math.PI
@@ -85,20 +94,18 @@ fun SkyChartCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .background(SurfaceCard)
+            .clip(Corners.Card)
+            .background(Surface)
             .padding(20.dp)
     ) {
         Text(
             text = stringResource(R.string.sky_chart_title),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.White
+            style = CardTitle
         )
         Text(
             text = stringResource(R.string.sky_chart_subtitle, hostName),
             style = MaterialTheme.typography.bodySmall,
-            color = TextSecondary,
+            color = InkTextFaint,
             modifier = Modifier.padding(top = 2.dp)
         )
 
@@ -108,8 +115,8 @@ fun SkyChartCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color(0xFF0A0E1A))
+                .clip(Corners.SmallCard)
+                .background(Well)
         ) {
             val w = size.width
             val h = size.height
@@ -121,7 +128,7 @@ fun SkyChartCard(
             for (raH in 0..24 step 6) {
                 val gx = xOf(raH * 15.0)
                 drawLine(
-                    color = SurfaceCardLight.copy(alpha = 0.6f),
+                    color = Line,
                     start = Offset(gx, 0f),
                     end = Offset(gx, h),
                     strokeWidth = 1f
@@ -131,7 +138,7 @@ fun SkyChartCard(
             for (d in -60..60 step 30) {
                 val gy = yOf(d.toDouble())
                 drawLine(
-                    color = SurfaceCardLight.copy(alpha = 0.6f),
+                    color = Line,
                     start = Offset(0f, gy),
                     end = Offset(w, gy),
                     strokeWidth = 1f
@@ -139,7 +146,7 @@ fun SkyChartCard(
             }
             // Celestial equator, emphasised.
             drawLine(
-                color = CosmicCyan.copy(alpha = 0.35f),
+                color = Matcha.copy(alpha = 0.45f),
                 start = Offset(0f, yOf(0.0)),
                 end = Offset(w, yOf(0.0)),
                 strokeWidth = 1.5f,
@@ -155,7 +162,7 @@ fun SkyChartCard(
                 if (star.label) {
                     val layout = textMeasurer.measure(
                         star.name,
-                        style = TextStyle(color = TextMuted, fontSize = 8.sp)
+                        style = TextStyle(color = InkTextFaint, fontSize = 9.sp)
                     )
                     drawText(layout, topLeft = Offset(cxp + 4f, cyp - layout.size.height - 1f))
                 }
@@ -165,50 +172,48 @@ fun SkyChartCard(
             val tx = xOf(ra)
             val ty = yOf(dec)
             drawCircle(
-                color = CosmicCyan.copy(alpha = 0.25f),
+                color = StarOrange.copy(alpha = 0.3f),
                 radius = 8f + pulse * 6f,
                 center = Offset(tx, ty)
             )
             drawCircle(
-                color = CosmicCyan,
+                color = StarOrange,
                 radius = 6f,
                 center = Offset(tx, ty),
                 style = Stroke(width = 2f)
             )
-            drawCircle(color = CosmicCyan, radius = 2.5f, center = Offset(tx, ty))
+            drawCircle(color = StarOrange, radius = 2.5f, center = Offset(tx, ty))
             val nameLayout = textMeasurer.measure(
                 hostName,
-                style = TextStyle(color = CosmicCyan, fontSize = 10.sp, fontWeight = FontWeight.SemiBold)
+                style = TextStyle(color = StarOrange, fontSize = 11.sp, fontWeight = FontWeight.Bold)
             )
             // Keep the label on-screen near right edge.
             val labelX = if (tx + 10f + nameLayout.size.width > w) tx - 10f - nameLayout.size.width else tx + 10f
             drawText(nameLayout, topLeft = Offset(labelX, ty - nameLayout.size.height - 4f))
 
             // X-axis tick caps.
-            val leftCap = textMeasurer.measure("0h", style = TextStyle(color = TextMuted, fontSize = 8.sp))
-            drawText(leftCap, topLeft = Offset(3f, h - leftCap.size.height - 2f))
-            val rightCap = textMeasurer.measure("24h", style = TextStyle(color = TextMuted, fontSize = 8.sp))
-            drawText(rightCap, topLeft = Offset(w - rightCap.size.width - 3f, h - rightCap.size.height - 2f))
+            val leftCap = textMeasurer.measure("0h", style = TextStyle(color = InkTextFaint, fontSize = 9.sp))
+            drawText(leftCap, topLeft = Offset(12.dp.toPx(), h - leftCap.size.height - 8.dp.toPx()))
+            val rightCap = textMeasurer.measure("24h", style = TextStyle(color = InkTextFaint, fontSize = 9.sp))
+            drawText(rightCap, topLeft = Offset(w - rightCap.size.width - 12.dp.toPx(), h - rightCap.size.height - 8.dp.toPx()))
         }
 
         Spacer(modifier = Modifier.height(14.dp))
 
         Text(
             text = stringResource(R.string.sky_chart_coords, formatRa(ra), formatDec(dec)),
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold
+            style = AlmanacData
         )
         Text(
             text = stringResource(hemisphereRes(dec)),
             style = MaterialTheme.typography.bodySmall,
-            color = TextSecondary,
+            color = InkTextDim,
             modifier = Modifier.padding(top = 4.dp)
         )
         Text(
             text = stringResource(R.string.sky_chart_best_month, bestMonth(ra)),
             style = MaterialTheme.typography.bodySmall,
-            color = TextSecondary,
+            color = InkTextDim,
             modifier = Modifier.padding(top = 2.dp)
         )
     }

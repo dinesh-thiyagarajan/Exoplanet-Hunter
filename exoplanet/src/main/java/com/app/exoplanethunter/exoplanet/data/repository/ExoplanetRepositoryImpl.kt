@@ -194,6 +194,7 @@ class ExoplanetRepositoryImpl(
             spectralType = spectralType,
             distanceParsec = distanceParsec,
             ra = ra, dec = dec,
+            systemId = systemId,
         )
     }
 }

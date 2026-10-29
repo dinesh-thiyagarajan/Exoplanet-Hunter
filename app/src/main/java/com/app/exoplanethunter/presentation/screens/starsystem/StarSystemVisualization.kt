@@ -76,6 +76,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.R
+import com.app.exoplanethunter.analytics.domain.model.OrreryToggle
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.presentation.components.composition
@@ -84,7 +85,27 @@ import com.app.exoplanethunter.presentation.components.estimatedTempK
 import com.app.exoplanethunter.presentation.components.formatOrbitalPeriod
 import com.app.exoplanethunter.presentation.theme.AlmanacData
 import com.app.exoplanethunter.presentation.theme.AlmanacMeta
-import com.app.exoplanethunter.presentation.theme.Brass
+import com.app.exoplanethunter.presentation.theme.AlmanacCaption
+import com.app.exoplanethunter.presentation.theme.BodyFamily
+import com.app.exoplanethunter.presentation.theme.Corners
+import com.app.exoplanethunter.presentation.theme.InkTextDim
+import com.app.exoplanethunter.presentation.theme.Line
+import com.app.exoplanethunter.presentation.theme.Matcha
+import com.app.exoplanethunter.presentation.theme.MatchaDeep
+import com.app.exoplanethunter.presentation.theme.OnMatcha
+import com.app.exoplanethunter.presentation.theme.OnMatchaDeep
+import com.app.exoplanethunter.presentation.theme.RowName
+import com.app.exoplanethunter.presentation.theme.Surface
+import com.app.exoplanethunter.presentation.theme.TempTemperate
+import com.app.exoplanethunter.presentation.theme.Well
+import com.app.exoplanethunter.presentation.components.AppIcons
+import com.app.exoplanethunter.presentation.components.CircleIconButton
+import com.app.exoplanethunter.presentation.components.PlanetDisc
+import com.app.exoplanethunter.presentation.components.ToggleChip
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.text.font.FontWeight
 import com.app.exoplanethunter.presentation.theme.Hairline
 import com.app.exoplanethunter.presentation.theme.InkText
 import com.app.exoplanethunter.presentation.theme.InkTextFaint
@@ -140,7 +161,8 @@ private val SOLAR_SYSTEM = listOf(
 internal fun SolarSystemVisualization(
     system: StarSystem,
     onPlanetClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onToggle: (OrreryToggle, Boolean) -> Unit = { _, _ -> },
 ) {
     val bodies = remember(system) { buildBodies(system) }
     val hz = remember(system) { habitableZone(system) }
@@ -184,7 +206,8 @@ internal fun SolarSystemVisualization(
     // --- View --------------------------------------------------------------------
     val tilt = remember { Animatable(DEFAULT_TILT) }
     var zoom by remember { mutableFloatStateOf(1f) }
-    var showHz by remember { mutableStateOf(hz != null) }
+    // Off by default: the band can dominate the view; one tap shows it.
+    var showHz by remember { mutableStateOf(false) }
     var showSolar by remember { mutableStateOf(false) }
     var selectedId by remember { mutableStateOf<Long?>(null) }
     var hitTargets by remember { mutableStateOf<List<Pair<Long, Offset>>>(emptyList()) }
@@ -223,7 +246,14 @@ internal fun SolarSystemVisualization(
     val companionColor = getStarColor(system.stellarEffectiveTempK?.times(0.75) ?: 4500.0)
     val solarLabels = solarShown.map { stringResource(it.labelRes) }
 
-    Box(modifier = modifier.onScreenChanged { onScreen = it }) {
+    Column(modifier = modifier.onScreenChanged { onScreen = it }) {
+      Box(
+          modifier = Modifier
+              .fillMaxWidth()
+              .height(ORRERY_HEIGHT)
+              .clip(Corners.Card)
+              .background(Well)
+      ) {
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -260,8 +290,8 @@ internal fun SolarSystemVisualization(
             val squash = cos(t)
             // Draw in the clear area between the time controls and the toggles, with a margin
             // at the sides, so orbits and bands never run under the controls or to the edge.
-            val top = 60.dp.toPx()
-            val bottom = size.height - 80.dp.toPx()
+            val top = 44.dp.toPx()
+            val bottom = size.height - 16.dp.toPx()
             val c = Offset(size.width / 2f, (top + bottom) / 2f)
             val starPx = (8f + 5f * ln(1f + (system.stellarRadiusSolar ?: 1.0).toFloat())).coerceIn(8f, 20f).dp.toPx()
             // A central pair needs room inside the innermost orbit.
@@ -290,7 +320,7 @@ internal fun SolarSystemVisualization(
                     addOval(Rect(c.x - rOut, c.y - rOut * squash, c.x + rOut, c.y + rOut * squash))
                     addOval(Rect(c.x - rIn, c.y - rIn * squash, c.x + rIn, c.y + rIn * squash))
                 }
-                drawPath(band, HZ_GREEN.copy(alpha = 0.13f))
+                drawPath(band, HZ_GREEN.copy(alpha = 0.16f))
                 // At the band's left end, away from the Solar System labels in the middle.
                 val hzLayout = textMeasurer.measure(hzLabel, ghostStyle.copy(color = HZ_GREEN))
                 // Skip it when the band is too small to hold it (it'd cover the planets).
@@ -335,7 +365,7 @@ internal fun SolarSystemVisualization(
                 val selected = b.planet.id == selectedId
                 drawPath(
                     path,
-                    color = if (selected) Brass.copy(alpha = 0.7f) else Color.White.copy(alpha = 0.14f),
+                    color = if (selected) InkText.copy(alpha = 0.6f) else Line,
                     style = Stroke(
                         width = (if (selected) 1.5f else 1f).dp.toPx(),
                         // A dashed orbit marks a size derived from the period, not measured.
@@ -354,10 +384,13 @@ internal fun SolarSystemVisualization(
                 drawPlanet(b, pos, c, zoom, selected = b.planet.id == selectedId, textMeasurer, labelStyle)
                 targets += b.planet.id to pos
             }
-            // Distant companions: far beyond these orbits, so marked at the edge of the view.
+            // Distant companions: far beyond these orbits, so drawn at the edge of the view.
             companions.forEachIndexed { i, companion ->
                 val note = companion.distanceAu?.let { distanceLabel.format("%,d".format(it)) } ?: offScaleLabel
-                drawCompanionPointer(c, companionAngles[i], companion.letter, companionColor, textMeasurer, ghostStyle, starLabel, note)
+                drawCompanionStar(
+                    c, companionAngles[i], companion.letter, companionColor, starPx * 0.6f,
+                    glowPulse, -corona * 0.7f, textMeasurer, ghostStyle, starLabel, note,
+                )
             }
             drawBodies(far = true)
             if (circumbinary) {
@@ -379,127 +412,151 @@ internal fun SolarSystemVisualization(
             hitTargets = targets
         }
 
-        // --- Controls --------------------------------------------------------------
+        // Day counter, top left of the canvas.
+        Column(modifier = Modifier.align(Alignment.TopStart).padding(start = 16.dp, top = 14.dp)) {
+            Text(stringResource(R.string.orrery_day, "%,d".format(days.toLong())), style = AlmanacData.copy(fontSize = 16.sp))
+            Text(stringResource(R.string.orrery_rate, formatOrbitalPeriod(daysPerSecond)), style = AlmanacCaption)
+        }
+      }
+
+        // --- Controls, below the orbits ------------------------------------------------
+        Spacer(Modifier.height(12.dp))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            CircleIconButton(
+                icon = if (playing) AppIcons.Pause else AppIcons.Play,
+                contentDescription = stringResource(if (playing) R.string.orrery_pause else R.string.orrery_play),
+                onClick = { playing = !playing },
+                container = Matcha,
+                tint = OnMatcha,
+            )
+            SpeedSegments(selected = speedIndex, onSelect = { speedIndex = it })
+        }
+        Spacer(Modifier.height(10.dp))
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopStart)
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(stringResource(R.string.orrery_day, "%,d".format(days.toLong())), style = AlmanacData.copy(fontSize = 15.sp))
-                Text(
-                    stringResource(R.string.orrery_rate, formatOrbitalPeriod(daysPerSecond)),
-                    style = AlmanacMeta.copy(fontSize = 10.sp),
-                )
+            if (hz != null) ToggleChip(stringResource(R.string.orrery_hz), showHz) {
+                showHz = !showHz
+                onToggle(OrreryToggle.HABITABLE_ZONE, showHz)
             }
-            ControlButton(onClick = { playing = !playing }) {
-                Icon(
-                    if (playing) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    contentDescription = stringResource(if (playing) R.string.orrery_pause else R.string.orrery_play),
-                    tint = Brass,
-                    modifier = Modifier.size(18.dp),
-                )
+            ToggleChip(stringResource(R.string.orrery_solar_system), showSolar) {
+                showSolar = !showSolar
+                onToggle(OrreryToggle.SOLAR_SYSTEM, showSolar)
             }
-            Spacer(modifier = Modifier.width(8.dp))
-            ControlButton(onClick = { speedIndex = (speedIndex + 1) % SPEEDS.size }) {
-                Text("%d×".format(SPEEDS[speedIndex].toInt()), style = AlmanacMeta.copy(color = Brass))
+            ToggleChip(stringResource(R.string.orrery_3d), tilt.targetValue > 0.1f) {
+                val to3d = tilt.targetValue <= 0.1f
+                onToggle(OrreryToggle.TILT_3D, to3d)
+                scope.launch { tilt.animateTo(if (to3d) DEFAULT_TILT else 0f, tween(600)) }
             }
         }
+        val selected = bodies.firstOrNull { it.planet.id == selectedId }
+        if (selected != null) {
+            Spacer(Modifier.height(12.dp))
+            SelectedPlanetCard(selected, onOpen = { onPlanetClick(selected.planet.id) })
+        }
+        val notes = listOfNotNull(
+            if (showSolar) stringResource(R.string.orrery_solar_legend) else null,
+            stringResource(R.string.orrery_scale_note),
+            if (showHz && hz != null) stringResource(R.string.orrery_hz_legend) else null,
+            when {
+                circumbinary && knownPairPeriod != null ->
+                    stringResource(R.string.orrery_circumbinary_period_note, formatOrbitalPeriod(knownPairPeriod))
+                circumbinary -> stringResource(R.string.orrery_circumbinary_note)
+                companions.isNotEmpty() -> pluralStringResource(R.plurals.orrery_companions_note, companions.size, companions.size)
+                else -> null
+            },
+            if (missing > 0) stringResource(R.string.orrery_missing_note, missing) else null,
+        )
+        Text(
+            notes.joinToString(" · "),
+            style = AlmanacCaption,
+            modifier = Modifier.padding(top = 10.dp),
+        )
+    }
+}
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomStart)
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-        ) {
-            val selected = bodies.firstOrNull { it.planet.id == selectedId }
-            if (selected != null) {
-                SelectedPlanetCard(selected, onOpen = { onPlanetClick(selected.planet.id) })
-            } else {
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    if (hz != null) ToggleChip(stringResource(R.string.orrery_hz), showHz) { showHz = !showHz }
-                    ToggleChip(stringResource(R.string.orrery_solar_system), showSolar) { showSolar = !showSolar }
-                    ToggleChip(stringResource(R.string.orrery_3d), tilt.targetValue > 0.1f) {
-                        scope.launch { tilt.animateTo(if (tilt.targetValue > 0.1f) 0f else DEFAULT_TILT, tween(600)) }
-                    }
-                }
-                val notes = listOfNotNull(
-                    if (showSolar) stringResource(R.string.orrery_solar_legend) else null,
-                    stringResource(R.string.orrery_scale_note),
-                    when {
-                        circumbinary && knownPairPeriod != null ->
-                            stringResource(R.string.orrery_circumbinary_period_note, formatOrbitalPeriod(knownPairPeriod))
-                        circumbinary -> stringResource(R.string.orrery_circumbinary_note)
-                        companions.isNotEmpty() -> pluralStringResource(R.plurals.orrery_companions_note, companions.size, companions.size)
-                        else -> null
-                    },
-                    if (missing > 0) stringResource(R.string.orrery_missing_note, missing) else null,
-                )
+private val ORRERY_HEIGHT = 380.dp
+
+/** The 1× / 10× / 100× segmented control. */
+@Composable
+private fun SpeedSegments(selected: Int, onSelect: (Int) -> Unit) {
+    Row(
+        modifier = Modifier.clip(Corners.Pill).background(Surface).padding(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        SPEEDS.forEachIndexed { i, speed ->
+            val on = i == selected
+            Box(
+                modifier = Modifier
+                    .size(width = 52.dp, height = 40.dp)
+                    .clip(Corners.Pill)
+                    .background(if (on) MatchaDeep else Color.Transparent)
+                    .clickable { onSelect(i) },
+                contentAlignment = Alignment.Center,
+            ) {
                 Text(
-                    notes.joinToString(" · "),
-                    style = AlmanacMeta.copy(fontSize = 10.sp),
-                    modifier = Modifier.padding(top = 6.dp),
+                    "%d×".format(speed.toInt()),
+                    fontFamily = BodyFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    color = if (on) OnMatchaDeep else InkTextDim,
                 )
             }
         }
     }
 }
 
-private val HZ_GREEN = Color(0xFF7FB069)
+private val HZ_GREEN = TempTemperate
 private val SOLAR_BLUE = Color(0xFF7FA8D8)
 
 /**
- * Points to a distant companion star. Real separations are typically tens to thousands of
- * AU — far outside the frame — so instead of a misleading dot "here", this is an
- * off-screen pointer at the edge: an arrow aimed outward along the star's direction.
+ * Draws a distant companion star. Real separations are typically tens to thousands of AU —
+ * far outside the frame — so the star sits at the edge of the view in its direction, with a
+ * dashed line back towards the planets' star and a label saying how far it really is.
  */
-private fun DrawScope.drawCompanionPointer(
+private fun DrawScope.drawCompanionStar(
     c: Offset,
     angle: Float,
     letter: String,
     color: Color,
+    radius: Float,
+    glowPulse: Float,
+    corona: Float,
     textMeasurer: TextMeasurer,
     style: TextStyle,
     starLabel: String,
     offScaleLabel: String,
 ) {
     val dir = Offset(cos(angle), sin(angle))
-    // Keep clear of the time controls (top) and the toggles (bottom).
-    val marginX = 20.dp.toPx()
-    val marginTop = 64.dp.toPx()
-    val marginBottom = 72.dp.toPx()
+    // Keep clear of the time controls (top) and the toggles (bottom), with room for the glow.
+    val glow = radius * 1.8f
+    val marginX = 12.dp.toPx() + glow
+    val marginTop = 48.dp.toPx() + glow
+    val marginBottom = 16.dp.toPx() + glow
     val reachX = (size.width / 2f - marginX) / abs(dir.x).coerceAtLeast(0.01f)
     val reachY = (if (dir.y < 0) c.y - marginTop else size.height - c.y - marginBottom) / abs(dir.y).coerceAtLeast(0.01f)
-    val tip = c + dir * min(reachX, reachY)
+    val star = c + dir * min(reachX, reachY)
 
-    // Arrowhead pointing outward.
-    val side = Offset(-dir.y, dir.x)
-    val len = 9.dp.toPx()
-    val head = Path().apply {
-        moveTo(tip.x, tip.y)
-        lineTo(tip.x - dir.x * len + side.x * len * 0.6f, tip.y - dir.y * len + side.y * len * 0.6f)
-        lineTo(tip.x - dir.x * len - side.x * len * 0.6f, tip.y - dir.y * len - side.y * len * 0.6f)
-        close()
-    }
-    drawPath(head, color)
+    // Dashed: "much further than it looks".
     drawLine(
-        color = color.copy(alpha = 0.5f),
-        start = tip - dir * 34.dp.toPx(),
-        end = tip - dir * len,
+        color = color.copy(alpha = 0.45f),
+        start = star - dir * (glow + 40.dp.toPx()),
+        end = star - dir * (glow + 2.dp.toPx()),
         strokeWidth = 1.5.dp.toPx(),
         pathEffect = PathEffect.dashPathEffect(floatArrayOf(4f, 4f)),
     )
+    drawStar(star.x, star.y, radius, color, glowPulse, corona, isPrimary = false)
+
     val title = textMeasurer.measure(starLabel.format(letter), style.copy(color = InkText))
     val note = textMeasurer.measure(offScaleLabel, style)
-    // Text hugs the arrow on the side away from the star, i.e. outside the orbits.
+    // Label above or below the star, aligned to the edge it sits against.
     val alignRight = dir.x > 0
     val w = max(title.size.width, note.size.width)
     val h = title.size.height + note.size.height
-    val gap = 6.dp.toPx()
-    val x = if (alignRight) tip.x - w else tip.x
-    val y = if (dir.y < 0) tip.y - h - gap else tip.y + gap
+    val gap = glow + 2.dp.toPx()
+    val x = if (alignRight) star.x + radius - w else star.x - radius
+    val y = if (dir.y < 0) star.y - h - gap else star.y + gap
     drawLabel(title, Offset(if (alignRight) x + w - title.size.width else x, y), backdrop = true)
     drawLabel(note, Offset(if (alignRight) x + w - note.size.width else x, y + title.size.height), backdrop = true)
 }
@@ -524,64 +581,29 @@ private fun DrawScope.drawLabel(layout: TextLayoutResult, topLeft: Offset, backd
 }
 
 @Composable
-private fun ToggleChip(label: String, on: Boolean, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(if (on) Brass.copy(alpha = 0.18f) else SurfaceColor.copy(alpha = 0.85f))
-            .border(0.5.dp, if (on) Brass else Hairline, RoundedCornerShape(6.dp))
-            .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 6.dp),
-    ) {
-        Text(label.uppercase(), style = AlmanacMeta.copy(fontSize = 10.sp, color = if (on) Brass else InkTextFaint))
-    }
-}
-
-@Composable
-private fun ControlButton(onClick: () -> Unit, content: @Composable () -> Unit) {
-    Box(
-        modifier = Modifier
-            .size(34.dp)
-            .clip(CircleShape)
-            .background(SurfaceColor.copy(alpha = 0.85f))
-            .border(0.5.dp, Brass, CircleShape)
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) { content() }
-}
-
-@Composable
 private fun SelectedPlanetCard(body: OrbitBody, onOpen: () -> Unit) {
     val planet = body.planet
-    val composition = remember(planet) { planet.composition().first }
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(SurfaceColor.copy(alpha = 0.95f))
-            .border(0.5.dp, Hairline, RoundedCornerShape(8.dp))
+            .clip(Corners.SmallCard)
+            .background(Surface)
             .clickable(onClick = onOpen)
-            .padding(horizontal = 14.dp, vertical = 10.dp),
+            .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(modifier = Modifier.size(10.dp).clip(CircleShape).background(body.color))
-        Spacer(modifier = Modifier.width(10.dp))
+        PlanetDisc(color = body.color, size = 36.dp)
+        Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                planet.planetName,
-                style = MaterialTheme.typography.titleMedium,
-                color = InkText,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Text(planet.planetName, style = RowName, maxLines = 1, overflow = TextOverflow.Ellipsis)
             val details = listOfNotNull(
-                stringResource(composition.labelRes),
+                planet.planetRadiusEarth?.let { "%.2f R\u2295".format(it) },
                 stringResource(R.string.orrery_year, formatOrbitalPeriod(body.periodDays)),
-                planet.estimatedTempK()?.let { "%,d°C".format((it - 273.15).toInt()) },
+                planet.estimatedTempK()?.let { (if (planet.equilibriumTempK == null) "\u2248 " else "") + "%,d K".format(it.toInt()) },
             )
             Text(details.joinToString(" · "), style = AlmanacMeta, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
-        Text(stringResource(R.string.star_system_view_arrow), style = AlmanacMeta.copy(color = Brass))
+        Text(stringResource(R.string.orrery_open), fontFamily = BodyFamily, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Matcha)
     }
 }
 
@@ -619,9 +641,9 @@ private fun DrawScope.drawPlanet(
         center = pos,
     )
     if (selected) {
-        drawCircle(Brass, radius = r + 4.dp.toPx(), center = pos, style = Stroke(1.5.dp.toPx()))
+        drawCircle(InkText, radius = r + 4.dp.toPx(), center = pos, style = Stroke(2.dp.toPx()))
     }
-    val layout = textMeasurer.measure(b.label, if (selected) labelStyle.copy(color = Brass) else labelStyle)
+    val layout = textMeasurer.measure(b.label, if (selected) labelStyle.copy(color = InkText) else labelStyle)
     drawLabel(layout, Offset(pos.x + r + 3.dp.toPx(), pos.y - r - layout.size.height * 0.6f))
 }
 

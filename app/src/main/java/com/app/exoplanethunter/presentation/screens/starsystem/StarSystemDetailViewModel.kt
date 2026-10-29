@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
+import com.app.exoplanethunter.analytics.domain.model.OrreryToggle
 import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.exoplanet.domain.usecase.GetStarSystemUseCase
@@ -29,5 +30,9 @@ class StarSystemDetailViewModel(
             trackEvent(AnalyticsEvent.StarSystemDetailScreenViewed(hostName = starSystem?.hostName ?: ""))
             isLoading = false
         }
+    }
+
+    fun onOrreryToggle(toggle: OrreryToggle, enabled: Boolean) {
+        trackEvent(AnalyticsEvent.OrreryToggleChanged(starSystem?.hostName ?: "", toggle, enabled))
     }
 }

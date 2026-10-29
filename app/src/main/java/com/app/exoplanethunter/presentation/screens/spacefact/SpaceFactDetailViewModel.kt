@@ -17,11 +17,18 @@ class SpaceFactDetailViewModel(
     var fact by mutableStateOf<SpaceFact?>(null)
         private set
 
+    /** 1-based position of the fact in the library, for "Fact 42 of 200" (0 when unknown). */
+    var position by mutableStateOf(0)
+        private set
+
+    val total: Int get() = spaceFactProvider.all().size
+
     private var openTracked = false
 
     fun load(factId: Int) {
         val loaded = spaceFactProvider.byId(factId)
         fact = loaded
+        position = spaceFactProvider.all().indexOfFirst { it.id == factId } + 1
         if (loaded != null && !openTracked) {
             openTracked = true
             trackEvent(AnalyticsEvent.SpaceFactOpened(loaded.id, loaded.title))

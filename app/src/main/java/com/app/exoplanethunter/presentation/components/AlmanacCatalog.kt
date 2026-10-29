@@ -3,68 +3,76 @@ package com.app.exoplanethunter.presentation.components
 import androidx.compose.ui.graphics.Color
 import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.presentation.theme.TempCold
-import com.app.exoplanethunter.presentation.theme.TempHot
+import com.app.exoplanethunter.presentation.theme.TempFrozen
+import com.app.exoplanethunter.presentation.theme.TempHotColor
+import com.app.exoplanethunter.presentation.theme.TempScorched
 import com.app.exoplanethunter.presentation.theme.TempTemperate
 import com.app.exoplanethunter.presentation.theme.TempUnknown
 import kotlin.math.roundToInt
 
 // ===========================================================================
-// Observatory Almanac catalogue helpers — the logbook vocabulary shared across
-// list rows, detail headers, and the galaxy map.
+// Catalogue helpers shared across list rows, detail headers, and the galaxy map.
 // ===========================================================================
 
 private const val PARSEC_TO_LY = 3.26156
 
-/** A stable, logbook-style catalogue number, e.g. "EH-0042". */
+/** A stable catalogue number, e.g. "EH-0042". */
 fun catalogueId(id: Long): String = "EH-%04d".format(id)
 
-/** Star class shorthand from spectral type, e.g. "M-DWARF", "G-TYPE". */
-fun starTypeLabel(spectralType: String?): String =
-    when (spectralType?.trim()?.firstOrNull()?.uppercaseChar()) {
-        'O' -> "O-TYPE"
-        'B' -> "B-TYPE"
-        'A' -> "A-TYPE"
-        'F' -> "F-TYPE"
-        'G' -> "G-TYPE"
-        'K' -> "K-DWARF"
-        'M' -> "M-DWARF"
-        else -> "UNCLASSED"
-    }
+/** Star class shorthand from spectral type, e.g. "M-type", or null when unknown. */
+fun starTypeLabel(spectralType: String?): String? =
+    spectralType?.trim()?.firstOrNull()?.uppercaseChar()
+        ?.takeIf { it in "OBAFGKM" }
+        ?.let { "$it-type" }
 
-/** Uppercase classification for the catalogue, e.g. "ROCKY", "HOT JUPITER". */
+/** Size class for the catalogue line, e.g. "Super-Earth", "Hot Jupiter", "Size unknown". */
 fun classificationLabel(planet: Exoplanet): String {
     val r = planet.planetRadiusEarth
-    val base = when {
-        r == null -> "UNSIZED"
-        r < 1.25 -> "ROCKY"
-        r < 2.0 -> "SUPER-EARTH"
-        r < 6.0 -> "NEPTUNE-LIKE"
-        else -> "JUPITER-LIKE"
-    }
     val hot = (planet.equilibriumTempK ?: 0.0) > 1000.0 ||
         (planet.orbitalPeriodDays ?: Double.MAX_VALUE) < 10.0
-    return if (base == "JUPITER-LIKE" && hot) "HOT JUPITER" else base
+    return when {
+        r == null -> "Size unknown"
+        r < 0.8 -> "Sub-Earth"
+        r < 1.25 -> "Earth-size"
+        r < 2.0 -> "Super-Earth"
+        r < 4.0 -> "Sub-Neptune"
+        r < 8.0 -> "Neptune-size"
+        r < 10.0 -> "Saturn-size"
+        hot -> "Hot Jupiter"
+        else -> "Gas giant"
+    }
 }
 
-/** Temperature bucket colour — the only semantic encoding in the design. */
-fun temperatureColor(tempK: Double?): Color = when {
-    tempK == null -> TempUnknown
-    tempK < 200 -> TempCold
-    tempK <= 320 -> TempTemperate
-    else -> TempHot
+/** The six-step temperature scale. Colour carries meaning, so the word is always shown too. */
+enum class TempBucket(val label: String, val color: Color) {
+    Scorched("Scorched", TempScorched),
+    Hot("Hot", TempHotColor),
+    Temperate("Temperate", TempTemperate),
+    Cold("Cold", TempCold),
+    Frozen("Frozen", TempFrozen),
+    Unknown("Unknown", TempUnknown);
+
+    companion object {
+        fun of(tempK: Double?): TempBucket = when {
+            tempK == null -> Unknown
+            tempK < 150 -> Frozen
+            tempK < 200 -> Cold
+            tempK <= 320 -> Temperate
+            tempK <= 1000 -> Hot
+            else -> Scorched
+        }
+    }
 }
 
-/** Temperature bucket label, e.g. "TEMPERATE", "FROZEN", "SCORCHED". */
-fun temperatureLabel(tempK: Double?): String = when {
-    tempK == null -> "UNKNOWN"
-    tempK < 200 -> "FROZEN"
-    tempK <= 320 -> "TEMPERATE"
-    else -> "SCORCHED"
-}
+/** Temperature bucket colour — the only colour scale that carries meaning. */
+fun temperatureColor(tempK: Double?): Color = TempBucket.of(tempK).color
 
-/** Distance rendered as light-years, e.g. "4.24 ly" or "1,206 ly". */
+/** Temperature bucket word, e.g. "Temperate". */
+fun temperatureLabel(tempK: Double?): String = TempBucket.of(tempK).label
+
+/** Distance rendered as light-years, e.g. "4.2 ly" or "1,206 ly"; "—" when unknown. */
 fun formatLightYears(parsec: Double?): String {
-    if (parsec == null) return "— ly"
+    if (parsec == null) return "—"
     val ly = parsec * PARSEC_TO_LY
-    return if (ly < 100) "%.2f ly".format(ly) else "%,d ly".format(ly.roundToInt())
+    return if (ly < 10) "%.1f ly".format(ly) else "%,d ly".format(ly.roundToInt())
 }

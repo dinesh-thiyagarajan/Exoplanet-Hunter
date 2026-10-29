@@ -23,6 +23,7 @@ object AnalyticsConstants {
     const val MANUAL_SYNC_SUCCESS = "manual_sync_success"
     const val MANUAL_SYNC_FAILURE = "manual_sync_failure"
     const val STAR_SYSTEM_FILTER_APPLIED = "star_system_filter_applied"
+    const val ORRERY_TOGGLE_CHANGED = "orrery_toggle_changed"
 
     const val PLANET_SORT_APPLIED = "planet_sort_applied"
     const val COMPARE_MODE_ENTERED = "compare_mode_entered"
@@ -32,6 +33,8 @@ object AnalyticsConstants {
     const val SPACE_FACT_SOURCE_OPENED = "space_fact_source_opened"
     const val SPACE_FACT_LIBRARY_VIEWED = "space_fact_library_viewed"
     const val WIDGET_PLANET_OPENED = "widget_planet_opened"
+    const val APP_UPDATE_PROMPTED = "app_update_prompted"
+    const val APP_UPDATE_RESULT = "app_update_result"
 
     // Parameter Keys
     const val PARAM_PLANET_ID = "planet_id"
@@ -50,4 +53,9 @@ object AnalyticsConstants {
     const val PARAM_PLANET_B_NAME = "planet_b_name"
     const val PARAM_FACT_ID = "fact_id"
     const val PARAM_FACT_TITLE = "fact_title"
+    const val PARAM_TOGGLE = "toggle"
+    const val PARAM_ENABLED = "enabled"
+    const val PARAM_UPDATE_TYPE = "update_type"
+    const val PARAM_AVAILABLE_VERSION_CODE = "available_version_code"
+    const val PARAM_RESULT = "result"
 }

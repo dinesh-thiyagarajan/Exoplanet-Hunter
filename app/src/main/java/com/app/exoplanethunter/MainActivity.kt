@@ -9,12 +9,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.app.exoplanethunter.presentation.navigation.ExoplanetNavigation
@@ -25,6 +30,8 @@ import com.app.exoplanethunter.review.ReviewPreferences
 import com.app.exoplanethunter.analytics.domain.model.AnalyticsEvent
 import com.app.exoplanethunter.analytics.domain.usecase.TrackEventUseCase
 import com.app.exoplanethunter.spacefacts.SpaceFactNotifier
+import com.app.exoplanethunter.update.AppUpdateController
+import com.app.exoplanethunter.update.UpdateReadyBar
 import com.app.exoplanethunter.widget.PlanetOfDayWidget
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -40,11 +47,15 @@ class MainActivity : ComponentActivity() {
 
     private val trackEvent: TrackEventUseCase by inject()
 
+    // Created in onCreate: it registers an activity-result launcher, which must happen before start.
+    private lateinit var appUpdates: AppUpdateController
+
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* no-op */ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appUpdates = AppUpdateController(this, trackEvent)
         pendingFactId = intent.factId()
         pendingPlanetId = intent.planetId()?.also {
             trackEvent(AnalyticsEvent.WidgetPlanetOpened)
@@ -53,12 +64,15 @@ class MainActivity : ComponentActivity() {
 
         if (savedInstanceState == null) {
             ReviewPreferences(this).recordLaunch()
-            // Ask for a review after a short settle delay, unless we were opened from a
-            // notification (don't interrupt the user reading a space fact).
+            // After a short settle delay, offer an update if there is one; otherwise ask for a
+            // review — never both at once, and neither when opened from a notification
+            // (don't interrupt the user reading a space fact).
             lifecycleScope.launch {
                 delay(2500)
                 if (pendingFactId == null) {
-                    AppReviewManager.maybeRequestReview(this@MainActivity)
+                    appUpdates.checkForUpdate { prompted ->
+                        if (!prompted) AppReviewManager.maybeRequestReview(this@MainActivity)
+                    }
                 }
             }
         }
@@ -70,12 +84,24 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = SpaceBlack
                 ) {
-                    ExoplanetNavigation(
-                        initialFactId = pendingFactId,
-                        onFactConsumed = { pendingFactId = null },
-                        initialPlanetId = pendingPlanetId,
-                        onPlanetConsumed = { pendingPlanetId = null }
-                    )
+                    Box {
+                        ExoplanetNavigation(
+                            initialFactId = pendingFactId,
+                            onFactConsumed = { pendingFactId = null },
+                            initialPlanetId = pendingPlanetId,
+                            onPlanetConsumed = { pendingPlanetId = null }
+                        )
+                        // Above the bottom navigation bar.
+                        UpdateReadyBar(
+                            visible = appUpdates.updateReady,
+                            onRestart = appUpdates::completeUpdate,
+                            onDismiss = appUpdates::dismissReady,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .navigationBarsPadding()
+                                .padding(start = 12.dp, end = 12.dp, bottom = 88.dp)
+                        )
+                    }
                 }
             }
         }

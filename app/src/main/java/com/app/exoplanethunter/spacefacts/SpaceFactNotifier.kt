@@ -22,8 +22,8 @@ object SpaceFactNotifier {
     private const val CHANNEL_ID = "space_facts"
     private const val NOTIFICATION_ID = 4201
 
-    /** Accent tint for the small icon / app name on the expanded notification (CosmicCyan). */
-    private const val NOTIFICATION_ACCENT = 0xFF4DD0E1.toInt()
+    /** Accent tint for the small icon / app name on the expanded notification (matcha). */
+    private const val NOTIFICATION_ACCENT = 0xFFAEBF92.toInt() // matcha
 
     fun ensureChannel(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return

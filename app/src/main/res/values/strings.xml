@@ -1,22 +1,13 @@
 <resources>
     <string name="app_name">Exoplanet Hunter</string>
-    <string name="tab_planets">Planets</string>
-    <string name="tab_systems">Systems</string>
-    <string name="tab_about">About</string>
-    <string name="about_title">Exoplanet Hunter</string>
-    <string name="about_data_source">Data Source</string>
-    <string name="about_significance">Significance</string>
-    <string name="about_ml">Machine Learning</string>
     <string name="filter_all">All</string>
     <string name="filter_habitable">Habitable</string>
     <string name="filter_recent_3y">Recent (3y)</string>
     <string name="filter_latest">Latest</string>
 
     <!-- About Screen -->
-    <string name="about_nasa_archive_dataset">NASA ARCHIVE DATASET</string>
     <string name="about_planets">Planets</string>
     <string name="about_systems">Systems</string>
-    <string name="about_section_scientific_framework">Scientific Framework</string>
     <string name="about_data_source_title">NASA Exoplanet Archive</string>
     <string name="about_data_source_description">Every planet and star shown in this app comes from one public source: the NASA Exoplanet Archive, operated by Caltech under contract with NASA. It is the global reference for confirmed exoplanets, combining results from missions like Kepler, K2, and TESS with major ground-based surveys. The app ships with a recent snapshot of the archive and can refresh it on demand from the archive\'s public service.</string>
     <string name="about_verification_title">How Planets Are Confirmed</string>
@@ -25,14 +16,18 @@
     <string name="about_ml_description">The habitability scores and planet classifications are produced by a small machine-learning model that runs entirely on your device, using the measured features from the archive. They are the app\'s own approximate, educational estimates — not official assessments from NASA or any observatory — and are not evidence that a planet is truly habitable.</string>
     <string name="about_affiliation_title">Not Affiliated with NASA</string>
     <string name="about_affiliation_description">Exoplanet Hunter is an independent, unofficial project. It is not affiliated with, endorsed by, or sponsored by NASA, Caltech, or IPAC. Those organisations are credited only as the source of the public data the app displays, as the archive\'s usage policy requires.</string>
-    <string name="about_sync_title">NASA TAP Sync</string>
-    <string name="about_sync_subtitle">Archive Synchronization</string>
+    <string name="about_sync_title">NASA catalog</string>
+    <string name="sync_state_synced">Synced</string>
+    <string name="sync_state_syncing">Syncing</string>
+    <string name="sync_state_failed">Sync failed</string>
+    <string name="sync_state_never">Not synced</string>
+    <string name="sync_works_offline">works offline</string>
+    <string name="settings_about_link">About &amp; data sources</string>
+    <string name="settings_attribution">Data: NASA Exoplanet Archive (IPAC / Caltech / NASA). Not affiliated with NASA.</string>
     <string name="about_sync_last_updated">Last updated:</string>
     <string name="about_sync_never">Never</string>
-    <string name="about_sync_refresh">REFRESH CATALOG</string>
+    <string name="about_sync_refresh">Refresh catalog</string>
     <string name="about_sync_updating">Updating planetary records…</string>
-    <string name="about_sync_success">Catalog successfully updated</string>
-    <string name="about_acknowledgement_label">DATA SOURCE ACKNOWLEDGEMENT</string>
     <string name="about_acknowledgement_text">This application has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.</string>
     <string name="about_acknowledgement_citation">Christiansen et al. (2025), Planetary Science Journal</string>
     <string name="about_acknowledgement_attribution">IPAC / CALTECH / NASA</string>
@@ -40,29 +35,26 @@
     <!-- Planet Detail Screen -->
     <string name="planet_detail_copy_name">Copy planet name</string>
     <string name="planet_detail_name_copied">Planet name copied</string>
-    <string name="planet_detail_disclaimer_action">About these estimates</string>
     <string name="planet_detail_disclaimer_title">About these estimates</string>
-    <string name="planet_detail_disclaimer_body">These habitability scores and probabilities are produced by a machine-learning model from limited observational data. They are rough, educational estimates — not confirmed measurements of whether a planet can support life. Real habitability depends on many factors science cannot yet measure for distant worlds. Treat these numbers as an illustrative guide, not scientific fact.</string>
+    <string name="planet_detail_disclaimer_body">Habitability scores and planet types come from a small AI model running on your phone, using the little data astronomers have for each world. They are rough and educational, not scientific fact.</string>
     <string name="planet_detail_disclaimer_dismiss">Got it</string>
 
     <!-- Planet Detail: card titles -->
-    <string name="planet_detail_title_habitability">AI Habitability Estimate</string>
-    <string name="planet_detail_title_properties">Planet Properties</string>
+    <string name="planet_detail_title_properties">Properties</string>
     <string name="planet_detail_title_earth_comparison">Compared to Earth</string>
-    <string name="planet_detail_title_host_star">Host Star: %s</string>
     <string name="planet_detail_title_discovery">Discovery</string>
     <string name="planet_detail_title_insights">AI Insights</string>
 
     <!-- Planet Detail: habitability card -->
     <!-- Planet hero: readouts, inferred composition, size to scale -->
-    <string name="hero_label_temp">EQ. TEMP</string>
-    <string name="hero_label_est_temp">EST. TEMP</string>
-    <string name="hero_label_gravity">GRAVITY</string>
-    <string name="hero_label_year">YEAR</string>
-    <string name="hero_label_density">DENSITY</string>
+    <string name="hero_label_temp">Eq. temp</string>
+    <string name="hero_label_est_temp">Est. temp</string>
+    <string name="hero_label_gravity">Gravity</string>
+    <string name="hero_label_year">Year</string>
+    <string name="hero_label_density">Density</string>
     <string name="hero_detail_earth_is_one_g">Earth = 1 g</string>
-    <string name="hero_detail_earth_density">Earth = 5.5</string>
-    <string name="hero_impression_caption">%1$s\nArtist\'s impression · Drag to spin</string>
+    <string name="hero_detail_earth_density">g/cm³ · Earth = 5.5</string>
+    <string name="hero_impression_caption">Artist\'s impression · Drag to spin</string>
     <string name="composition_iron_rich">Iron-rich rocky world</string>
     <string name="composition_rocky">Rocky world</string>
     <string name="composition_rocky_or_water">Rocky or water-rich world</string>
@@ -77,18 +69,12 @@
     <string name="composition_basis_radius">Inferred from radius</string>
     <string name="composition_basis_mass">Inferred from mass</string>
     <string name="composition_basis_none">Not enough data</string>
-    <string name="size_scale_title">SIZE TO SCALE</string>
-    <string name="size_scale_ratio">%s× EARTH</string>
+    <string name="size_scale_title">Size to scale</string>
+    <string name="size_scale_ratio">%s× Earth</string>
     <string name="size_scale_earth">Earth</string>
     <string name="size_scale_neptune">Neptune</string>
     <string name="size_scale_jupiter">Jupiter</string>
-    <string name="planet_detail_subtitle">A world orbiting %1$s</string>
-    <string name="planet_detail_earth_similarity">EARTH SIMILARITY</string>
-    <string name="planet_detail_ml_verdict">AI ESTIMATE · %1$s</string>
-    <string name="planet_detail_confidence_high">HIGH CONFIDENCE</string>
-    <string name="planet_detail_confidence_low">LOW CONFIDENCE</string>
-    <string name="planet_detail_score_na">N/A</string>
-    <string name="planet_detail_habitability_score">Habitability Score</string>
+    <string name="planet_detail_subtitle">A world orbiting</string>
     <string name="planet_detail_hab_desc_insufficient">Insufficient data to estimate</string>
     <string name="planet_detail_hab_desc_high">High potential for habitability</string>
     <string name="planet_detail_hab_desc_moderate">Moderate habitability potential</string>
@@ -98,41 +84,32 @@
     <!-- Planet Detail: property labels -->
     <string name="planet_detail_label_radius">Radius</string>
     <string name="planet_detail_label_mass">Mass</string>
-    <string name="planet_detail_label_orbit_period">Orbit Period</string>
-    <string name="planet_detail_label_semi_major_axis">Semi-Major Axis</string>
+    <string name="planet_detail_label_orbit_period">Orbit period</string>
+    <string name="planet_detail_label_semi_major_axis">Semi-major axis</string>
     <string name="planet_detail_label_eccentricity">Eccentricity</string>
-    <string name="planet_detail_label_eq_temperature">Eq. Temperature</string>
+    <string name="planet_detail_label_eq_temperature">Equilibrium temp</string>
     <string name="planet_detail_label_insolation">Insolation</string>
-    <string name="planet_detail_label_radius_jup">Radius (Jup)</string>
-    <string name="planet_detail_label_mass_jup">Mass (Jup)</string>
     <string name="planet_detail_subtitle_earth_radii">Earth radii</string>
     <string name="planet_detail_subtitle_earth_masses">Earth masses</string>
-    <string name="planet_detail_subtitle_solar_flux">Solar flux</string>
-    <string name="planet_detail_subtitle_jupiter_radii">Jupiter radii</string>
     <string name="planet_detail_subtitle_jupiter_masses">Jupiter masses</string>
 
     <!-- Planet Detail: stellar labels -->
-    <string name="planet_detail_label_spectral_type">Spectral Type</string>
+    <string name="planet_detail_label_spectral_type">Spectral type</string>
     <string name="planet_detail_label_temperature">Temperature</string>
     <string name="planet_detail_subtitle_effective">Effective</string>
     <string name="planet_detail_subtitle_solar_radii">Solar radii</string>
     <string name="planet_detail_subtitle_solar_masses">Solar masses</string>
     <string name="planet_detail_label_metallicity">Metallicity</string>
-    <string name="planet_detail_label_surface_gravity">Surface Gravity</string>
-    <string name="planet_detail_label_stars_in_system">Stars in System</string>
-    <string name="planet_detail_label_planets_in_system">Planets in System</string>
+    <string name="planet_detail_label_surface_gravity">Surface gravity</string>
 
     <!-- Planet Detail: discovery labels -->
     <string name="planet_detail_label_method">Method</string>
     <string name="planet_detail_label_year">Year</string>
     <string name="planet_detail_label_facility">Facility</string>
     <string name="planet_detail_label_distance">Distance</string>
-    <string name="planet_detail_label_coordinates">Coordinates</string>
 
     <!-- Planet Detail: Earth comparison -->
-    <string name="planet_detail_earth_comparison_desc">How this world stacks up against our own. The white line marks Earth (1×).</string>
-    <string name="planet_detail_label_surface_gravity_est">Surface gravity (est.)</string>
-    <string name="planet_detail_label_eq_temperature_lower">Eq. temperature</string>
+    <string name="planet_detail_earth_comparison_desc">White tick = Earth (1×). Log scale.</string>
     <string name="planet_detail_label_orbital_period">Orbital period</string>
 
     <!-- Planet list: sort -->
@@ -154,6 +131,9 @@
 
     <!-- Compare screen -->
     <string name="compare_title">Compare</string>
+    <string name="compare_swap">Swap</string>
+    <string name="compare_change">Change</string>
+    <string name="compare_change_title">Compare with…</string>
     <string name="compare_metric_radius">Radius</string>
     <string name="compare_metric_mass">Mass</string>
     <string name="compare_metric_orbital_period">Year</string>
@@ -164,13 +144,11 @@
     <string name="compare_metric_density">Density</string>
     <string name="compare_metric_gravity">Gravity</string>
     <string name="compare_metric_star">Host star</string>
-    <string name="compare_estimated_footnote">≈ Estimated from the star and orbit — no measured value.</string>
-    <string name="compare_ai_type">AI: %s</string>
+    <string name="compare_estimated_footnote">≈ Estimated from the star and orbit, not measured.</string>
     <string name="compare_no_data">—</string>
-    <string name="compare_section_ml">AI Habitability Estimate</string>
-    <string name="compare_section_properties">Physical Properties</string>
+    <string name="compare_section_ml">AI habitability</string>
     <string name="compare_overall_habitability">Overall habitability</string>
-    <string name="compare_ml_disclaimer">AI estimates from limited data — rough, educational, not scientific fact.</string>
+    <string name="compare_ml_disclaimer">AI estimates come from limited data: rough and educational, not scientific fact.</string>
 
     <!-- Compare: verdict summary -->
     <string name="compare_verdict_title">At a glance</string>
@@ -179,7 +157,7 @@
     <string name="compare_verdict_unknown_earthlike">Not enough data to judge Earth-likeness</string>
     <string name="compare_verdict_larger">%1$s is %2$s× larger across</string>
     <string name="compare_verdict_same_size">Nearly identical in size</string>
-    <string name="compare_verdict_closer">%1$s is closer — %2$s vs %3$s light-years away</string>
+    <string name="compare_verdict_closer">%1$s is closer: %2$s vs %3$s light-years</string>
     <string name="compare_verdict_hotter">%1$s is the hotter world</string>
 
     <!-- Compare: size-to-scale -->
@@ -195,7 +173,6 @@
     <string name="space_fact_library_search_hint">Search facts…</string>
     <string name="space_fact_library_empty">No facts match your search.</string>
     <string name="settings_fact_library_title">Space facts library</string>
-    <string name="settings_fact_library_subtitle">Browse every fact in the app</string>
 
     <!-- New-discovery notifications -->
     <string name="discovery_channel_name">New Discoveries</string>
@@ -204,17 +181,19 @@
     <string name="discovery_title_multiple">%1$d new worlds confirmed</string>
     <string name="discovery_title_bulk">%1$d new worlds added to your catalog</string>
     <string name="discovery_body_more">%1$s and %2$d more</string>
-    <string name="space_fact_title">Space Fact</string>
+    <string name="space_fact_title">Space fact</string>
+    <string name="space_fact_share">Share this fact</string>
+    <string name="space_fact_position">Fact %1$d of %2$d</string>
+    <string name="space_fact_illustration">Illustration</string>
     <string name="space_fact_not_found">This fact could not be found.</string>
     <string name="space_fact_read_more">Read the full article</string>
-    <string name="space_fact_disclaimer">Opens an external science article (e.g. Wikipedia) in an in-app browser tab.</string>
+    <string name="space_fact_disclaimer">Opens an external science article in your browser.</string>
 
     <!-- Planet of the Day widget -->
     <string name="widget_label">PLANET OF THE DAY</string>
     <string name="widget_subtitle">%1$s · Discovered %2$d</string>
     <string name="widget_empty">Open the app to load planets</string>
     <string name="widget_description">A new exoplanet each day on your home screen.</string>
-    <string name="widget_add_to_home">Add Planet of the Day to home screen</string>
 
     <!-- Common / accessibility -->
     <string name="cd_back">Back</string>
@@ -231,61 +210,77 @@
     <string name="nav_about">Settings</string>
 
     <!-- Splash -->
-    <string name="splash_title_line1">EXOPLANET</string>
-    <string name="splash_title_line2">HUNTER</string>
+    <string name="splash_title_line1">Exoplanet</string>
+    <string name="splash_title_line2">Hunter</string>
     <string name="splash_ready">Ready</string>
     <string name="splash_loading">Loading exoplanet data…</string>
+    <string name="splash_while_you_wait">While you wait</string>
+    <string-array name="splash_facts">
+        <item>All seven TRAPPIST-1 planets would fit inside Mercury’s orbit.</item>
+        <item>A year on WASP-12 b lasts just over a day.</item>
+        <item>Kepler-16 b has two suns, so it gets a double sunset.</item>
+    </string-array>
 
     <!-- Favorites screen -->
     <string name="favorites_title">Favorites</string>
-    <string name="favorites_eyebrow">SAVED PLANETS</string>
-    <string name="favorites_count">%d saved</string>
     <string name="favorites_empty_title">No favorites yet</string>
+    <string name="favorites_collection">Your collection · %d saved</string>
+    <string name="favorites_browse">Browse planets</string>
     <string name="favorites_empty_subtitle">Tap the star on any planet to save it here.</string>
 
     <!-- Planet list screen -->
     <string name="planet_list_title">Planets</string>
-    <string name="planet_list_eyebrow">FIELD CATALOGUE</string>
-    <string name="planet_list_confirmed">CONFIRMED</string>
-    <string name="planet_list_of_total">OF %s</string>
-    <string name="planet_list_sorted_by">SORTED · %1$s</string>
-    <string name="planet_list_count">%d planets discovered</string>
-    <string name="planet_list_search_hint">Search planets or stars…</string>
-    <string name="planet_list_empty">No planets found matching your criteria.</string>
+    <string name="planet_list_empty">No planets match this filter. Try another one, or show them all.</string>
+    <string name="planet_list_empty_title">Nothing here</string>
+    <string name="planet_list_clear_filters">Show all planets</string>
+    <string name="planet_list_subtitle">%s confirmed worlds</string>
+    <string name="planet_list_filtered">%1$s of %2$s worlds</string>
+    <string name="planet_list_sorted_prefix">Sorted by</string>
+    <string name="search_action">Search</string>
+    <string name="search_hint">Search planets or stars</string>
+    <string name="search_tab_planets">Planets · %d</string>
+    <string name="search_tab_systems">Star systems · %d</string>
+    <string name="search_recent">Recent</string>
+    <string name="search_clear_recent">Clear</string>
+    <string name="search_no_results_title">No matches</string>
+    <string name="search_no_results">Nothing in the catalogue matches “%s”. Check the spelling, or try a star name.</string>
+    <string name="search_prompt_title">Find a world</string>
+    <string name="search_prompt">Type a planet or star name, for example TRAPPIST-1 or K2-18 b.</string>
 
     <!-- Statistics screen -->
-    <string name="stats_title">Statistics</string>
-    <string name="stats_subtitle">The catalog at a glance</string>
-    <string name="stats_hero_planets">Planets</string>
-    <string name="stats_hero_systems">Star Systems</string>
-    <string name="stats_section_methods">Discoveries by Method</string>
-    <string name="stats_eyebrow">THE CATALOGUE</string>
-    <string name="stats_glance">At a glance</string>
-    <string name="stats_confirmed_worlds">CONFIRMED WORLDS</string>
-    <string name="stats_star_systems">STAR SYSTEMS</string>
-    <string name="stats_how_found">HOW THEY WERE FOUND</string>
-    <string name="stats_section_sizes">Planet Sizes</string>
-    <string name="stats_section_years">Discoveries per Year</string>
-    <string name="stats_section_transit">How the Transit Method Works</string>
+    <string name="stats_title">Stats</string>
+    <string name="stats_confirmed_worlds">confirmed worlds</string>
+    <string name="stats_star_systems">star systems</string>
+    <string name="stats_how_found">How they were found</string>
+    <string name="stats_tap_to_filter">Tap to filter</string>
+    <string name="stats_other">Other</string>
+    <string name="stats_peak_year">%1$s · %2$s found</string>
+    <string name="stats_section_sizes">Planet sizes</string>
+    <string name="stats_section_years">Discoveries per year</string>
+    <string name="stats_section_transit">How the transit method works</string>
     <string name="stats_transit_caption">Most of these worlds were found by watching a star dim as a planet crosses in front of it. The deeper the dip, the bigger the planet.</string>
     <string name="stats_transit_legend_star">Star</string>
     <string name="stats_transit_legend_planet">Planet</string>
     <string name="stats_transit_legend_brightness">Brightness</string>
-    <string name="stats_section_radial_velocity">How the Radial-Velocity Method Works</string>
+    <string name="stats_section_radial_velocity">How the radial-velocity method works</string>
     <string name="stats_rv_caption">A planet\'s gravity makes its star wobble around a shared centre of mass. The light blueshifts as the star swings toward us and redshifts as it pulls away — betraying the unseen planet.</string>
     <string name="stats_no_data">No data</string>
 
     <!-- Galaxy map (3D neighborhood) -->
     <string name="galaxy_map_title">Galaxy Map</string>
-    <string name="galaxy_map_eyebrow">DEEP FIELD</string>
     <string name="galaxy_map_hint">%1$d nearby stars · drag to rotate, pinch to zoom</string>
     <string name="galaxy_map_empty">No star positions available yet.</string>
+    <string name="galaxy_map_galactic_centre">Galactic centre (Sagittarius)</string>
+    <string name="galaxy_map_sun">Sun</string>
     <string name="galaxy_map_card_distance">%1$d parsecs · %2$d light-years away</string>
-    <string name="galaxy_map_card_meta">%1$d known planets · spectral type %2$s</string>
+    <plurals name="galaxy_map_card_meta">
+        <item quantity="one">%1$d known planet · spectral type %2$s</item>
+        <item quantity="other">%1$d known planets · spectral type %2$s</item>
+    </plurals>
     <string name="galaxy_map_card_view">View this system</string>
 
     <!-- Sky chart (find it in the night sky) -->
-    <string name="sky_chart_title">Find it in the night sky</string>
+    <string name="sky_chart_title">Find it in the sky</string>
     <string name="sky_chart_subtitle">Where %1$s sits on the celestial sphere</string>
     <string name="sky_chart_coords">RA %1$s · Dec %2$s</string>
     <string name="sky_chart_hemi_north">Best seen from the Northern Hemisphere</string>
@@ -295,19 +290,18 @@
 
     <!-- Tidal locking -->
     <string name="tidal_lock_badge">Tidally locked</string>
-    <string name="tidal_lock_desc">Orbiting so close that one face stays in eternal daylight while the other is locked in perpetual night.</string>
+    <string name="tidal_lock_desc">it probably always shows the same face to its star.</string>
 
     <!-- Star system list screen -->
     <string name="star_system_list_title">Star Systems</string>
-    <string name="star_system_list_eyebrow">STELLAR INDEX</string>
-    <string name="star_system_detail_eyebrow">STAR SYSTEM</string>
     <string name="star_system_list_loading">Loading…</string>
-    <string name="star_system_list_count">Explore %d star systems</string>
     <string name="star_system_list_filtered_count">Showing %1$s of %2$s star systems</string>
-    <string name="star_system_list_empty">No star systems found matching your criteria.</string>
-    <string name="star_system_list_search_hint">Search star systems…</string>
-    <string name="star_system_spectral_type">Spectral type %s</string>
-    <string name="star_system_multiplicity_single">Single star</string>
+    <string name="star_system_list_empty">No star systems match this filter.</string>
+    <string name="star_system_show_all">Show all systems</string>
+    <string name="star_system_list_subtitle">%s systems with planets</string>
+    <string name="galaxy_map_entry_subtitle">Nearby stars in 3D</string>
+    <string name="star_system_multiplicity_single_short">Single</string>
+    <string name="star_system_single_star_lower">single star</string>
     <string name="star_system_multiplicity_binary">Binary</string>
     <string name="star_system_multiplicity_trinary">Trinary</string>
     <string name="star_system_multiplicity_many">%d stars</string>
@@ -316,17 +310,18 @@
 
     <!-- Star system detail screen -->
     <string name="star_system_empty">No data available for this star system</string>
-    <string name="star_system_tap_hint">Tap a planet to select · Pinch to zoom · Two-finger drag to tilt</string>
     <!-- Orrery (star system view) -->
-    <string name="orrery_day">DAY %s</string>
+    <string name="orrery_day">Day %s</string>
     <string name="orrery_rate">1 s ≈ %s</string>
     <string name="orrery_play">Play</string>
     <string name="orrery_pause">Pause</string>
     <string name="orrery_hz">Habitable zone</string>
     <string name="orrery_solar_system">Our Solar System</string>
-    <string name="orrery_3d">3D</string>
+    <string name="orrery_3d">3D tilt</string>
     <string name="orrery_year">Year %s</string>
     <string name="orrery_scale_note">Distances √-scaled · sizes exaggerated</string>
+    <string name="orrery_hz_legend">green band = habitable zone</string>
+    <string name="orrery_open">Open →</string>
     <string name="orrery_companion_off_scale">far beyond view</string>
     <string name="orrery_star_letter">Star %s</string>
     <string name="orrery_companion_distance">~%s AU away</string>
@@ -334,22 +329,19 @@
     <string name="orrery_solar_legend">Blue rings: our Solar System at the same scale</string>
     <string name="orrery_circumbinary_note">Planets orbit both stars</string>
     <plurals name="orrery_companions_note">
-        <item quantity="one">Companion star far beyond view</item>
-        <item quantity="other">%d companion stars far beyond view</item>
+        <item quantity="one">Companion star drawn at the edge, not to scale</item>
+        <item quantity="other">%d companion stars drawn at the edge, not to scale</item>
     </plurals>
     <string name="orrery_missing_note">%d without orbit data</string>
     <string name="orrery_mercury">Mercury</string>
     <string name="orrery_venus">Venus</string>
     <string name="orrery_mars">Mars</string>
-    <string name="star_system_view">View</string>
-    <string name="star_system_view_arrow">View →</string>
-    <string name="star_system_host_single">Star: %s</string>
-    <string name="star_system_host_multi">Stars: %1$s (%2$s)</string>
-    <string name="star_system_star_count">%d-star system</string>
+    <string name="star_system_host_single">%s</string>
+    <string name="star_system_host_multi">%1$s · %2$s</string>
     <string name="star_system_label_stars">Stars</string>
     <string name="star_system_label_planets">Planets</string>
     <string name="star_system_in_system">in system</string>
-    <string name="star_system_planets_section">Planets (%d)</string>
+    <string name="star_system_planets_section">Planets · %d</string>
     <string name="star_system_label_ra">RA</string>
     <string name="star_system_label_dec">Dec</string>
 
@@ -360,9 +352,6 @@
     </plurals>
 
     <!-- Settings screen -->
-    <string name="settings_section_preferences">Preferences</string>
-    <string name="settings_section_data">Data</string>
-    <string name="settings_section_about">About</string>
     <string name="settings_notifications_title">Space fact notifications</string>
     <string name="settings_discovery_title">New discovery alerts</string>
     <string name="settings_discovery_subtitle">Tell me when new worlds are confirmed</string>
@@ -372,4 +361,48 @@
     <string name="settings_widget_title">Home screen widget</string>
     <string name="settings_widget_subtitle">Add Planet of the Day to your launcher</string>
     <string name="about_acknowledgement_row_title">Acknowledgement</string>
+    <!-- In-app update -->
+    <string name="update_ready">A new version is ready to install</string>
+    <string name="update_later">Later</string>
+    <string name="update_restart">Restart</string>
+    <!-- Planet detail (Matcha Night) -->
+    <string name="summary_adj_scorched">scorching</string>
+    <string name="summary_adj_hot">hot</string>
+    <string name="summary_adj_temperate">temperate</string>
+    <string name="summary_adj_cold">cold</string>
+    <string name="summary_adj_frozen">frozen</string>
+    <string name="summary_wider">%1$s× wider than Earth</string>
+    <string name="summary_smaller">about %1$s%% smaller than Earth</string>
+    <string name="summary_earth_size">about the size of Earth</string>
+    <string name="summary_zone_temperate">in the zone around its star where water could stay liquid</string>
+    <string name="summary_zone_hot">too close to its star for liquid water</string>
+    <string name="summary_zone_cold">far enough from its star that water would freeze</string>
+    <string name="hero_detail_celsius">about %s °C</string>
+    <string name="hero_detail_measured">measured</string>
+    <string name="estimate_footnote">≈ Estimated from the star and orbit, not measured.</string>
+    <string name="planet_detail_habitability_title">Habitability</string>
+    <string name="ai_estimate">AI estimate</string>
+    <string name="of_100">of 100</string>
+    <string name="planet_detail_earth_similarity_value">Earth similarity %s</string>
+    <string name="planet_detail_ai_type">Type: %1$s · %2$s</string>
+    <string name="confidence_high">high confidence</string>
+    <string name="confidence_low">low confidence</string>
+    <string name="planet_detail_disclaimer_link">About these estimates →</string>
+    <string name="host_star">Host star</string>
+    <string name="star_kind_m">red dwarf</string>
+    <string name="star_kind_k">orange dwarf</string>
+    <string name="star_kind_g">Sun-like star</string>
+    <string name="star_kind_f">yellow-white star</string>
+    <string name="star_kind_hot">hot white star</string>
+    <string name="star_system_in_system_label">In system</string>
+    <plurals name="stars_count">
+        <item quantity="one">%d star</item>
+        <item quantity="other">%d stars</item>
+    </plurals>
+    <string name="open_star_system">Open star system</string>
+    <string name="unit_days">days</string>
+    <string name="unit_kelvin">kelvin</string>
+    <string name="unit_kelvin_estimated">kelvin, estimated</string>
+    <string name="unit_earth_is_one">Earth = 1</string>
+    <string name="ai_disclaimer_short">Rough and educational, not scientific fact.</string>
 </resources>

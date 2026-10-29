@@ -54,7 +54,23 @@ import com.app.exoplanethunter.exoplanet.domain.model.Exoplanet
 import com.app.exoplanethunter.exoplanet.domain.model.StarSystem
 import com.app.exoplanethunter.presentation.theme.AlmanacData
 import com.app.exoplanethunter.presentation.theme.AlmanacMeta
-import com.app.exoplanethunter.presentation.theme.AlmanacSectionLabel
+import com.app.exoplanethunter.presentation.theme.AlmanacCaption
+import com.app.exoplanethunter.presentation.theme.BodyFamily
+import com.app.exoplanethunter.presentation.theme.CardTitle
+import com.app.exoplanethunter.presentation.theme.Corners
+import com.app.exoplanethunter.presentation.theme.InkTextFaint
+import com.app.exoplanethunter.presentation.theme.RowName
+import com.app.exoplanethunter.presentation.components.AppIcons
+import com.app.exoplanethunter.presentation.components.PlanetDisc
+import com.app.exoplanethunter.presentation.components.SectionCard
+import com.app.exoplanethunter.presentation.components.TempBucket
+import com.app.exoplanethunter.presentation.components.TempIndicator
+import com.app.exoplanethunter.presentation.components.estimatedTempK
+import com.app.exoplanethunter.presentation.components.formatOrbitalPeriod
+import com.app.exoplanethunter.presentation.components.isBanded
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import com.app.exoplanethunter.presentation.theme.Brass
 import com.app.exoplanethunter.presentation.theme.CosmicCyan
 import com.app.exoplanethunter.presentation.theme.Hairline
@@ -159,80 +175,29 @@ internal fun PlanetsInfoCard(
         iconColor = CosmicCyan
     ) {
         planets.forEach { planet ->
-            Card(
+            val bucket = TempBucket.of(planet.estimatedTempK())
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceCardLight),
-                onClick = { onPlanetClick(planet.id) }
+                    .clip(Corners.SmallCard)
+                    .clickable { onPlanetClick(planet.id) }
+                    .padding(vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .clip(CircleShape)
-                            .background(
-                                getPlanetColorDetailed(
-                                    planet.equilibriumTempK,
-                                    planet.planetRadiusEarth,
-                                    planet.planetMassEarth
-                                )
-                            )
+                PlanetDisc(color = bucket.color, size = 36.dp, banded = planet.isBanded())
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(planet.planetName, style = RowName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    val details = listOfNotNull(
+                        planet.planetRadiusEarth?.let { "%.1f R\u2295".format(it) },
+                        planet.orbitalPeriodDays?.let { formatOrbitalPeriod(it) },
+                        planet.orbitSemiMajorAxisAu?.let { "%.3f AU".format(it) },
                     )
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = planet.planetName,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White
-                        )
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            planet.planetRadiusEarth?.let {
-                                Text(
-                                    text = "${String.format("%.1f", it)} R\u2295",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = TextSecondary
-                                )
-                            }
-                            planet.orbitalPeriodDays?.let {
-                                Text(
-                                    text = "${String.format("%.1f", it)} days",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = TextSecondary
-                                )
-                            }
-                            planet.orbitSemiMajorAxisAu?.let {
-                                Text(
-                                    text = "${String.format("%.3f", it)} AU",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = TextSecondary
-                                )
-                            }
-                            planet.equilibriumTempK?.let {
-                                Text(
-                                    text = "${it.toInt()} K",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = TextSecondary
-                                )
-                            }
-                        }
-                    }
-
-                    Text(
-                        text = stringResource(R.string.star_system_view),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = CosmicCyan
-                    )
+                    Text(details.joinToString(" · "), style = AlmanacMeta, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
+                Spacer(modifier = Modifier.width(8.dp))
+                TempIndicator(bucket)
+                Icon(AppIcons.ChevronRight, null, tint = InkTextFaint, modifier = Modifier.padding(start = 6.dp).size(18.dp))
             }
         }
     }
@@ -249,18 +214,9 @@ private fun DetailCard(
     iconColor: Color,
     content: @Composable () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Surface)
-            .border(0.5.dp, Hairline, RoundedCornerShape(8.dp))
-            .padding(18.dp)
-    ) {
-        Text(text = title.uppercase(), style = AlmanacSectionLabel)
-        Spacer(modifier = Modifier.height(10.dp))
-        Box(modifier = Modifier.fillMaxWidth().height(0.5.dp).background(Hairline))
-        Spacer(modifier = Modifier.height(16.dp))
+    SectionCard {
+        Text(text = title, style = CardTitle)
+        Spacer(modifier = Modifier.height(12.dp))
         content()
     }
 }
@@ -275,9 +231,9 @@ private fun PropertyItem(label: String, value: String, subtitle: String) {
         verticalAlignment = Alignment.Bottom
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(label, style = MaterialTheme.typography.bodyMedium, color = InkTextDim)
+            Text(label, fontFamily = BodyFamily, fontSize = 15.sp, color = InkTextDim)
             if (subtitle.isNotBlank()) {
-                Text(subtitle, style = AlmanacMeta)
+                Text(subtitle, style = AlmanacCaption)
             }
         }
         Spacer(modifier = Modifier.width(12.dp))

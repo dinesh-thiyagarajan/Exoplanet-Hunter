@@ -117,6 +117,16 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
             }
         }
 
+        is AnalyticsEvent.OrreryToggleChanged -> {
+            val event = this
+            Keys.ORRERY_TOGGLE_CHANGED to Bundle().apply {
+                putString(Keys.PARAM_HOST_NAME, event.hostName)
+                putString(Keys.PARAM_TOGGLE, event.toggle.key)
+                // Firebase has no boolean params; a 0/1 number is filterable in BigQuery.
+                putLong(Keys.PARAM_ENABLED, if (event.enabled) 1L else 0L)
+            }
+        }
+
         // Sort
         is AnalyticsEvent.PlanetSortApplied -> {
             val event = this
@@ -170,5 +180,22 @@ class FirebaseAnalyticsRepository(context: Context) : AnalyticsRepository {
         // Widget
         is AnalyticsEvent.WidgetPlanetOpened ->
             Keys.WIDGET_PLANET_OPENED to null
+
+        // In-app updates
+        is AnalyticsEvent.AppUpdatePrompted -> {
+            val event = this
+            Keys.APP_UPDATE_PROMPTED to Bundle().apply {
+                putString(Keys.PARAM_UPDATE_TYPE, event.updateType)
+                putLong(Keys.PARAM_AVAILABLE_VERSION_CODE, event.availableVersionCode.toLong())
+            }
+        }
+
+        is AnalyticsEvent.AppUpdateResult -> {
+            val event = this
+            Keys.APP_UPDATE_RESULT to Bundle().apply {
+                putString(Keys.PARAM_UPDATE_TYPE, event.updateType)
+                putString(Keys.PARAM_RESULT, event.result)
+            }
+        }
     }
 }

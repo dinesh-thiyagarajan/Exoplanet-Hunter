@@ -118,6 +118,7 @@ dependencies {
 
     // Google Play In-App Review
     implementation(libs.play.review.ktx)
+    implementation(libs.play.app.update.ktx)
 
     // Firebase
     implementation(platform(libs.firebase.bom))

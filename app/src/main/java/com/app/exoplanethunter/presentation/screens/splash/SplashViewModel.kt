@@ -15,9 +15,14 @@ class SplashViewModel(
     private val _loadingState = MutableStateFlow(false)
     val loadingState = _loadingState.asStateFlow()
 
+    /** Null until known; true on the very first launch (the longer splash with a fact card). */
+    private val _isFirstLaunch = MutableStateFlow<Boolean?>(null)
+    val isFirstLaunch = _isFirstLaunch.asStateFlow()
+
     init {
         viewModelScope.launch {
             val isInitialAssetCopied = syncPreferences.isInitialAssetCopied.first()
+            _isFirstLaunch.value = !isInitialAssetCopied
             if (!isInitialAssetCopied) {
                 syncPreferences.setInitialAssetCopied(true)
             }

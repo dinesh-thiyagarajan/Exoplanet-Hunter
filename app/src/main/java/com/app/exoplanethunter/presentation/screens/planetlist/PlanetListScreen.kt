@@ -62,6 +62,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -79,18 +82,21 @@ import com.app.exoplanethunter.presentation.components.BackToTopButton
 import com.app.exoplanethunter.presentation.components.CollapsingHeaderLayout
 import com.app.exoplanethunter.presentation.components.rememberCollapsingHeaderState
 import com.app.exoplanethunter.presentation.components.PlanetRowCard
-import com.app.exoplanethunter.presentation.theme.AlmanacData
-import com.app.exoplanethunter.presentation.theme.AlmanacEyebrow
+import com.app.exoplanethunter.presentation.components.AppIcons
+import com.app.exoplanethunter.presentation.components.CircleIconButton
+import com.app.exoplanethunter.presentation.components.EmptyState
+import com.app.exoplanethunter.presentation.components.PrimaryButton
+import com.app.exoplanethunter.presentation.components.SkeletonRow
+import com.app.exoplanethunter.presentation.components.TabHeader
 import com.app.exoplanethunter.presentation.theme.AlmanacMeta
-import com.app.exoplanethunter.presentation.theme.AlmanacSectionLabel
-import com.app.exoplanethunter.presentation.theme.Brass
-import com.app.exoplanethunter.presentation.theme.Hairline
+import com.app.exoplanethunter.presentation.theme.Corners
 import com.app.exoplanethunter.presentation.theme.Ink
 import com.app.exoplanethunter.presentation.theme.InkText
-import com.app.exoplanethunter.presentation.theme.InkTextDim
-import com.app.exoplanethunter.presentation.theme.InkTextFaint
-import com.app.exoplanethunter.presentation.theme.Surface as SurfaceColor
-import com.app.exoplanethunter.presentation.theme.SurfaceRaised
+import com.app.exoplanethunter.presentation.theme.Matcha
+import com.app.exoplanethunter.presentation.theme.MatchaDeep
+import com.app.exoplanethunter.presentation.theme.OnMatchaDeep
+import com.app.exoplanethunter.presentation.theme.Raised
+import com.app.exoplanethunter.presentation.theme.SectionTitle
 import java.util.Calendar
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
@@ -100,6 +106,7 @@ import org.koin.androidx.compose.koinViewModel
 fun PlanetListScreen(
     onPlanetClick: (Long) -> Unit,
     onCompare: (Long, Long) -> Unit = { _, _ -> },
+    onOpenSearch: () -> Unit = {},
     viewModel: PlanetListViewModel = koinViewModel()
 ) {
     val listState = rememberLazyListState()
@@ -135,73 +142,36 @@ fun PlanetListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Ink)
-                        .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+                        .padding(bottom = 4.dp)
                 ) {
-                    Row(verticalAlignment = Alignment.Top) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(stringResource(R.string.planet_list_eyebrow), style = AlmanacEyebrow)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = stringResource(R.string.planet_list_title),
-                                style = MaterialTheme.typography.displayMedium
-                            )
-                        }
-                        Column(horizontalAlignment = Alignment.End) {
-                            val total = viewModel.totalPlanetCount
-                            val shown = viewModel.planets.size
-                            val isFiltered = total > 0 && shown != total
-                            Text(
-                                text = "%,d".format(if (isFiltered || total == 0) shown else total),
-                                style = AlmanacData.copy(fontSize = 22.sp)
-                            )
-                            Text(
-                                text = if (isFiltered) stringResource(R.string.planet_list_of_total, "%,d".format(total))
-                                else stringResource(R.string.planet_list_confirmed),
-                                style = AlmanacMeta
-                            )
-                        }
+                    val total = viewModel.totalPlanetCount
+                    val shown = viewModel.planets.size
+                    val isFiltered = total > 0 && shown != total
+                    TabHeader(
+                        title = stringResource(R.string.planet_list_title),
+                        subtitle = when {
+                            total == 0 -> null
+                            isFiltered -> stringResource(R.string.planet_list_filtered, "%,d".format(shown), "%,d".format(total))
+                            else -> stringResource(R.string.planet_list_subtitle, "%,d".format(total))
+                        },
+                    ) {
+                        CircleIconButton(AppIcons.Search, stringResource(R.string.search_action), onOpenSearch)
+                        CircleIconButton(AppIcons.Filter, stringResource(R.string.sort_action), { showSortSheet = true })
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Underline-only search (no box)
-                    TextField(
-                        value = viewModel.searchQuery,
-                        onValueChange = viewModel::onSearchQueryChanged,
-                        placeholder = {
-                            Text(stringResource(R.string.planet_list_search_hint), color = InkTextFaint)
-                        },
-                        leadingIcon = {
-                            Icon(Icons.Default.Search, contentDescription = null, tint = InkTextFaint)
-                        },
-                        trailingIcon = {
-                            if (viewModel.searchQuery.isNotBlank()) {
-                                IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                                    Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cd_clear), tint = InkTextFaint)
-                                }
-                            }
-                        },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                        keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            cursorColor = Brass,
-                            focusedIndicatorColor = Brass,
-                            unfocusedIndicatorColor = Hairline,
-                            focusedTextColor = InkText,
-                            unfocusedTextColor = InkText
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     // ---- Filter chips ----
+                    // Keep the selected chip in view, e.g. after filtering from the Stats tab.
+                    val chipState = rememberLazyListState()
+                    LaunchedEffect(viewModel.selectedFilter, viewModel.discoveryMethods) {
+                        val i = viewModel.discoveryMethods.indexOf(viewModel.selectedFilter)
+                        if (i >= 0) chipState.animateScrollToItem(i + 2)
+                    }
                     LazyRow(
+                        state = chipState,
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(end = 16.dp)
+                        contentPadding = PaddingValues(horizontal = 16.dp)
                     ) {
                         item {
                             val allSelected = viewModel.selectedFilter == null && !viewModel.showHabitableOnly &&
@@ -232,59 +202,49 @@ fun PlanetListScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    // ---- Sort + compare row ----
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Row(
+                    // ---- "Sorted by Default · Compare" ----
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 6.dp, top = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = buildAnnotatedString {
+                                append(stringResource(R.string.planet_list_sorted_prefix))
+                                append(" ")
+                                withStyle(SpanStyle(color = InkText, fontWeight = FontWeight.Bold)) {
+                                    append(stringResource(viewModel.sortOption.labelRes))
+                                }
+                            },
+                            style = AlmanacMeta,
                             modifier = Modifier
-                                .clip(RoundedCornerShape(4.dp))
+                                .clip(Corners.Pill)
                                 .clickable { showSortSheet = true }
-                                .padding(vertical = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(
-                                    R.string.planet_list_sorted_by,
-                                    stringResource(viewModel.sortOption.labelRes).uppercase()
-                                ),
-                                style = AlmanacSectionLabel
-                            )
-                            Icon(
-                                Icons.Default.ArrowDropDown,
-                                contentDescription = null,
-                                tint = InkTextDim,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
+                                .padding(vertical = 8.dp)
+                        )
                         Spacer(modifier = Modifier.weight(1f))
                         if (compareEnabled) {
                             AlmanacOutlinedButton(
-                                label = stringResource(R.string.compare_action).uppercase(),
+                                label = stringResource(if (viewModel.compareMode) R.string.compare_exit else R.string.compare_action),
                                 onClick = viewModel::toggleCompareMode,
                                 active = viewModel.compareMode
                             )
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Box(modifier = Modifier.fillMaxWidth().height(0.5.dp).background(Hairline))
                 }
             },
         ) { headerHeight ->
             // ---- List ----
             if (viewModel.isLoading) {
-                Box(modifier = Modifier.fillMaxSize().padding(top = headerHeight), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Brass)
+                Column(modifier = Modifier.fillMaxSize().padding(top = headerHeight, start = 16.dp, end = 16.dp)) {
+                    repeat(8) { SkeletonRow() }
                 }
             } else if (viewModel.planets.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize().padding(top = headerHeight), contentAlignment = Alignment.Center) {
-                    Text(
-                        text = stringResource(R.string.planet_list_empty),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = InkTextFaint,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(32.dp)
+                Box(modifier = Modifier.fillMaxSize().padding(top = headerHeight)) {
+                    EmptyState(
+                        title = stringResource(R.string.planet_list_empty_title),
+                        hint = stringResource(R.string.planet_list_empty),
+                        actionLabel = stringResource(R.string.planet_list_clear_filters),
+                        onAction = { viewModel.onFilterSelected(null) },
                     )
                 }
             } else {
@@ -292,10 +252,10 @@ fun PlanetListScreen(
                 LazyColumn(
                     state = listState,
                     contentPadding = PaddingValues(
-                        start = 16.dp, end = 16.dp, top = headerHeight + 10.dp,
-                        bottom = if (viewModel.compareMode) 96.dp else 16.dp
+                        start = 16.dp, end = 4.dp, top = headerHeight + 4.dp,
+                        bottom = if (viewModel.compareMode) 112.dp else 16.dp
                     ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     val planets = viewModel.planets
                     planets.forEachIndexed { index, planet ->
@@ -340,51 +300,43 @@ fun PlanetListScreen(
         // ---- Compare action bar ----
         if (viewModel.compareMode) {
             val selected = viewModel.selectedForCompare
-            Surface(
-                modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
-                color = SurfaceColor,
-                shadowElevation = 12.dp
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(12.dp)
+                    .clip(Corners.Pill)
+                    .background(MatchaDeep)
+                    .padding(start = 20.dp, end = 6.dp, top = 6.dp, bottom = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = if (selected.size < 2) stringResource(R.string.compare_hint)
-                            else selected.joinToString(" vs ") { it.planetName },
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = InkText,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Text(
-                            text = stringResource(R.string.compare_selected_count, selected.size),
-                            style = AlmanacMeta
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Button(
-                        onClick = {
-                            if (selected.size == 2) {
-                                val a = selected[0]; val b = selected[1]
-                                viewModel.trackComparison(a, b)
-                                InterstitialAdController.maybeShow(activity) { onCompare(a.id, b.id) }
-                                viewModel.exitCompareMode()
-                            }
-                        },
-                        enabled = selected.size == 2,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Brass,
-                            contentColor = Ink,
-                            disabledContainerColor = SurfaceRaised,
-                            disabledContentColor = InkTextFaint
-                        )
-                    ) {
-                        Text(stringResource(R.string.compare_button), fontWeight = FontWeight.Medium)
-                    }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = if (selected.size < 2) stringResource(R.string.compare_hint)
+                        else selected.joinToString(" vs ") { it.planetName },
+                        style = MaterialTheme.typography.titleSmall,
+                        color = InkText,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = stringResource(R.string.compare_selected_count, selected.size),
+                        style = AlmanacMeta.copy(color = OnMatchaDeep)
+                    )
                 }
+                Spacer(modifier = Modifier.width(12.dp))
+                PrimaryButton(
+                    label = stringResource(R.string.compare_button),
+                    enabled = selected.size == 2,
+                    onClick = {
+                        if (selected.size == 2) {
+                            val a = selected[0]; val b = selected[1]
+                            viewModel.trackComparison(a, b)
+                            InterstitialAdController.maybeShow(activity) { onCompare(a.id, b.id) }
+                            viewModel.exitCompareMode()
+                        }
+                    }
+                )
             }
         }
 
@@ -394,11 +346,12 @@ fun PlanetListScreen(
             ModalBottomSheet(
                 onDismissRequest = { showSortSheet = false },
                 sheetState = sheetState,
-                containerColor = SurfaceColor
+                containerColor = Raised,
+                shape = Corners.Dialog
             ) {
                 Text(
                     text = stringResource(R.string.sort_title),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = SectionTitle,
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 8.dp)
                 )
                 SortOption.entries.forEach { option ->
@@ -416,10 +369,11 @@ fun PlanetListScreen(
                         Text(
                             text = stringResource(option.labelRes),
                             style = MaterialTheme.typography.bodyLarge,
-                            color = if (selected) Brass else InkText,
+                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                            color = if (selected) Matcha else InkText,
                             modifier = Modifier.weight(1f)
                         )
-                        if (selected) Icon(Icons.Default.Check, contentDescription = null, tint = Brass)
+                        if (selected) Icon(AppIcons.Check, contentDescription = null, tint = Matcha, modifier = Modifier.size(20.dp))
                     }
                 }
                 Spacer(modifier = Modifier.height(24.dp))
